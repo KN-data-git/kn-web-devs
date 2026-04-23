@@ -62,6 +62,8 @@
   .btn:hover{background:var(--ink);color:var(--bg);}
   .btn.btn-dark{background:var(--ink);color:var(--bg);}
   .btn.btn-dark:hover{background:transparent;color:var(--ink);}
+  .btn.btn-on-dark{background:transparent;color:var(--bg);border-color:var(--bg);}
+  .btn.btn-on-dark:hover{background:var(--bg);color:var(--ink);}
   .btn .arrow{display:inline-block;transform:translateX(0);transition:transform .15s ease;}
   .btn:hover .arrow{transform:translateX(4px);}
 
@@ -212,6 +214,31 @@
     padding: var(--s-9) 0 0;
   }
 
+  /* Passport Seoul section — sibling sub-brand island, stacks directly under HYPEER */
+  .passport-section{
+    padding: 0;
+  }
+  .passport-island{
+    background: var(--ink);
+    color: var(--bg);
+    padding: var(--s-9) var(--pad-x);
+    margin: 0 calc(-1 * var(--pad-x));
+  }
+  .passport-logo{
+    margin: 0 0 var(--s-6);
+  }
+  .passport-logo img{
+    height: 40px;
+    width: auto;
+    display: block;
+  }
+  .passport-island .label{
+    color: #9A9A9A;
+  }
+  .passport-island .lead{
+    color: #C9C9C9;
+  }
+
   /* Contact CTA */
   .cta-section{
     padding: var(--s-10) 0;
@@ -252,7 +279,9 @@
       <img src="/assets/Kreators_logo(B)_v2.png" alt="KREATORS." />
     </a>
     <div class="nav-menu">
-      <a href="portfolio.html">Work</a>
+      <!-- Brand filter landings; wired to Work section filtering later -->
+      <a href="portfolio.html?brand=hypeer">HYPEER</a>
+      <a href="portfolio.html?brand=passport-seoul">Passport Seoul</a>
       <a href="#">Studio</a>
       <a href="blog.html">Journal</a>
       <a href="hiring.html">Careers</a>
@@ -314,8 +343,27 @@
       <p class="lead" style="max-width: 640px; margin: 0 0 var(--s-6);">
         Where KREATORS researches, HYPEER activates. From creator partnerships to always-on social, HYPEER turns our data into campaigns that move culture forward.
       </p>
-      <a href="#" class="btn" style="background:var(--ink);color:var(--hypeer);border-color:var(--ink);">
+      <a href="portfolio.html?brand=hypeer" class="btn" style="background:var(--ink);color:var(--hypeer);border-color:var(--ink);">
         See HYPEER work <span class="arrow">→</span>
+      </a>
+    </div>
+  </section>
+
+  <!-- PASSPORT SEOUL ISLAND -->
+  <section class="passport-section">
+    <div class="passport-island">
+      <div class="passport-logo">
+        <img src="/assets/PPS_logo_white.png" alt="Passport Seoul" />
+      </div>
+      <div class="label">Introducing</div>
+      <h2 class="display-m" style="margin: var(--s-3) 0 var(--s-4); max-width: 900px;">
+        Passport Seoul — our data-driven strategy &amp; planning unit.
+      </h2>
+      <p class="lead" style="max-width: 640px; margin: 0 0 var(--s-6);">
+        Where HYPEER activates, Passport Seoul plans. We translate entertainment market data into strategic playbooks for brands entering — or scaling within — Korea and beyond.
+      </p>
+      <a href="portfolio.html?brand=passport-seoul" class="btn btn-on-dark">
+        See Passport Seoul work <span class="arrow">→</span>
       </a>
     </div>
   </section>
