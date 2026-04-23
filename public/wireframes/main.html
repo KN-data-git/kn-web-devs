@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ko">
+<html lang="en">
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -224,10 +224,12 @@
     padding: var(--s-9) var(--pad-x);
     margin: 0 calc(-1 * var(--pad-x));
   }
-  .passport-logo{
+  .passport-logo,
+  .hypeer-logo{
     margin: 0 0 var(--s-6);
   }
-  .passport-logo img{
+  .passport-logo img,
+  .hypeer-logo img{
     height: 40px;
     width: auto;
     display: block;
@@ -238,6 +240,45 @@
   .passport-island .lead{
     color: #C9C9C9;
   }
+
+  /* Language toggle + i18n visibility */
+  .nav-actions{
+    display: flex;
+    align-items: center;
+    gap: var(--s-4);
+  }
+  .lang-toggle{
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: var(--font-sans);
+    font-weight: 600;
+    font-size: 12px;
+    letter-spacing: 0.14em;
+  }
+  .lang-toggle .lang-sep{
+    color: var(--rule);
+  }
+  .lang-btn{
+    background: transparent;
+    border: 0;
+    padding: 4px 0;
+    color: var(--muted);
+    font: inherit;
+    letter-spacing: inherit;
+    cursor: pointer;
+    transition: color .15s ease;
+  }
+  .lang-btn:hover{ color: var(--ink); }
+  html[lang="en"] .lang-btn[data-lang="en"],
+  html[lang="ko"] .lang-btn[data-lang="ko"]{
+    color: var(--ink);
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+  /* show only the text matching the active document language */
+  html[lang="en"] .i18n-ko{ display: none; }
+  html[lang="ko"] .i18n-en{ display: none; }
 
   /* Contact CTA */
   .cta-section{
@@ -268,7 +309,7 @@
     <img src="/assets/Kreators_logo(B)_v2.png" alt="KREATORS." />
   </div>
   <div class="intro-cue" aria-hidden="true">
-    <span>Scroll</span>
+    <span class="i18n-en">Scroll</span><span class="i18n-ko">스크롤</span>
   </div>
 </section>
 
@@ -282,11 +323,18 @@
       <!-- Brand filter landings; wired to Work section filtering later -->
       <a href="portfolio.html?brand=hypeer">HYPEER</a>
       <a href="portfolio.html?brand=passport-seoul">Passport Seoul</a>
-      <a href="#">Studio</a>
-      <a href="blog.html">Journal</a>
-      <a href="hiring.html">Careers</a>
+      <a href="#"><span class="i18n-en">Studio</span><span class="i18n-ko">스튜디오</span></a>
+      <a href="blog.html"><span class="i18n-en">Journal</span><span class="i18n-ko">저널</span></a>
+      <a href="hiring.html"><span class="i18n-en">Careers</span><span class="i18n-ko">채용</span></a>
     </div>
-    <a href="#contact" class="nav-cta">Contact</a>
+    <div class="nav-actions">
+      <div class="lang-toggle" role="group" aria-label="Language">
+        <button type="button" class="lang-btn" data-lang="en">EN</button>
+        <span class="lang-sep" aria-hidden="true">·</span>
+        <button type="button" class="lang-btn" data-lang="ko">KR</button>
+      </div>
+      <a href="#contact" class="nav-cta"><span class="i18n-en">Contact</span><span class="i18n-ko">연락</span></a>
+    </div>
   </div>
 </nav>
 
@@ -294,12 +342,17 @@
 
   <!-- HERO -->
   <section class="hero">
-    <div class="label" style="color:var(--muted); margin-bottom: var(--s-4);">Entertainment · Data · Marketing</div>
+    <div class="label" style="color:var(--muted); margin-bottom: var(--s-4);">
+      <span class="i18n-en">Entertainment · Data · Marketing</span>
+      <span class="i18n-ko">엔터테인먼트 · 데이터 · 마케팅</span>
+    </div>
     <h1 class="display-l hero-headline">
-      We read entertainment.<br/>We write strategy.
+      <span class="i18n-en">We read entertainment.<br/>We write strategy.</span>
+      <span class="i18n-ko">엔터테인먼트를 읽고,<br/>전략을 씁니다.</span>
     </h1>
     <p class="lead hero-sub">
-      Kreators Network is a Seoul-based agency that turns entertainment industry data into marketing strategies for brands and agencies worldwide.
+      <span class="i18n-en">Kreators Network is a Seoul-based agency that turns entertainment industry data into marketing strategies for brands and agencies worldwide.</span>
+      <span class="i18n-ko">Kreators Network는 엔터테인먼트 산업 데이터를 전 세계 브랜드와 에이전시를 위한 마케팅 전략으로 전환하는 서울 기반의 에이전시입니다.</span>
     </p>
   </section>
 
@@ -307,27 +360,40 @@
   <section class="manifesto">
     <div class="manifesto-grid">
       <div class="manifesto-left">
-        <div class="label">About</div>
+        <div class="label"><span class="i18n-en">About</span><span class="i18n-ko">소개</span></div>
         <p class="manifesto-statement">
-          The entertainment industry generates more data than ever — streaming numbers, social signals, fandom behaviors, cultural momentum. Most of it is noise. We find the signal, and we build strategy around it.
+          <span class="i18n-en">The entertainment industry generates more data than ever — streaming numbers, social signals, fandom behaviors, cultural momentum. Most of it is noise. We find the signal, and we build strategy around it.</span>
+          <span class="i18n-ko">엔터테인먼트 산업은 어느 때보다 많은 데이터를 쏟아냅니다. 스트리밍 지표, 소셜 시그널, 팬덤 행동, 문화적 모멘텀. 대부분은 소음입니다. 우리는 그 안에서 신호를 찾고, 그 위에 전략을 세웁니다.</span>
         </p>
-        <a href="#" class="btn" style="margin-top: var(--s-6);">Learn about us <span class="arrow">→</span></a>
+        <a href="#" class="btn" style="margin-top: var(--s-6);">
+          <span class="i18n-en">Learn about us</span><span class="i18n-ko">스튜디오 소개</span>
+          <span class="arrow">→</span>
+        </a>
       </div>
       <div class="manifesto-right">
         <div class="capability">
           <div class="capability-num">01</div>
-          <h3>Data Intelligence</h3>
-          <p>We map streaming platforms, social ecosystems, and fan communities to surface the metrics that actually predict cultural impact.</p>
+          <h3><span class="i18n-en">Data Intelligence</span><span class="i18n-ko">데이터 인텔리전스</span></h3>
+          <p>
+            <span class="i18n-en">We map streaming platforms, social ecosystems, and fan communities to surface the metrics that actually predict cultural impact.</span>
+            <span class="i18n-ko">스트리밍 플랫폼, 소셜 생태계, 팬 커뮤니티를 정교하게 맵핑해, 문화적 임팩트를 실제로 예측할 수 있는 지표를 찾아냅니다.</span>
+          </p>
         </div>
         <div class="capability">
           <div class="capability-num">02</div>
-          <h3>Strategic Marketing</h3>
-          <p>Data becomes direction. We design campaigns grounded in audience behavior — not assumptions — for music, film, and IP properties.</p>
+          <h3><span class="i18n-en">Strategic Marketing</span><span class="i18n-ko">전략적 마케팅</span></h3>
+          <p>
+            <span class="i18n-en">Data becomes direction. We design campaigns grounded in audience behavior — not assumptions — for music, film, and IP properties.</span>
+            <span class="i18n-ko">데이터가 방향이 됩니다. 음악, 영화, IP 캠페인을 가정이 아닌 오디언스의 실제 행동 위에 설계합니다.</span>
+          </p>
         </div>
         <div class="capability">
           <div class="capability-num">03</div>
-          <h3>Research & Editorial</h3>
-          <p>We publish what we learn. Our journal is where industry knowledge becomes shared knowledge — reports, essays, and data stories.</p>
+          <h3><span class="i18n-en">Research &amp; Editorial</span><span class="i18n-ko">리서치 &amp; 에디토리얼</span></h3>
+          <p>
+            <span class="i18n-en">We publish what we learn. Our journal is where industry knowledge becomes shared knowledge — reports, essays, and data stories.</span>
+            <span class="i18n-ko">우리가 배운 것을 씁니다. 저널은 산업의 지식이 공유된 지식으로 전환되는 공간입니다 — 리포트, 에세이, 데이터 스토리.</span>
+          </p>
         </div>
       </div>
     </div>
@@ -336,15 +402,21 @@
   <!-- HYPEER ISLAND -->
   <section class="hypeer-section">
     <div class="hypeer-island">
-      <div class="label">Introducing</div>
+      <div class="hypeer-logo">
+        <img src="/assets/HYPR_logo_B.png" alt="HYPEER" />
+      </div>
+      <div class="label"><span class="i18n-en">Introducing</span><span class="i18n-ko">소개합니다</span></div>
       <h2 class="display-m" style="margin: var(--s-3) 0 var(--s-4); max-width: 900px;">
-        HYPEER — the social-first marketing wing of Kreators Network.
+        <span class="i18n-en">HYPEER — the social-first marketing wing of Kreators Network.</span>
+        <span class="i18n-ko">HYPEER — Kreators Network의 소셜 퍼스트 마케팅 윙.</span>
       </h2>
       <p class="lead" style="max-width: 640px; margin: 0 0 var(--s-6);">
-        Where KREATORS researches, HYPEER activates. From creator partnerships to always-on social, HYPEER turns our data into campaigns that move culture forward.
+        <span class="i18n-en">Where KREATORS researches, HYPEER activates. From creator partnerships to always-on social, HYPEER turns our data into campaigns that move culture forward.</span>
+        <span class="i18n-ko">KREATORS가 리서치한다면, HYPEER는 실행합니다. 크리에이터 파트너십부터 상시 소셜 운영까지, HYPEER는 우리의 데이터를 문화를 움직이는 캠페인으로 전환합니다.</span>
       </p>
       <a href="portfolio.html?brand=hypeer" class="btn" style="background:var(--ink);color:var(--hypeer);border-color:var(--ink);">
-        See HYPEER work <span class="arrow">→</span>
+        <span class="i18n-en">See HYPEER work</span><span class="i18n-ko">HYPEER 작업 보기</span>
+        <span class="arrow">→</span>
       </a>
     </div>
   </section>
@@ -355,24 +427,36 @@
       <div class="passport-logo">
         <img src="/assets/PPS_logo_white.png" alt="Passport Seoul" />
       </div>
-      <div class="label">Introducing</div>
+      <div class="label"><span class="i18n-en">Introducing</span><span class="i18n-ko">소개합니다</span></div>
       <h2 class="display-m" style="margin: var(--s-3) 0 var(--s-4); max-width: 900px;">
-        Passport Seoul — our data-driven strategy &amp; planning unit.
+        <span class="i18n-en">Passport Seoul — our data-driven strategy &amp; planning unit.</span>
+        <span class="i18n-ko">Passport Seoul — 데이터 기반 전략 &amp; 기획 유닛.</span>
       </h2>
       <p class="lead" style="max-width: 640px; margin: 0 0 var(--s-6);">
-        Where HYPEER activates, Passport Seoul plans. We translate entertainment market data into strategic playbooks for brands entering — or scaling within — Korea and beyond.
+        <span class="i18n-en">Where HYPEER activates, Passport Seoul plans. We translate entertainment market data into strategic playbooks for brands entering — or scaling within — Korea and beyond.</span>
+        <span class="i18n-ko">HYPEER가 실행한다면, Passport Seoul은 기획합니다. 엔터테인먼트 시장 데이터를 한국, 그리고 그 너머로 진입하거나 확장하려는 브랜드의 전략 플레이북으로 옮깁니다.</span>
       </p>
       <a href="portfolio.html?brand=passport-seoul" class="btn btn-on-dark">
-        See Passport Seoul work <span class="arrow">→</span>
+        <span class="i18n-en">See Passport Seoul work</span><span class="i18n-ko">Passport Seoul 작업 보기</span>
+        <span class="arrow">→</span>
       </a>
     </div>
   </section>
 
   <!-- CONTACT CTA -->
   <section class="cta-section" id="contact">
-    <h2 class="display-m">Let's read the industry together.</h2>
-    <p class="lead">We work with brands, agencies, and platforms looking for data-driven entertainment marketing. Tell us what you're building.</p>
-    <a href="mailto:hello@kreatorsnetwork.com" class="btn btn-dark">Get in touch <span class="arrow">→</span></a>
+    <h2 class="display-m">
+      <span class="i18n-en">Let's read the industry together.</span>
+      <span class="i18n-ko">함께 산업을 읽어갑시다.</span>
+    </h2>
+    <p class="lead">
+      <span class="i18n-en">We work with brands, agencies, and platforms looking for data-driven entertainment marketing. Tell us what you're building.</span>
+      <span class="i18n-ko">데이터 기반 엔터테인먼트 마케팅을 찾는 브랜드, 에이전시, 플랫폼과 함께합니다. 지금 무엇을 만들고 계신지 들려주세요.</span>
+    </p>
+    <a href="mailto:hello@kreatorsnetwork.com" class="btn btn-dark">
+      <span class="i18n-en">Get in touch</span><span class="i18n-ko">연락하기</span>
+      <span class="arrow">→</span>
+    </a>
   </section>
 
 </main>
@@ -386,27 +470,29 @@
           <img src="/assets/Kreators_logo(W).png" alt="KREATORS." />
         </a>
         <p class="ui" style="color:#9A9A9A; max-width: 360px;">
-          An entertainment-focused data marketing agency based in Seoul. We read industries and write what we learn.
+          <span class="i18n-en">An entertainment-focused data marketing agency based in Seoul. We read industries and write what we learn.</span>
+          <span class="i18n-ko">서울 기반의 엔터테인먼트 전문 데이터 마케팅 에이전시. 산업을 읽고, 배운 것을 씁니다.</span>
         </p>
       </div>
       <div>
-        <h4>Studio</h4>
+        <h4><span class="i18n-en">Studio</span><span class="i18n-ko">스튜디오</span></h4>
         <ul>
-          <li><a href="#">About</a></li>
+          <li><a href="#"><span class="i18n-en">About</span><span class="i18n-ko">소개</span></a></li>
           <li><a href="#">HYPEER</a></li>
-          <li><a href="hiring.html">Careers</a></li>
-          <li><a href="#contact">Contact</a></li>
+          <li><a href="#">Passport Seoul</a></li>
+          <li><a href="hiring.html"><span class="i18n-en">Careers</span><span class="i18n-ko">채용</span></a></li>
+          <li><a href="#contact"><span class="i18n-en">Contact</span><span class="i18n-ko">연락</span></a></li>
         </ul>
       </div>
       <div>
-        <h4>Work</h4>
+        <h4><span class="i18n-en">Work</span><span class="i18n-ko">작업</span></h4>
         <ul>
-          <li><a href="portfolio.html">Portfolio</a></li>
-          <li><a href="blog.html">Journal</a></li>
+          <li><a href="portfolio.html"><span class="i18n-en">Portfolio</span><span class="i18n-ko">포트폴리오</span></a></li>
+          <li><a href="blog.html"><span class="i18n-en">Journal</span><span class="i18n-ko">저널</span></a></li>
         </ul>
       </div>
       <div>
-        <h4>Follow</h4>
+        <h4><span class="i18n-en">Follow</span><span class="i18n-ko">팔로우</span></h4>
         <ul>
           <li><a href="#">Instagram</a></li>
           <li><a href="#">LinkedIn</a></li>
@@ -416,7 +502,7 @@
     </div>
     <div class="footer-bottom">
       <span>&copy; 2026 Kreators Network</span>
-      <span>Seoul &middot; Remote</span>
+      <span><span class="i18n-en">Seoul &middot; Remote</span><span class="i18n-ko">서울 &middot; 리모트</span></span>
     </div>
   </div>
 </footer>
@@ -435,7 +521,7 @@
       var p = Math.max(0, Math.min(1, y / (h * 0.85)));
       logo.style.opacity = String(1 - p);
       logo.style.transform = 'translateY(' + (-p * 56) + 'px) scale(' + (1 - p * 0.04) + ')';
-      if(cue){ cue.style.opacity = String(Math.max(0, 1 - p * 2.2)); }
+      if(cue){ cue.style.opacity = String(Math.max(0, 1 - p * 2.8)); }
       ticking = false;
     }
     function onScroll(){
@@ -447,6 +533,26 @@
     window.addEventListener('scroll', onScroll, {passive: true});
     window.addEventListener('resize', onScroll, {passive: true});
     update();
+  })();
+
+  // Language toggle — single-page i18n with localStorage persistence.
+  (function(){
+    var root = document.documentElement;
+    var KEY = 'kn-lang';
+    var valid = { en: true, ko: true };
+    try {
+      var stored = localStorage.getItem(KEY);
+      if(stored && valid[stored]) root.setAttribute('lang', stored);
+    } catch(e) { /* storage unavailable */ }
+    var btns = document.querySelectorAll('.lang-btn');
+    btns.forEach(function(btn){
+      btn.addEventListener('click', function(){
+        var next = btn.getAttribute('data-lang');
+        if(!valid[next]) return;
+        root.setAttribute('lang', next);
+        try { localStorage.setItem(KEY, next); } catch(e) { /* noop */ }
+      });
+    });
   })();
 </script>
 
