@@ -46,7 +46,7 @@
   .label{font-family:var(--font-sans);font-weight:600;font-size:var(--fs-label);line-height:1.2;letter-spacing:0.14em;text-transform:uppercase;}
 
   /* Nav */
-  .nav{position:sticky;top:0;z-index:50;background:var(--bg);border-bottom:1px solid var(--rule-strong);}
+  .nav{position:fixed;top:0;left:0;right:0;z-index:50;background:var(--bg);border-bottom:1px solid var(--rule-strong);}
   .nav-inner{display:flex;align-items:center;justify-content:space-between;height:72px;}
   .nav-brand{display:inline-flex;align-items:center;height:28px;}
   .nav-brand img{height:20px;width:auto;display:block;}
@@ -81,6 +81,59 @@
   .hypeer-island{background:var(--hypeer);color:var(--ink);padding:var(--s-9) var(--pad-x);margin:0 calc(-1 * var(--pad-x));}
 
   /* ---- PAGE-SPECIFIC ---- */
+
+  /* Intro — brand title card that fades on scroll */
+  .intro{
+    position: relative;
+    min-height: 100vh;
+    padding-top: 72px; /* offset for fixed nav so logo sits centered in the visible area */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg);
+    overflow: hidden;
+  }
+  .intro-logo{
+    will-change: opacity, transform;
+    transform-origin: 50% 50%;
+  }
+  .intro-logo img{
+    display: block;
+    width: clamp(260px, 48vw, 720px);
+    height: auto;
+  }
+  .intro-cue{
+    position: absolute;
+    bottom: var(--s-7);
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    font-family: var(--font-sans);
+    font-weight: 600;
+    font-size: 11px;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--muted);
+    will-change: opacity;
+  }
+  .intro-cue::after{
+    content: "";
+    width: 1px;
+    height: 36px;
+    background: var(--ink);
+    transform-origin: top center;
+    animation: introPulse 1.8s ease-in-out infinite;
+  }
+  @keyframes introPulse{
+    0%,100%{transform: scaleY(.3); opacity: .4;}
+    50%{transform: scaleY(1); opacity: 1;}
+  }
+  @media (prefers-reduced-motion: reduce){
+    .intro-cue::after{animation: none; transform: scaleY(1); opacity: 1;}
+  }
 
   /* Hero */
   .hero{
@@ -182,11 +235,21 @@
 </head>
 <body>
 
+<!-- INTRO — brand title card -->
+<section class="intro" aria-label="Kreators Network">
+  <div class="intro-logo">
+    <img src="/assets/Kreators_logo(B)_v2.png" alt="KREATORS." />
+  </div>
+  <div class="intro-cue" aria-hidden="true">
+    <span>Scroll</span>
+  </div>
+</section>
+
 <!-- NAV -->
 <nav class="nav">
   <div class="container nav-inner">
     <a href="main.html" class="nav-brand" aria-label="KREATORS home">
-      <img src="kn_logo/Kreators_logo(B)_v2.png" alt="KREATORS." />
+      <img src="/assets/Kreators_logo(B)_v2.png" alt="KREATORS." />
     </a>
     <div class="nav-menu">
       <a href="portfolio.html">Work</a>
@@ -272,7 +335,7 @@
     <div class="footer-grid">
       <div>
         <a href="main.html" class="footer-brand" aria-label="KREATORS home">
-          <img src="kn_logo/Kreators_logo(W).png" alt="KREATORS." />
+          <img src="/assets/Kreators_logo(W).png" alt="KREATORS." />
         </a>
         <p class="ui" style="color:#9A9A9A; max-width: 360px;">
           An entertainment-focused data marketing agency based in Seoul. We read industries and write what we learn.
@@ -309,6 +372,35 @@
     </div>
   </div>
 </footer>
+
+<script>
+  // Intro logo fades + subtly lifts as the user scrolls through the first viewport.
+  (function(){
+    var logo = document.querySelector('.intro-logo');
+    var cue  = document.querySelector('.intro-cue');
+    if(!logo) return;
+    var ticking = false;
+    function update(){
+      var h = window.innerHeight || document.documentElement.clientHeight;
+      var y = window.scrollY || window.pageYOffset || 0;
+      // Finish the transition slightly before the viewport ends (0.85 * h) for a cleaner handoff.
+      var p = Math.max(0, Math.min(1, y / (h * 0.85)));
+      logo.style.opacity = String(1 - p);
+      logo.style.transform = 'translateY(' + (-p * 56) + 'px) scale(' + (1 - p * 0.04) + ')';
+      if(cue){ cue.style.opacity = String(Math.max(0, 1 - p * 2.2)); }
+      ticking = false;
+    }
+    function onScroll(){
+      if(!ticking){
+        window.requestAnimationFrame(update);
+        ticking = true;
+      }
+    }
+    window.addEventListener('scroll', onScroll, {passive: true});
+    window.addEventListener('resize', onScroll, {passive: true});
+    update();
+  })();
+</script>
 
 </body>
 </html>
