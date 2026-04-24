@@ -1,20 +1,26 @@
 <!doctype html>
-<html lang="ko">
+<html lang="en">
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Work — KREATORS.</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;800;900&family=Newsreader:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet" />
+<!-- v2: Fraunces (display, editorial serif w/ opsz+SOFT+WONK) · Geist (UI sans) · Geist Mono (labels/numerics) · Newsreader (long-form reading) · Pretendard (Korean) -->
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT,WONK@0,9..144,300..900,0..100,0..1;1,9..144,300..900,0..100,0..1&family=Geist:wght@400;500;600;700;800;900&family=Geist+Mono:wght@400;500;600&family=Newsreader:ital,wght@0,400..700;1,400&display=swap" rel="stylesheet" />
 <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css" rel="stylesheet" />
 <style>
   :root{
     --bg:#FFFFFF;--ink:#0A0A0A;--ink-2:#1A1A1A;--muted:#6B6B6B;
     --rule:#E5E5E5;--rule-strong:#0A0A0A;
     --hypeer:#EF4A24;--hypeer-tint:#FCDED8;
-    --font-sans:"Inter","Pretendard Variable",system-ui,sans-serif;
+
+    /* v2 font stacks */
+    --font-sans:"Geist","Pretendard Variable",system-ui,sans-serif;
+    --font-display:"Fraunces","Pretendard Variable",Georgia,serif;
     --font-serif:"Newsreader","Pretendard Variable",Georgia,serif;
+    --font-mono:"Geist Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+
     --fs-display-xl:clamp(56px,9vw,120px);
     --fs-display-l:clamp(44px,6.4vw,84px);
     --fs-display-m:clamp(36px,4.4vw,60px);
@@ -29,20 +35,51 @@
   html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);}
   body{font-family:var(--font-sans);font-size:var(--fs-ui);line-height:1.5;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;}
   a{color:inherit;text-decoration:none;}
+  a.link{border-bottom:1px solid var(--ink);padding-bottom:1px;}
+  a.link:hover{color:var(--hypeer);border-color:var(--hypeer);}
   .container{max-width:var(--container);margin:0 auto;padding:0 var(--pad-x);}
-  .display-l{font-family:var(--font-sans);font-weight:900;font-size:var(--fs-display-l);line-height:1.0;letter-spacing:-0.03em;}
+
+  /* Type — v2 (refined)
+     Display scale is Geist across the site. Fraunces is reserved exclusively for
+     the main-page hero copy via .hero-headline; no other headline uses it. */
+  .display-xl{font-family:var(--font-sans);font-weight:900;font-size:var(--fs-display-xl);line-height:0.95;letter-spacing:-0.035em;}
+  /* Sub-page hero — smaller and lighter than main.html's hero so the landing page stays the boldest moment. */
+  .display-l{font-family:var(--font-sans);font-weight:700;font-size:clamp(36px,5vw,64px);line-height:1.08;letter-spacing:-0.02em;}
+  .display-m{font-family:var(--font-sans);font-weight:800;font-size:var(--fs-display-m);line-height:1.05;letter-spacing:-0.025em;}
+  .h1{font-family:var(--font-sans);font-weight:800;font-size:var(--fs-h1);line-height:1.1;letter-spacing:-0.02em;}
   .h2{font-family:var(--font-sans);font-weight:800;font-size:var(--fs-h2);line-height:1.15;letter-spacing:-0.015em;}
+
+  /* Reserved Fraunces override — opt-in class, unused on this page but kept for consistency. */
+  .hero-headline{
+    font-family:var(--font-display);
+    font-weight:800;
+    letter-spacing:-0.02em;
+    line-height:1.02;
+    font-variation-settings:"opsz" 144, "SOFT" 40, "WONK" 1;
+  }
+  .h3{font-family:var(--font-sans);font-weight:700;font-size:var(--fs-h3);line-height:1.25;letter-spacing:-0.01em;}
   .lead{font-family:var(--font-serif);font-weight:400;font-size:var(--fs-lead);line-height:1.55;}
   .body{font-family:var(--font-serif);font-weight:400;font-size:var(--fs-body);line-height:1.7;color:var(--ink-2);}
   .ui{font-family:var(--font-sans);font-weight:500;font-size:var(--fs-ui);line-height:1.4;}
-  .label{font-family:var(--font-sans);font-weight:600;font-size:var(--fs-label);line-height:1.2;letter-spacing:0.14em;text-transform:uppercase;}
-  .btn{display:inline-flex;align-items:center;gap:10px;font-family:var(--font-sans);font-weight:600;font-size:15px;padding:14px 22px;border:1px solid var(--ink);background:var(--bg);color:var(--ink);cursor:pointer;transition:all .15s ease;}
-  .btn:hover{background:var(--ink);color:var(--bg);}
-  .btn .arrow{display:inline-block;transform:translateX(0);transition:transform .15s ease;}
-  .btn:hover .arrow{transform:translateX(4px);}
+  /* Label — v2 uses Geist Mono for the "data signal" tone */
+  .label{font-family:var(--font-mono);font-weight:500;font-size:var(--fs-label);line-height:1.2;letter-spacing:0.08em;text-transform:uppercase;}
 
-  /* Nav */
-  .nav{position:sticky;top:0;z-index:50;background:var(--bg);border-bottom:1px solid var(--rule-strong);}
+  /* Readability — balanced headings, no orphans, Korean word-break */
+  .display-xl,.display-l,.display-m,.h1,.h2,.h3{text-wrap:balance;}
+  .lead,.body{text-wrap:pretty;}
+  html[lang="ko"] .lead,html[lang="ko"] .body{word-break:keep-all;overflow-wrap:break-word;}
+  .btn,.filter-btn,.nav-cta{white-space:nowrap;}
+
+  /* i18n visibility */
+  html[lang="en"] .i18n-ko{display:none;}
+  html[lang="en"] .i18n-ja{display:none;}
+  html[lang="ko"] .i18n-en{display:none;}
+  html[lang="ko"] .i18n-ja{display:none;}
+  html[lang="ja"] .i18n-en{display:none;}
+  html[lang="ja"] .i18n-ko{display:none;}
+
+  /* Nav — matches main.html */
+  .nav{position:fixed;top:0;left:0;right:0;z-index:50;background:var(--bg);border-bottom:1px solid var(--rule-strong);}
   .nav-inner{display:flex;align-items:center;justify-content:space-between;height:72px;}
   .nav-brand{display:inline-flex;align-items:center;height:28px;}
   .nav-brand img{height:20px;width:auto;display:block;}
@@ -50,26 +87,36 @@
   .nav-menu a{font-family:var(--font-sans);font-weight:500;font-size:15px;color:var(--ink);}
   .nav-menu a:hover{color:var(--hypeer);}
   .nav-menu a.active{border-bottom:2px solid var(--ink);padding-bottom:2px;}
+  .nav-actions{display:flex;align-items:center;gap:var(--s-4);}
+  .lang-toggle{display:inline-flex;align-items:center;gap:6px;font-family:var(--font-sans);font-weight:600;font-size:12px;letter-spacing:0.14em;}
+  .lang-toggle .lang-sep{color:var(--rule);}
+  .lang-btn{background:transparent;border:0;padding:4px 0;color:var(--muted);font:inherit;letter-spacing:inherit;cursor:pointer;transition:color .15s ease;}
+  .lang-btn:hover{color:var(--ink);}
+  html[lang="en"] .lang-btn[data-lang="en"],
+  html[lang="ko"] .lang-btn[data-lang="ko"],
+  html[lang="ja"] .lang-btn[data-lang="ja"]{color:var(--ink);text-decoration:underline;text-underline-offset:4px;}
   .nav-cta{font-family:var(--font-sans);font-weight:600;font-size:14px;padding:10px 18px;border:1px solid var(--ink);border-radius:0;}
   .nav-cta:hover{background:var(--ink);color:var(--bg);}
 
-  /* Footer */
+  /* Footer — matches main.html */
   .footer{margin-top:var(--s-10);background:var(--ink);color:var(--bg);padding:var(--s-9) 0 var(--s-6);}
   .footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:var(--s-7);}
-  .footer h4{font-family:var(--font-sans);font-weight:600;font-size:13px;letter-spacing:0.14em;text-transform:uppercase;color:#9A9A9A;margin:0 0 var(--s-4);}
+  .footer h4{font-family:var(--font-mono);font-weight:500;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#9A9A9A;margin:0 0 var(--s-4);}
   .footer ul{list-style:none;padding:0;margin:0;display:grid;gap:10px;}
-  .footer ul a{font-size:15px;color:var(--bg);}
+  .footer ul a{font-family:var(--font-sans);font-size:15px;color:var(--bg);}
   .footer ul a:hover{color:var(--hypeer);}
   .footer-brand{display:block;margin:0 0 var(--s-4);}
   .footer-brand img{height:32px;width:auto;display:block;}
-  .footer-bottom{margin-top:var(--s-8);padding-top:var(--s-4);border-top:1px solid #2A2A2A;display:flex;justify-content:space-between;font-size:13px;color:#6B6B6B;}
+  .footer-bottom{margin-top:var(--s-8);padding-top:var(--s-4);border-top:1px solid #2A2A2A;display:flex;justify-content:space-between;font-family:var(--font-mono);font-size:12px;letter-spacing:0.04em;color:#6B6B6B;}
   @media(max-width:800px){.footer-grid{grid-template-columns:1fr 1fr;}}
 
-  /* Tags */
-  .tag{display:inline-block;font-family:var(--font-sans);font-weight:600;font-size:11px;letter-spacing:0.14em;text-transform:uppercase;padding:4px 10px;border:1px solid var(--ink);color:var(--ink);background:transparent;}
+  /* Tags — v2: mono for consistency with .label (data-signal tone) */
+  .tag{display:inline-block;font-family:var(--font-mono);font-weight:500;font-size:11px;letter-spacing:0.06em;text-transform:uppercase;padding:4px 10px;border:1px solid var(--ink);color:var(--ink);background:transparent;}
   .tag.tag-hypeer{border-color:var(--hypeer);color:var(--hypeer);}
 
   /* ---- PAGE: PORTFOLIO ---- */
+  .page-content{padding-top:72px;} /* offset for fixed nav */
+
   .page-header{
     padding:var(--s-9) 0 var(--s-7);
     border-bottom:1px solid var(--rule);
@@ -93,6 +140,36 @@
   }
   .filter-btn:hover,.filter-btn.active{border-color:var(--ink);color:var(--ink);background:var(--bg);}
 
+  /* Pagination — dynamically rendered by JS based on filtered card count. */
+  .pagination{
+    display:flex;align-items:center;justify-content:center;
+    gap:var(--s-2);
+    margin-top:var(--s-8);
+    padding-top:var(--s-7);
+    border-top:1px solid var(--rule);
+    flex-wrap:wrap;
+  }
+  .pagination.is-hidden{display:none;}
+  .page-btn{
+    display:inline-flex;align-items:center;justify-content:center;
+    min-width:40px;height:40px;padding:0 12px;
+    font-family:var(--font-mono);font-weight:500;font-size:13px;
+    letter-spacing:0.04em;
+    color:var(--muted);background:transparent;
+    border:1px solid transparent;cursor:pointer;
+    transition:all .15s ease;
+  }
+  .page-btn:hover{color:var(--ink);}
+  .page-btn.active{color:var(--ink);border-color:var(--ink);}
+  .page-btn[disabled]{opacity:0.3;cursor:not-allowed;}
+  .page-btn.arrow{padding:0 14px;letter-spacing:0.02em;}
+  .page-ellipsis{color:var(--muted);padding:0 var(--s-1);user-select:none;}
+  @media(max-width:700px){
+    .pagination{gap:var(--s-1);}
+    .page-btn{min-width:36px;height:36px;padding:0 8px;font-size:13px;}
+    .page-btn.arrow{padding:0 10px;}
+  }
+
   /* Project grid */
   .project-grid{
     display:grid;
@@ -104,6 +181,7 @@
 
   .project-card{display:block;transition:opacity .15s ease;}
   .project-card:hover{opacity:0.75;}
+  .project-card.is-hidden{display:none;}
   .project-thumb{
     aspect-ratio:16/10;
     background:#F1F1F1;
@@ -146,64 +224,84 @@
 <nav class="nav">
   <div class="container nav-inner">
     <a href="main.html" class="nav-brand" aria-label="KREATORS home">
-      <img src="kn_logo/Kreators_logo(B)_v2.png" alt="KREATORS." />
+      <img src="/assets/Kreators_logo(B)_v2.png" alt="KREATORS." />
     </a>
     <div class="nav-menu">
       <a href="portfolio.html" class="active">Work</a>
-      <a href="#">Studio</a>
       <a href="blog.html">Journal</a>
       <a href="hiring.html">Careers</a>
     </div>
-    <a href="main.html#contact" class="nav-cta">Contact</a>
+    <div class="nav-actions">
+      <div class="lang-toggle" role="group" aria-label="Language">
+        <button type="button" class="lang-btn" data-lang="en">EN</button>
+        <span class="lang-sep" aria-hidden="true">·</span>
+        <button type="button" class="lang-btn" data-lang="ko">KR</button>
+        <span class="lang-sep" aria-hidden="true">·</span>
+        <button type="button" class="lang-btn" data-lang="ja">JP</button>
+      </div>
+      <a href="main.html#contact" class="nav-cta">Contact</a>
+    </div>
   </div>
 </nav>
 
+<div class="page-content">
 <main class="container">
 
-  <!-- PAGE HEADER -->
+  <!-- PAGE HEADER — i18n applied -->
   <section class="page-header">
-    <div class="label">Work</div>
-    <h1 class="display-l">Selected projects.</h1>
-    <p class="lead">Research, campaigns, and data strategies we've delivered for entertainment brands and agencies across music, film, and IP.</p>
+    <div class="label">
+      <span class="i18n-en">Work</span>
+      <span class="i18n-ko">작업</span>
+      <span class="i18n-ja">実績</span>
+    </div>
+    <h1 class="display-l">
+      <span class="i18n-en">Signals into stories.</span>
+      <span class="i18n-ko">시그널을 스토리로.</span>
+      <span class="i18n-ja">シグナルをストーリーに。</span>
+    </h1>
+    <p class="lead">
+      <span class="i18n-en">A selection of projects where streaming data, fandom behavior, and market signals became campaigns, content, and strategy for entertainment brands.</span>
+      <span class="i18n-ko">스트리밍 데이터, 팬덤의 움직임, 시장의 신호가 엔터테인먼트 브랜드의 캠페인과 콘텐츠, 전략으로 이어진 프로젝트들.</span>
+      <span class="i18n-ja">ストリーミングデータ、ファンダムの行動、市場シグナルが、エンターテインメントブランドのキャンペーン、コンテンツ、戦略へと結実したプロジェクト。</span>
+    </p>
   </section>
 
-  <!-- FILTERS -->
+  <!-- FILTERS — English-only across all locales (brand/product names kept untranslated). data-filter values map to CMS `category` field. -->
   <div class="filters">
-    <button class="filter-btn active">All</button>
-    <button class="filter-btn">Research</button>
-    <button class="filter-btn">Campaign</button>
-    <button class="filter-btn">Data Strategy</button>
-    <button class="filter-btn">HYPEER</button>
+    <button class="filter-btn active" data-filter="all">All</button>
+    <button class="filter-btn" data-filter="hypeer-campaign">HYPEER Campaign</button>
+    <button class="filter-btn" data-filter="passport-seoul-research">Passport Seoul Research</button>
+    <button class="filter-btn" data-filter="contents">Contents</button>
   </div>
 
-  <!-- PROJECT GRID -->
+  <!-- PROJECT GRID — content NOT i18n'd (CMS-managed in production) -->
   <div class="project-grid">
 
-    <a href="#" class="project-card">
+    <a href="#" class="project-card" data-category="passport-seoul-research">
       <div class="project-thumb dark">
         <span class="project-thumb-label">FANDOM<br/>MIGRATION</span>
       </div>
       <div class="project-meta">
-        <span class="tag">Research</span>
+        <span class="tag">Passport Seoul</span>
         <span class="label">2026</span>
       </div>
       <h3 class="project-title">K-pop fandom platform migration: a two-year longitudinal study</h3>
       <p class="project-desc">Mapping where listening, sharing, and purchasing behavior actually lives across 12 platforms and 3 markets.</p>
     </a>
 
-    <a href="#" class="project-card">
+    <a href="#" class="project-card" data-category="hypeer-campaign">
       <div class="project-thumb">
         <span class="project-thumb-label">GLOBAL<br/>ROLLOUT</span>
       </div>
       <div class="project-meta">
-        <span class="tag">Campaign</span>
+        <span class="tag tag-hypeer">HYPEER</span>
         <span class="label">2025</span>
       </div>
       <h3 class="project-title">Streaming signals to brand partnership: 14-market launch playbook</h3>
       <p class="project-desc">Turning real-time platform data into a coordinated global campaign for a top-tier entertainment IP.</p>
     </a>
 
-    <a href="#" class="project-card">
+    <a href="#" class="project-card" data-category="hypeer-campaign">
       <div class="project-thumb hypeer">
         <span class="project-thumb-label">SOCIAL<br/>ENGINE</span>
       </div>
@@ -215,31 +313,31 @@
       <p class="project-desc">HYPEER designed and operated a 6-month social content engine across TikTok, Instagram, and Weverse.</p>
     </a>
 
-    <a href="#" class="project-card">
+    <a href="#" class="project-card" data-category="passport-seoul-research">
       <div class="project-thumb dark">
         <span class="project-thumb-label">AUDIENCE<br/>BLUEPRINT</span>
       </div>
       <div class="project-meta">
-        <span class="tag">Data Strategy</span>
+        <span class="tag">Passport Seoul</span>
         <span class="label">2025</span>
       </div>
       <h3 class="project-title">Audience segmentation blueprint for OTT content studio</h3>
       <p class="project-desc">Built a behavioral segmentation model that identified four underserved audience clusters for original content development.</p>
     </a>
 
-    <a href="#" class="project-card">
+    <a href="#" class="project-card" data-category="contents">
       <div class="project-thumb">
         <span class="project-thumb-label">TREND<br/>RADAR</span>
       </div>
       <div class="project-meta">
-        <span class="tag">Research</span>
+        <span class="tag">Contents</span>
         <span class="label">2024</span>
       </div>
       <h3 class="project-title">Entertainment trend radar: quarterly data briefing series</h3>
       <p class="project-desc">An ongoing subscription product delivering cross-platform trend analysis to agency partners every quarter.</p>
     </a>
 
-    <a href="#" class="project-card">
+    <a href="#" class="project-card" data-category="hypeer-campaign">
       <div class="project-thumb hypeer">
         <span class="project-thumb-label">CREATOR<br/>COLLAB</span>
       </div>
@@ -251,17 +349,45 @@
       <p class="project-desc">HYPEER matched 12 creators with a beauty brand launch tied to a K-pop comeback, generating 48M organic impressions.</p>
     </a>
 
+    <a href="#" class="project-card" data-category="passport-seoul-research">
+      <div class="project-thumb dark">
+        <span class="project-thumb-label">WEBTOON<br/>PIPELINE</span>
+      </div>
+      <div class="project-meta">
+        <span class="tag">Passport Seoul</span>
+        <span class="label">2024</span>
+      </div>
+      <h3 class="project-title">Webtoon-to-screen IP adaptation landscape: a market pipeline study</h3>
+      <p class="project-desc">Tracking the commercial lifecycle of 40+ webtoon properties from platform serialization to global studio deal.</p>
+    </a>
+
+    <a href="#" class="project-card" data-category="contents">
+      <div class="project-thumb">
+        <span class="project-thumb-label">STREAMING<br/>ECONOMY</span>
+      </div>
+      <div class="project-meta">
+        <span class="tag">Contents</span>
+        <span class="label">2023</span>
+      </div>
+      <h3 class="project-title">The state of Korean streaming economics: annual data report</h3>
+      <p class="project-desc">A yearly publication examining revenue flows, platform power, and artist economics across Korean entertainment streaming.</p>
+    </a>
+
   </div>
 
-</main>
+  <!-- PAGINATION — dynamically populated by JS. Hidden when total pages ≤ 1. -->
+  <nav class="pagination is-hidden" aria-label="Portfolio pagination"></nav>
 
-<!-- FOOTER -->
+</main>
+</div>
+
+<!-- FOOTER — English-only -->
 <footer class="footer">
   <div class="container">
     <div class="footer-grid">
       <div>
         <a href="main.html" class="footer-brand" aria-label="KREATORS home">
-          <img src="kn_logo/Kreators_logo(W).png" alt="KREATORS." />
+          <img src="/assets/Kreators_logo(W).png" alt="KREATORS." />
         </a>
         <p class="ui" style="color:#9A9A9A; max-width: 360px;">
           An entertainment-focused data marketing agency based in Seoul. We read industries and write what we learn.
@@ -270,17 +396,18 @@
       <div>
         <h4>Studio</h4>
         <ul>
-          <li><a href="#">About</a></li>
-          <li><a href="#">HYPEER</a></li>
-          <li><a href="hiring.html">Careers</a></li>
-          <li><a href="main.html#contact">Contact</a></li>
+          <li><a href="main.html#hypeer">HYPEER</a></li>
+          <li><a href="main.html#passport-seoul">Passport Seoul</a></li>
+          <li><a href="#">Talented</a></li>
         </ul>
       </div>
       <div>
-        <h4>Work</h4>
+        <h4>Index</h4>
         <ul>
-          <li><a href="portfolio.html">Portfolio</a></li>
+          <li><a href="portfolio.html">Work</a></li>
           <li><a href="blog.html">Journal</a></li>
+          <li><a href="hiring.html">Careers</a></li>
+          <li><a href="main.html#contact">Contact</a></li>
         </ul>
       </div>
       <div>
@@ -298,6 +425,166 @@
     </div>
   </div>
 </footer>
+
+<script>
+  // Language toggle — shared across all pages, persists via localStorage.
+  (function(){
+    var root = document.documentElement;
+    var KEY = 'kn-lang';
+    var valid = { en: true, ko: true, ja: true };
+    try {
+      var stored = localStorage.getItem(KEY);
+      if(stored && valid[stored]) root.setAttribute('lang', stored);
+    } catch(e) {}
+    var btns = document.querySelectorAll('.lang-btn');
+    btns.forEach(function(btn){
+      btn.addEventListener('click', function(){
+        var next = btn.getAttribute('data-lang');
+        if(!valid[next]) return;
+        root.setAttribute('lang', next);
+        try { localStorage.setItem(KEY, next); } catch(e) {}
+      });
+    });
+  })();
+
+  // Portfolio filter + pagination — unified state machine.
+  // Filter narrows the card pool by data-category. Pagination slices the narrowed pool by PER_PAGE.
+  // Both are reflected in URL as ?category=<x>&page=<n> so links are shareable and back/forward works.
+  // Stage A (static HTML): card count comes from DOM.
+  // Stage B (CMS-connected): same logic, but card count comes from Payload API response — no code change needed here.
+  (function(){
+    var PER_PAGE = 6;
+    var filterBtns = document.querySelectorAll('.filter-btn');
+    var cards = Array.prototype.slice.call(document.querySelectorAll('.project-card'));
+    var pagination = document.querySelector('.pagination');
+    if(!filterBtns.length || !cards.length || !pagination) return;
+
+    var state = { filter: 'all', page: 1 };
+
+    function getScopedCards(){
+      return cards.filter(function(c){
+        return state.filter === 'all' || c.getAttribute('data-category') === state.filter;
+      });
+    }
+
+    function computePageList(current, total){
+      // Compact page list: 1 … (current-1) current (current+1) … total.
+      // If total ≤ 7, show all numbers; otherwise collapse with ellipsis.
+      if(total <= 7){
+        var arr = [];
+        for(var i = 1; i <= total; i++) arr.push(i);
+        return arr;
+      }
+      var result = [1];
+      if(current > 3) result.push('ellipsis');
+      var s = Math.max(2, current - 1);
+      var e = Math.min(total - 1, current + 1);
+      for(var i = s; i <= e; i++) result.push(i);
+      if(current < total - 2) result.push('ellipsis');
+      result.push(total);
+      return result;
+    }
+
+    function renderPagination(totalPages){
+      if(totalPages <= 1){
+        pagination.classList.add('is-hidden');
+        pagination.innerHTML = '';
+        return;
+      }
+      pagination.classList.remove('is-hidden');
+
+      var parts = [];
+      parts.push(
+        '<button type="button" class="page-btn arrow" data-nav="prev"' +
+        (state.page === 1 ? ' disabled' : '') +
+        ' aria-label="Previous page">&larr; Prev</button>'
+      );
+      computePageList(state.page, totalPages).forEach(function(p){
+        if(p === 'ellipsis'){
+          parts.push('<span class="page-ellipsis" aria-hidden="true">&hellip;</span>');
+        } else {
+          parts.push(
+            '<button type="button" class="page-btn' + (p === state.page ? ' active' : '') +
+            '" data-page="' + p + '" aria-label="Page ' + p + '"' +
+            (p === state.page ? ' aria-current="page"' : '') + '>' + p + '</button>'
+          );
+        }
+      });
+      parts.push(
+        '<button type="button" class="page-btn arrow" data-nav="next"' +
+        (state.page === totalPages ? ' disabled' : '') +
+        ' aria-label="Next page">Next &rarr;</button>'
+      );
+      pagination.innerHTML = parts.join('');
+
+      pagination.querySelectorAll('.page-btn').forEach(function(btn){
+        btn.addEventListener('click', function(){
+          if(btn.hasAttribute('disabled')) return;
+          var nav = btn.getAttribute('data-nav');
+          var page = btn.getAttribute('data-page');
+          if(nav === 'prev' && state.page > 1) state.page--;
+          else if(nav === 'next' && state.page < totalPages) state.page++;
+          else if(page) state.page = parseInt(page, 10);
+          render();
+          // Scroll to top of filters so user sees the new page in context.
+          var filtersEl = document.querySelector('.filters');
+          if(filtersEl) filtersEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+      });
+    }
+
+    function syncURL(){
+      try {
+        var url = new URL(window.location.href);
+        if(state.filter === 'all') url.searchParams.delete('category');
+        else url.searchParams.set('category', state.filter);
+        if(state.page === 1) url.searchParams.delete('page');
+        else url.searchParams.set('page', state.page);
+        window.history.replaceState({}, '', url);
+      } catch(e) {}
+    }
+
+    function render(){
+      filterBtns.forEach(function(b){
+        b.classList.toggle('active', b.getAttribute('data-filter') === state.filter);
+      });
+      var scoped = getScopedCards();
+      var totalPages = Math.max(1, Math.ceil(scoped.length / PER_PAGE));
+      if(state.page > totalPages) state.page = totalPages;
+      if(state.page < 1) state.page = 1;
+      var start = (state.page - 1) * PER_PAGE;
+      var end = start + PER_PAGE;
+
+      cards.forEach(function(c){ c.classList.add('is-hidden'); });
+      scoped.slice(start, end).forEach(function(c){ c.classList.remove('is-hidden'); });
+
+      renderPagination(totalPages);
+      syncURL();
+    }
+
+    // Initialize from URL (?category=<x>&page=<n>)
+    try {
+      var params = new URLSearchParams(window.location.search);
+      var q = params.get('category');
+      var p = params.get('page');
+      if(q) state.filter = q;
+      if(p) {
+        var parsed = parseInt(p, 10);
+        if(!isNaN(parsed) && parsed >= 1) state.page = parsed;
+      }
+    } catch(e) {}
+
+    filterBtns.forEach(function(btn){
+      btn.addEventListener('click', function(){
+        state.filter = btn.getAttribute('data-filter') || 'all';
+        state.page = 1; // reset to first page on filter change
+        render();
+      });
+    });
+
+    render();
+  })();
+</script>
 
 </body>
 </html>
