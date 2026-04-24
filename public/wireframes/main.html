@@ -6,15 +6,18 @@
 <title>KREATORS. — Entertainment Data Marketing Agency</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;800;900&family=Newsreader:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT,WONK@0,9..144,300..900,0..100,0..1;1,9..144,300..900,0..100,0..1&family=Geist:wght@400;500;600;700;800;900&family=Geist+Mono:wght@400;500;600&family=Newsreader:ital,wght@0,400..700;1,400&display=swap" rel="stylesheet" />
 <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css" rel="stylesheet" />
 <style>
   :root{
     --bg:#FFFFFF;--ink:#0A0A0A;--ink-2:#1A1A1A;--muted:#6B6B6B;
     --rule:#E5E5E5;--rule-strong:#0A0A0A;
     --hypeer:#EF4A24;--hypeer-tint:#FCDED8;
-    --font-sans:"Inter","Pretendard Variable",system-ui,sans-serif;
+    /* v2 font stacks */
+    --font-sans:"Geist","Pretendard Variable",system-ui,sans-serif;
+    --font-display:"Fraunces","Pretendard Variable",Georgia,serif;
     --font-serif:"Newsreader","Pretendard Variable",Georgia,serif;
+    --font-mono:"Geist Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
     --fs-display-xl:clamp(56px,9vw,120px);
     --fs-display-l:clamp(44px,6.4vw,84px);
     --fs-display-m:clamp(36px,4.4vw,60px);
@@ -33,18 +36,58 @@
   a.link:hover{color:var(--hypeer);border-color:var(--hypeer);}
   .container{max-width:var(--container);margin:0 auto;padding:0 var(--pad-x);}
 
-  /* Type */
+  /* Type — v2 (refined)
+     Display scale is Geist by default for architectural weight and consistency.
+     Fraunces is reserved for a single editorial moment — the main hero copy
+     (.hero-headline) — to prevent the serif from feeling overused. */
   .display-xl{font-family:var(--font-sans);font-weight:900;font-size:var(--fs-display-xl);line-height:0.95;letter-spacing:-0.035em;}
   .display-l{font-family:var(--font-sans);font-weight:900;font-size:var(--fs-display-l);line-height:1.0;letter-spacing:-0.03em;}
   .display-m{font-family:var(--font-sans);font-weight:800;font-size:var(--fs-display-m);line-height:1.05;letter-spacing:-0.025em;}
   .h1{font-family:var(--font-sans);font-weight:800;font-size:var(--fs-h1);line-height:1.1;letter-spacing:-0.02em;}
   .h2{font-family:var(--font-sans);font-weight:800;font-size:var(--fs-h2);line-height:1.15;letter-spacing:-0.015em;}
+
+  /* Fraunces override — opt-in via .hero-headline, applied only to the main-page hero. */
+  .hero-headline{
+    font-family:var(--font-display);
+    font-weight:800;
+    letter-spacing:-0.02em;
+    line-height:1.02;
+    font-variation-settings:"opsz" 144, "SOFT" 40, "WONK" 1;
+  }
   .h3{font-family:var(--font-sans);font-weight:700;font-size:var(--fs-h3);line-height:1.25;letter-spacing:-0.01em;}
   .lead{font-family:var(--font-serif);font-weight:400;font-size:var(--fs-lead);line-height:1.55;}
   .body{font-family:var(--font-serif);font-weight:400;font-size:var(--fs-body);line-height:1.7;color:var(--ink-2);}
   .ui{font-family:var(--font-sans);font-weight:500;font-size:var(--fs-ui);line-height:1.4;}
-  .label{font-family:var(--font-sans);font-weight:600;font-size:var(--fs-label);line-height:1.2;letter-spacing:0.14em;text-transform:uppercase;}
-  .sub-headline{font-family:var(--font-serif);font-weight:400;font-size:clamp(22px,2.4vw,32px);line-height:1.3;max-width:800px;margin:0 0 var(--s-6);}
+  /* Label — v2 uses Geist Mono for the "data signal" tone */
+  .label{font-family:var(--font-mono);font-weight:500;font-size:var(--fs-label);line-height:1.2;letter-spacing:0.08em;text-transform:uppercase;}
+  .sub-headline{font-family:var(--font-serif);font-weight:400;font-size:clamp(22px,2.4vw,32px);line-height:1.3;max-width:800px;margin:0 0 var(--s-6);transition:font-weight .2s ease;}
+  .sub-headline:hover{font-weight:600;}
+  /* In-headline definition line — matches .sub-headline's serif treatment for typographic unity with the tagline below */
+  .headline-def{display:block;font-family:var(--font-serif);font-weight:400;font-size:clamp(22px,2.4vw,32px);line-height:1.3;margin-top:var(--s-2);}
+
+  /* Hero headline word-level hover accents — introduces ink + HYPEER orange on interaction */
+  .hl-signal, .hl-strategy{
+    padding: 0 0.08em;
+    transition: background-color .15s ease, color .15s ease;
+    box-decoration-break: clone;
+    -webkit-box-decoration-break: clone;
+  }
+  .hl-signal:hover{
+    background-color: var(--ink);
+    color: var(--bg);
+  }
+  .hl-strategy:hover{
+    background-color: var(--hypeer);
+    color: var(--ink);
+  }
+
+  /* Readability — balanced headings, no orphans, Korean word-break */
+  .display-xl,.display-l,.display-m,.h1,.h2,.h3{text-wrap:balance;}
+  .lead,.body,.sub-headline,.manifesto-statement{text-wrap:pretty;}
+  html[lang="ko"] .lead,html[lang="ko"] .body,html[lang="ko"] .sub-headline,
+  html[lang="ko"] .manifesto-statement,html[lang="ko"] .capability p,
+  html[lang="ko"] .value p{word-break:keep-all;overflow-wrap:break-word;}
+  .btn,.nav-cta{white-space:nowrap;}
 
   /* Nav */
   .nav{position:fixed;top:0;left:0;right:0;z-index:50;background:var(--bg);border-bottom:1px solid var(--rule-strong);}
@@ -71,17 +114,32 @@
   /* Footer */
   .footer{margin-top:0;background:var(--ink);color:var(--bg);padding:var(--s-9) 0 var(--s-6);}
   .footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:var(--s-7);}
-  .footer h4{font-family:var(--font-sans);font-weight:600;font-size:13px;letter-spacing:0.14em;text-transform:uppercase;color:#9A9A9A;margin:0 0 var(--s-4);}
+  .footer h4{font-family:var(--font-mono);font-weight:500;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#9A9A9A;margin:0 0 var(--s-4);}
   .footer ul{list-style:none;padding:0;margin:0;display:grid;gap:10px;}
-  .footer ul a{font-size:15px;color:var(--bg);}
+  .footer ul a{font-family:var(--font-sans);font-size:15px;color:var(--bg);}
   .footer ul a:hover{color:var(--hypeer);}
   .footer-brand{display:block;margin:0 0 var(--s-4);}
   .footer-brand img{height:32px;width:auto;display:block;}
-  .footer-bottom{margin-top:var(--s-8);padding-top:var(--s-4);border-top:1px solid #2A2A2A;display:flex;justify-content:space-between;font-size:13px;color:#6B6B6B;}
+  .footer-bottom{margin-top:var(--s-8);padding-top:var(--s-4);border-top:1px solid #2A2A2A;display:flex;justify-content:space-between;font-family:var(--font-mono);font-size:12px;letter-spacing:0.04em;color:#6B6B6B;}
   @media(max-width:800px){.footer-grid{grid-template-columns:1fr 1fr;}}
 
   /* HYPEER Island */
   .hypeer-island{background:var(--hypeer);color:var(--ink);padding:var(--s-9) var(--pad-x);margin:0 calc(-1 * var(--pad-x));}
+
+  /* Sub-brand headline weight override
+     Rationale — KREATORS (master brand) speaks in Fraunces (editorial voice);
+     HYPEER and Passport Seoul are activation/strategic product voices that need
+     architectural weight. Switching their .display-m to Geist Black gives the
+     sub-brand announcements more gravity without losing the Fraunces italic
+     subtitle (.headline-def) that still provides the creative counterpoint. */
+  .hypeer-island .display-m,
+  .passport-island .display-m{
+    font-family: var(--font-sans);
+    font-weight: 900;
+    letter-spacing: -0.025em;
+    line-height: 1.02;
+    font-variation-settings: normal;
+  }
 
   /* ---- PAGE-SPECIFIC ---- */
 
@@ -114,10 +172,11 @@
     flex-direction: column;
     align-items: center;
     gap: 12px;
-    font-family: var(--font-sans);
-    font-weight: 600;
+    /* v2: mono for the scroll cue — subtle technical signal */
+    font-family: var(--font-mono);
+    font-weight: 500;
     font-size: 11px;
-    letter-spacing: 0.24em;
+    letter-spacing: 0.18em;
     text-transform: uppercase;
     color: var(--muted);
     will-change: opacity;
@@ -180,12 +239,38 @@
   }
   .capability{
     border-top: 1px solid var(--rule);
-    padding-top: var(--s-4);
+    padding: var(--s-4);
+    transition: background-color .15s ease, color .15s ease, border-top-color .15s ease;
   }
+  .capability-num,
+  .capability p{
+    transition: color .15s ease;
+  }
+  /* Default hover (cards 1 & 3) — ink block with white text */
+  .capability:hover{
+    background-color: var(--ink);
+    color: var(--bg);
+    border-top-color: var(--ink);
+  }
+  .capability:hover .capability-num,
+  .capability:hover p{
+    color: var(--bg);
+  }
+  /* Card #2 (Strategic Marketing) — HYPEER orange block with ink text */
+  .capability:nth-child(2):hover{
+    background-color: var(--hypeer);
+    color: var(--ink);
+    border-top-color: var(--hypeer);
+  }
+  .capability:nth-child(2):hover .capability-num,
+  .capability:nth-child(2):hover p{
+    color: var(--ink);
+  }
+  /* v2: capability numbers now in Geist Mono — reads like a data index */
   .capability-num{
-    font-family: var(--font-sans);
-    font-weight: 800;
-    font-size: 13px;
+    font-family: var(--font-mono);
+    font-weight: 500;
+    font-size: 12px;
     letter-spacing: 0.08em;
     color: var(--muted);
     margin-bottom: var(--s-2);
@@ -253,10 +338,11 @@
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    font-family: var(--font-sans);
-    font-weight: 600;
+    /* v2: mono for the locale switch reads as a system indicator */
+    font-family: var(--font-mono);
+    font-weight: 500;
     font-size: 12px;
-    letter-spacing: 0.14em;
+    letter-spacing: 0.08em;
   }
   .lang-toggle .lang-sep{
     color: var(--rule);
@@ -273,14 +359,19 @@
   }
   .lang-btn:hover{ color: var(--ink); }
   html[lang="en"] .lang-btn[data-lang="en"],
-  html[lang="ko"] .lang-btn[data-lang="ko"]{
+  html[lang="ko"] .lang-btn[data-lang="ko"],
+  html[lang="ja"] .lang-btn[data-lang="ja"]{
     color: var(--ink);
     text-decoration: underline;
     text-underline-offset: 4px;
   }
   /* show only the text matching the active document language */
   html[lang="en"] .i18n-ko{ display: none; }
+  html[lang="en"] .i18n-ja{ display: none; }
   html[lang="ko"] .i18n-en{ display: none; }
+  html[lang="ko"] .i18n-ja{ display: none; }
+  html[lang="ja"] .i18n-en{ display: none; }
+  html[lang="ja"] .i18n-ko{ display: none; }
 
   /* Contact CTA */
   .cta-section{
@@ -311,7 +402,7 @@
     <img src="/assets/Kreators_logo(B)_v2.png" alt="KREATORS." />
   </div>
   <div class="intro-cue" aria-hidden="true">
-    <span class="i18n-en">Scroll</span><span class="i18n-ko">스크롤</span>
+    <span class="i18n-en">Scroll</span><span class="i18n-ko">스크롤</span><span class="i18n-ja">スクロール</span>
   </div>
 </section>
 
@@ -323,9 +414,7 @@
     </a>
     <div class="nav-menu">
       <!-- Nav labels are intentionally English-only regardless of lang toggle -->
-      <a href="portfolio.html?brand=hypeer">HYPEER</a>
-      <a href="portfolio.html?brand=passport-seoul">Passport Seoul</a>
-      <a href="#">Studio</a>
+      <a href="portfolio.html">Work</a>
       <a href="blog.html">Journal</a>
       <a href="hiring.html">Careers</a>
     </div>
@@ -334,6 +423,8 @@
         <button type="button" class="lang-btn" data-lang="en">EN</button>
         <span class="lang-sep" aria-hidden="true">·</span>
         <button type="button" class="lang-btn" data-lang="ko">KR</button>
+        <span class="lang-sep" aria-hidden="true">·</span>
+        <button type="button" class="lang-btn" data-lang="ja">JP</button>
       </div>
       <a href="#contact" class="nav-cta">Contact</a>
     </div>
@@ -347,54 +438,61 @@
     <div class="label" style="color:var(--muted); margin-bottom: var(--s-4);">
       <span class="i18n-en">Entertainment · Data · Marketing</span>
       <span class="i18n-ko">엔터테인먼트 · 데이터 · 마케팅</span>
+      <span class="i18n-ja">エンターテインメント · データ · マーケティング</span>
     </div>
     <h1 class="display-l hero-headline">
-      <span class="i18n-en">We read the signal.<br/>We write the strategy.</span>
-      <span class="i18n-ko">신호를 읽고,<br/>전략을 씁니다.</span>
+      <span class="i18n-en">We read the <span class="hl-signal">signal</span>.<br/>We write the <span class="hl-strategy">strategy</span>.</span>
+      <span class="i18n-ko"><span class="hl-signal">신호</span>를 읽고,<br/><span class="hl-strategy">전략</span>을 씁니다.</span>
+      <span class="i18n-ja"><span class="hl-signal">シグナル</span>を読み、<br/><span class="hl-strategy">戦略</span>を描く。</span>
     </h1>
     <p class="lead hero-sub">
       <span class="i18n-en">Kreators Network is a Seoul-based agency that turns entertainment industry data into marketing strategies for labels and artists worldwide.</span>
       <span class="i18n-ko">Kreators Network는 엔터테인먼트 산업 데이터를 전 세계 레이블과 아티스트를 위한 마케팅 전략으로 전환하는 서울 기반의 에이전시입니다.</span>
+      <span class="i18n-ja">エンターテインメント産業のデータを、世界のレーベルとアーティストのためのマーケティング戦略へ。ソウルを拠点に活動するエージェンシーです。</span>
     </p>
   </section>
 
   <!-- ABOUT / MANIFESTO -->
-  <section class="manifesto">
+  <section class="manifesto" id="about">
     <div class="manifesto-grid">
       <div class="manifesto-left">
-        <div class="label"><span class="i18n-en">About</span><span class="i18n-ko">소개</span></div>
+        <div class="label"><span class="i18n-en">About</span><span class="i18n-ko">소개</span><span class="i18n-ja">紹介</span></div>
         <p class="manifesto-statement">
           <span class="i18n-en">A trusted partner to labels and artists at home and abroad — HYPEER for marketing, Passport Seoul for data, Talented for curation. As Luminate&rsquo;s exclusive Korea sales partner, we deliver content, experiences, analytics, and strategy.</span>
           <span class="i18n-ko">국내외 레이블과 아티스트의 신뢰받는 파트너 — 마케팅은 HYPEER, 데이터는 Passport Seoul, 큐레이션은 Talented. 루미네이트의 한국 독점 세일즈 파트너로서 콘텐츠, 경험, 분석, 전략을 제공합니다.</span>
+          <span class="i18n-ja">国内外のレーベルとアーティストに信頼されるパートナー — マーケティングはHYPEER、データはPassport Seoul、キュレーションはTalented。Luminateの韓国独占セールスパートナーとして、コンテンツ・体験・分析・戦略をワンストップで届けます。</span>
         </p>
         <a href="#" class="btn" style="margin-top: var(--s-6);">
-          <span class="i18n-en">Learn about us</span><span class="i18n-ko">스튜디오 소개</span>
+          <span class="i18n-en">Learn about us</span><span class="i18n-ko">스튜디오 소개</span><span class="i18n-ja">スタジオ紹介</span>
           <span class="arrow">→</span>
         </a>
       </div>
       <div class="manifesto-right">
         <div class="capability">
           <div class="capability-num">01</div>
-          <h3><span class="i18n-en">Data Intelligence</span><span class="i18n-ko">데이터 인텔리전스</span></h3>
+          <h3><span class="i18n-en">Data Intelligence</span><span class="i18n-ko">데이터 인텔리전스</span><span class="i18n-ja">データインテリジェンス</span></h3>
           <p>
             <span class="i18n-en">We map streaming platforms, social ecosystems, and fan communities to surface the metrics that actually predict cultural impact.</span>
             <span class="i18n-ko">스트리밍 플랫폼, 소셜 생태계, 팬 커뮤니티를 정교하게 맵핑해, 문화적 임팩트를 실제로 예측할 수 있는 지표를 찾아냅니다.</span>
+            <span class="i18n-ja">ストリーミング、ソーシャル、ファンコミュニティを精密にマッピングし、文化的インパクトを実際に予測できる指標を導き出します。</span>
           </p>
         </div>
         <div class="capability">
           <div class="capability-num">02</div>
-          <h3><span class="i18n-en">Strategic Marketing</span><span class="i18n-ko">전략적 마케팅</span></h3>
+          <h3><span class="i18n-en">Strategic Marketing</span><span class="i18n-ko">전략적 마케팅</span><span class="i18n-ja">戦略的マーケティング</span></h3>
           <p>
             <span class="i18n-en">Data becomes direction. We design campaigns grounded in audience behavior — not assumptions — for music, film, and IP properties.</span>
             <span class="i18n-ko">데이터가 방향이 됩니다. 음악, 영화, IP 캠페인을 가정이 아닌 오디언스의 실제 행동 위에 설계합니다.</span>
+            <span class="i18n-ja">データが方向性になる。音楽、映画、IPキャンペーンを、仮説ではなくオーディエンスの実際の行動に基づいて設計します。</span>
           </p>
         </div>
         <div class="capability">
           <div class="capability-num">03</div>
-          <h3><span class="i18n-en">Research &amp; Editorial</span><span class="i18n-ko">리서치 &amp; 에디토리얼</span></h3>
+          <h3><span class="i18n-en">Research &amp; Editorial</span><span class="i18n-ko">리서치 &amp; 에디토리얼</span><span class="i18n-ja">リサーチ＆エディトリアル</span></h3>
           <p>
             <span class="i18n-en">We publish what we learn. Our journal is where industry knowledge becomes shared knowledge — reports, essays, and data stories.</span>
             <span class="i18n-ko">우리가 배운 것을 씁니다. 저널은 산업의 지식이 공유된 지식으로 전환되는 공간입니다 — 리포트, 에세이, 데이터 스토리.</span>
+            <span class="i18n-ja">学んだことを発信します。ジャーナルは、業界の知見が共有知に変わる場です — レポート、エッセイ、データストーリー。</span>
           </p>
         </div>
       </div>
@@ -402,52 +500,57 @@
   </section>
 
   <!-- HYPEER ISLAND -->
-  <section class="hypeer-section">
+  <section class="hypeer-section" id="hypeer">
     <div class="hypeer-island">
       <div class="hypeer-logo">
         <img src="/assets/HYPR_logo_B.png" alt="HYPEER" />
       </div>
-      <div class="label"><span class="i18n-en">Introducing</span><span class="i18n-ko">소개합니다</span></div>
+      <div class="label"><span class="i18n-en">Introducing</span><span class="i18n-ko">소개합니다</span><span class="i18n-ja">紹介</span></div>
       <h2 class="display-m" style="margin: var(--s-3) 0 var(--s-3); max-width: 900px;">
-        <span class="i18n-en">HYPEER is the MX marketing lab of Kreators Network.</span>
-        <span class="i18n-ko">HYPEER는 Kreators Network의 MX 마케팅 랩입니다.</span>
+        <span class="i18n-en">HYPEER<span class="headline-def">MX marketing lab of Kreators Network.</span></span>
+        <span class="i18n-ko">HYPEER<span class="headline-def">Kreators Network의 MX 마케팅 랩.</span></span>
+        <span class="i18n-ja">HYPEER<span class="headline-def">Kreators NetworkのMXマーケティングラボ。</span></span>
       </h2>
-      <p class="sub-headline">
-        <span class="i18n-en">Right music to right people &mdash; in a right way.</span>
-        <span class="i18n-ko">알맞은 음악을, 알맞은 사람에게 &mdash; 알맞은 방식으로.</span>
-      </p>
       <p class="lead" style="max-width: 640px; margin: 0 0 var(--s-6);">
         <span class="i18n-en">We unite creative storytelling with data intelligence to build artist brands that capture imagination and stand the test of markets.</span>
         <span class="i18n-ko">크리에이티브 스토리텔링과 데이터 인텔리전스를 결합해, 상상력을 사로잡고 시장의 검증을 견디는 아티스트 브랜드를 만듭니다.</span>
+        <span class="i18n-ja">クリエイティブなストーリーテリングとデータインテリジェンスを融合し、想像力を捉え、市場に耐えうるアーティストブランドを築きます。</span>
+      </p>
+      <!-- Brand motto: kept in English across all locales for typographic consistency (Newsreader is Latin-only variable) -->
+      <p class="sub-headline" lang="en">
+        Right music to right people &mdash; in a right way.
       </p>
       <a href="portfolio.html?brand=hypeer" class="btn" style="background:var(--ink);color:var(--hypeer);border-color:var(--ink);">
-        <span class="i18n-en">See HYPEER work</span><span class="i18n-ko">HYPEER 작업 보기</span>
+        <span class="i18n-en">See HYPEER work</span><span class="i18n-ko">HYPEER 작업 보기</span><span class="i18n-ja">HYPEERの実績を見る</span>
         <span class="arrow">→</span>
       </a>
     </div>
   </section>
 
   <!-- PASSPORT SEOUL ISLAND -->
-  <section class="passport-section">
+  <section class="passport-section" id="passport-seoul">
     <div class="passport-island">
       <div class="passport-logo">
         <img src="/assets/PPS_logo_white.png" alt="Passport Seoul" />
       </div>
-      <div class="label"><span class="i18n-en">Introducing</span><span class="i18n-ko">소개합니다</span></div>
+      <div class="label"><span class="i18n-en">Introducing</span><span class="i18n-ko">소개합니다</span><span class="i18n-ja">紹介</span></div>
       <h2 class="display-m" style="margin: var(--s-3) 0 var(--s-3); max-width: 900px;">
         <span class="i18n-en">Passport Seoul</span>
         <span class="i18n-ko">Passport Seoul</span>
+        <span class="i18n-ja">Passport Seoul</span>
       </h2>
       <p class="sub-headline">
         <span class="i18n-en">Our data-driven strategy &amp; planning unit.</span>
         <span class="i18n-ko">데이터 기반 전략 &amp; 기획 유닛.</span>
+        <span class="i18n-ja">データドリブンな戦略＆プランニングユニット。</span>
       </p>
       <p class="lead" style="max-width: 640px; margin: 0 0 var(--s-6);">
         <span class="i18n-en">Where HYPEER activates, Passport Seoul plans. We translate entertainment market data into strategic playbooks for brands entering — or scaling within — Korea and beyond.</span>
-        <span class="i18n-ko">HYPEER가 실행한다면, Passport Seoul은 기획합니다. 엔터테인먼트 시장 데이터를 한국, 그리고 그 너머로 진입하거나 확장하려는 브랜드의 전략 플레이북으로 옮깁니다.</span>
+        <span class="i18n-ko">HYPEER가 실행하고, Passport Seoul이 설계합니다. 엔터테인먼트 시장 데이터를, 한국과 그 너머로 진입하거나 확장하려는 브랜드의 전략 플레이북으로 옮깁니다.</span>
+        <span class="i18n-ja">HYPEERが実行し、Passport Seoulが設計する。エンターテインメント市場のデータを、韓国とその先へ進出・拡大するブランドの戦略プレイブックへと変えます。</span>
       </p>
       <a href="portfolio.html?brand=passport-seoul" class="btn btn-on-dark">
-        <span class="i18n-en">See Passport Seoul work</span><span class="i18n-ko">Passport Seoul 작업 보기</span>
+        <span class="i18n-en">See Passport Seoul work</span><span class="i18n-ko">Passport Seoul 작업 보기</span><span class="i18n-ja">Passport Seoulの実績を見る</span>
         <span class="arrow">→</span>
       </a>
     </div>
@@ -458,13 +561,15 @@
     <h2 class="display-m">
       <span class="i18n-en">Let's read the industry together.</span>
       <span class="i18n-ko">함께 산업을 읽어갑시다.</span>
+      <span class="i18n-ja">業界を、共に読み解こう。</span>
     </h2>
     <p class="lead">
       <span class="i18n-en">We work with brands, agencies, and platforms looking for data-driven entertainment marketing. Tell us what you're building.</span>
       <span class="i18n-ko">데이터 기반 엔터테인먼트 마케팅을 찾는 브랜드, 에이전시, 플랫폼과 함께합니다. 지금 무엇을 만들고 계신지 들려주세요.</span>
+      <span class="i18n-ja">データドリブンなエンターテインメントマーケティングを求めるブランド、エージェンシー、プラットフォームと共に歩みます。今取り組んでいることを、お聞かせください。</span>
     </p>
     <a href="mailto:hello@kreatorsnetwork.com" class="btn btn-dark">
-      <span class="i18n-en">Get in touch</span><span class="i18n-ko">연락하기</span>
+      <span class="i18n-en">Get in touch</span><span class="i18n-ko">연락하기</span><span class="i18n-ja">お問い合わせ</span>
       <span class="arrow">→</span>
     </a>
   </section>
@@ -486,18 +591,18 @@
       <div>
         <h4>Studio</h4>
         <ul>
-          <li><a href="#">About</a></li>
-          <li><a href="#">HYPEER</a></li>
-          <li><a href="#">Passport Seoul</a></li>
-          <li><a href="hiring.html">Careers</a></li>
-          <li><a href="#contact">Contact</a></li>
+          <li><a href="main.html#hypeer">HYPEER</a></li>
+          <li><a href="main.html#passport-seoul">Passport Seoul</a></li>
+          <li><a href="#">Talented</a></li>
         </ul>
       </div>
       <div>
-        <h4>Work</h4>
+        <h4>Index</h4>
         <ul>
-          <li><a href="portfolio.html">Portfolio</a></li>
+          <li><a href="portfolio.html">Work</a></li>
           <li><a href="blog.html">Journal</a></li>
+          <li><a href="hiring.html">Careers</a></li>
+          <li><a href="main.html#contact">Contact</a></li>
         </ul>
       </div>
       <div>
@@ -550,7 +655,7 @@
   (function(){
     var root = document.documentElement;
     var KEY = 'kn-lang';
-    var valid = { en: true, ko: true };
+    var valid = { en: true, ko: true, ja: true };
     try {
       var stored = localStorage.getItem(KEY);
       if(stored && valid[stored]) root.setAttribute('lang', stored);
