@@ -1,24 +1,29 @@
 <!doctype html>
-<html lang="ko">
+<html lang="en">
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Careers — KREATORS.</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;800;900&family=Newsreader:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet" />
+<!-- v2 font stack: Fraunces (display, reserved for .hero-headline only), Geist (UI sans),
+     Geist Mono (labels / data signal), Newsreader (long-form reading) -->
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT,WONK@0,9..144,300..900,0..100,0..1;1,9..144,300..900,0..100,0..1&family=Geist:wght@400;500;600;700;800;900&family=Geist+Mono:wght@400;500;600&family=Newsreader:ital,wght@0,400..700;1,400&display=swap" rel="stylesheet" />
 <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css" rel="stylesheet" />
 <style>
   :root{
     --bg:#FFFFFF;--ink:#0A0A0A;--ink-2:#1A1A1A;--muted:#6B6B6B;
     --rule:#E5E5E5;--rule-strong:#0A0A0A;
     --hypeer:#EF4A24;--hypeer-tint:#FCDED8;
-    --font-sans:"Inter","Pretendard Variable",system-ui,sans-serif;
+
+    /* v2 font stacks — matches main/portfolio/blog */
+    --font-sans:"Geist","Pretendard Variable",system-ui,sans-serif;
+    --font-display:"Fraunces","Pretendard Variable",Georgia,serif;
     --font-serif:"Newsreader","Pretendard Variable",Georgia,serif;
-    --fs-display-xl:clamp(56px,9vw,120px);
+    --font-mono:"Geist Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+
     --fs-display-l:clamp(44px,6.4vw,84px);
     --fs-display-m:clamp(36px,4.4vw,60px);
-    --fs-h1:clamp(32px,3.4vw,48px);
     --fs-h2:clamp(24px,2.4vw,34px);
     --fs-h3:22px;--fs-lead:20px;--fs-body:18px;--fs-ui:15px;--fs-label:12px;
     --s-1:4px;--s-2:8px;--s-3:12px;--s-4:16px;--s-5:24px;--s-6:32px;
@@ -30,25 +35,54 @@
   body{font-family:var(--font-sans);font-size:var(--fs-ui);line-height:1.5;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;}
   a{color:inherit;text-decoration:none;}
   .container{max-width:var(--container);margin:0 auto;padding:0 var(--pad-x);}
-  .display-l{font-family:var(--font-sans);font-weight:900;font-size:var(--fs-display-l);line-height:1.0;letter-spacing:-0.03em;}
+  /* Type — v2 (refined)
+     Display scale is Geist across the site. Fraunces is reserved exclusively for
+     the main-page hero copy via .hero-headline; no other headline uses it. */
+  /* Sub-page hero — smaller and lighter than main.html's hero so the landing page stays the boldest moment. */
+  .display-l{font-family:var(--font-sans);font-weight:700;font-size:clamp(36px,5vw,64px);line-height:1.08;letter-spacing:-0.02em;}
   .display-m{font-family:var(--font-sans);font-weight:800;font-size:var(--fs-display-m);line-height:1.05;letter-spacing:-0.025em;}
   .h2{font-family:var(--font-sans);font-weight:800;font-size:var(--fs-h2);line-height:1.15;letter-spacing:-0.015em;}
-  .h3{font-family:var(--font-sans);font-weight:700;font-size:var(--fs-h3);line-height:1.25;letter-spacing:-0.01em;}
+
+  /* Reserved Fraunces override — opt-in class, unused on this page but kept for consistency. */
+  .hero-headline{
+    font-family:var(--font-display);
+    font-weight:800;
+    letter-spacing:-0.02em;
+    line-height:1.02;
+    font-variation-settings:"opsz" 144, "SOFT" 40, "WONK" 1;
+  }
+
   .lead{font-family:var(--font-serif);font-weight:400;font-size:var(--fs-lead);line-height:1.55;}
   .body{font-family:var(--font-serif);font-weight:400;font-size:var(--fs-body);line-height:1.7;color:var(--ink-2);}
   .ui{font-family:var(--font-sans);font-weight:500;font-size:var(--fs-ui);line-height:1.4;}
-  .label{font-family:var(--font-sans);font-weight:600;font-size:var(--fs-label);line-height:1.2;letter-spacing:0.14em;text-transform:uppercase;}
+  /* Label / Tag — v2 uses Geist Mono for the "data signal" tone */
+  .label{font-family:var(--font-mono);font-weight:500;font-size:var(--fs-label);line-height:1.2;letter-spacing:0.08em;text-transform:uppercase;}
   .btn{display:inline-flex;align-items:center;gap:10px;font-family:var(--font-sans);font-weight:600;font-size:15px;padding:14px 22px;border:1px solid var(--ink);background:var(--bg);color:var(--ink);cursor:pointer;transition:all .15s ease;}
   .btn:hover{background:var(--ink);color:var(--bg);}
   .btn.btn-dark{background:var(--ink);color:var(--bg);}
   .btn.btn-dark:hover{background:transparent;color:var(--ink);}
   .btn .arrow{display:inline-block;transform:translateX(0);transition:transform .15s ease;}
   .btn:hover .arrow{transform:translateX(4px);}
-  .tag{display:inline-block;font-family:var(--font-sans);font-weight:600;font-size:11px;letter-spacing:0.14em;text-transform:uppercase;padding:4px 10px;border:1px solid var(--ink);color:var(--ink);background:transparent;}
+  .tag{display:inline-block;font-family:var(--font-mono);font-weight:500;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;padding:4px 10px;border:1px solid var(--ink);color:var(--ink);background:transparent;}
   .tag.tag-hypeer{border-color:var(--hypeer);color:var(--hypeer);}
 
+  /* Readability */
+  .display-l,.display-m,.h2{text-wrap:balance;}
+  .lead,.body,.value p{text-wrap:pretty;}
+  html[lang="ko"] .lead,html[lang="ko"] .body,
+  html[lang="ko"] .value p{word-break:keep-all;overflow-wrap:break-word;}
+  .btn,.nav-cta{white-space:nowrap;}
+
+  /* i18n visibility */
+  html[lang="en"] .i18n-ko{display:none;}
+  html[lang="en"] .i18n-ja{display:none;}
+  html[lang="ko"] .i18n-en{display:none;}
+  html[lang="ko"] .i18n-ja{display:none;}
+  html[lang="ja"] .i18n-en{display:none;}
+  html[lang="ja"] .i18n-ko{display:none;}
+
   /* Nav */
-  .nav{position:sticky;top:0;z-index:50;background:var(--bg);border-bottom:1px solid var(--rule-strong);}
+  .nav{position:fixed;top:0;left:0;right:0;z-index:50;background:var(--bg);border-bottom:1px solid var(--rule-strong);}
   .nav-inner{display:flex;align-items:center;justify-content:space-between;height:72px;}
   .nav-brand{display:inline-flex;align-items:center;height:28px;}
   .nav-brand img{height:20px;width:auto;display:block;}
@@ -56,22 +90,32 @@
   .nav-menu a{font-family:var(--font-sans);font-weight:500;font-size:15px;color:var(--ink);}
   .nav-menu a:hover{color:var(--hypeer);}
   .nav-menu a.active{border-bottom:2px solid var(--ink);padding-bottom:2px;}
+  .nav-actions{display:flex;align-items:center;gap:var(--s-4);}
+  .lang-toggle{display:inline-flex;align-items:center;gap:6px;font-family:var(--font-mono);font-weight:500;font-size:12px;letter-spacing:0.08em;}
+  .lang-toggle .lang-sep{color:var(--rule);}
+  .lang-btn{background:transparent;border:0;padding:4px 0;color:var(--muted);font:inherit;letter-spacing:inherit;cursor:pointer;transition:color .15s ease;}
+  .lang-btn:hover{color:var(--ink);}
+  html[lang="en"] .lang-btn[data-lang="en"],
+  html[lang="ko"] .lang-btn[data-lang="ko"],
+  html[lang="ja"] .lang-btn[data-lang="ja"]{color:var(--ink);text-decoration:underline;text-underline-offset:4px;}
   .nav-cta{font-family:var(--font-sans);font-weight:600;font-size:14px;padding:10px 18px;border:1px solid var(--ink);border-radius:0;}
   .nav-cta:hover{background:var(--ink);color:var(--bg);}
 
   /* Footer */
   .footer{margin-top:var(--s-10);background:var(--ink);color:var(--bg);padding:var(--s-9) 0 var(--s-6);}
   .footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:var(--s-7);}
-  .footer h4{font-family:var(--font-sans);font-weight:600;font-size:13px;letter-spacing:0.14em;text-transform:uppercase;color:#9A9A9A;margin:0 0 var(--s-4);}
+  .footer h4{font-family:var(--font-mono);font-weight:500;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#9A9A9A;margin:0 0 var(--s-4);}
   .footer ul{list-style:none;padding:0;margin:0;display:grid;gap:10px;}
-  .footer ul a{font-size:15px;color:var(--bg);}
+  .footer ul a{font-family:var(--font-sans);font-size:15px;color:var(--bg);}
   .footer ul a:hover{color:var(--hypeer);}
   .footer-brand{display:block;margin:0 0 var(--s-4);}
   .footer-brand img{height:32px;width:auto;display:block;}
-  .footer-bottom{margin-top:var(--s-8);padding-top:var(--s-4);border-top:1px solid #2A2A2A;display:flex;justify-content:space-between;font-size:13px;color:#6B6B6B;}
+  .footer-bottom{margin-top:var(--s-8);padding-top:var(--s-4);border-top:1px solid #2A2A2A;display:flex;justify-content:space-between;font-family:var(--font-mono);font-size:12px;letter-spacing:0.04em;color:#6B6B6B;}
   @media(max-width:800px){.footer-grid{grid-template-columns:1fr 1fr;}}
 
   /* ---- PAGE: HIRING ---- */
+  .page-content{padding-top:72px;}
+
   .page-header{
     padding:var(--s-9) 0 var(--s-7);
     border-bottom:1px solid var(--rule);
@@ -80,7 +124,7 @@
   .page-header h1{margin:0 0 var(--s-4);}
   .page-header .lead{max-width:640px;margin:0;color:var(--muted);}
 
-  /* Culture section */
+  /* Culture section — i18n applied */
   .culture{
     padding:var(--s-9) 0;
     border-bottom:1px solid var(--rule);
@@ -106,10 +150,8 @@
     .culture-values{grid-template-columns:1fr;}
   }
 
-  /* Open positions */
-  .positions{
-    padding:var(--s-9) 0;
-  }
+  /* Open positions — content NOT i18n'd (CMS-managed) */
+  .positions{padding:var(--s-9) 0;}
   .positions-header{
     display:grid;grid-template-columns:1fr 2fr;gap:var(--s-8);
     margin-bottom:var(--s-7);
@@ -127,16 +169,9 @@
     transition:background .15s ease;
   }
   .position-row:hover{background:#FAFAFA;}
-  .position-title{
-    font-family:var(--font-sans);font-weight:700;font-size:18px;
-    letter-spacing:-0.01em;
-  }
-  .position-team,.position-type,.position-location{
-    font-family:var(--font-sans);font-size:14px;color:var(--muted);
-  }
-  .position-arrow{
-    font-size:20px;color:var(--ink);transition:transform .15s ease;
-  }
+  .position-title{font-family:var(--font-sans);font-weight:700;font-size:18px;letter-spacing:-0.01em;}
+  .position-team,.position-type,.position-location{font-family:var(--font-mono);font-size:12px;letter-spacing:0.04em;color:var(--muted);}
+  .position-arrow{font-size:20px;color:var(--ink);transition:transform .15s ease;}
   .position-row:hover .position-arrow{transform:translateX(4px);}
   @media(max-width:700px){
     .position-row{grid-template-columns:1fr 1fr;gap:var(--s-3);}
@@ -164,63 +199,113 @@
 <nav class="nav">
   <div class="container nav-inner">
     <a href="main.html" class="nav-brand" aria-label="KREATORS home">
-      <img src="kn_logo/Kreators_logo(B)_v2.png" alt="KREATORS." />
+      <img src="/assets/Kreators_logo(B)_v2.png" alt="KREATORS." />
     </a>
     <div class="nav-menu">
       <a href="portfolio.html">Work</a>
-      <a href="#">Studio</a>
       <a href="blog.html">Journal</a>
       <a href="hiring.html" class="active">Careers</a>
     </div>
-    <a href="main.html#contact" class="nav-cta">Contact</a>
+    <div class="nav-actions">
+      <div class="lang-toggle" role="group" aria-label="Language">
+        <button type="button" class="lang-btn" data-lang="en">EN</button>
+        <span class="lang-sep" aria-hidden="true">·</span>
+        <button type="button" class="lang-btn" data-lang="ko">KR</button>
+        <span class="lang-sep" aria-hidden="true">·</span>
+        <button type="button" class="lang-btn" data-lang="ja">JP</button>
+      </div>
+      <a href="main.html#contact" class="nav-cta">Contact</a>
+    </div>
   </div>
 </nav>
 
+<div class="page-content">
 <main class="container">
 
-  <!-- PAGE HEADER -->
+  <!-- PAGE HEADER — i18n applied -->
   <section class="page-header">
-    <div class="label">Careers</div>
-    <h1 class="display-l">Come read with us.</h1>
-    <p class="lead">We're building the team that reads entertainment industries better than anyone else — and turns that reading into action.</p>
+    <div class="label">
+      <span class="i18n-en">Careers</span>
+      <span class="i18n-ko">채용</span>
+      <span class="i18n-ja">採用</span>
+    </div>
+    <h1 class="display-l">
+      <span class="i18n-en">Come read with us.</span>
+      <span class="i18n-ko">함께 읽어갈 사람을 찾습니다.</span>
+      <span class="i18n-ja">共に読み解く仲間を探しています。</span>
+    </h1>
+    <p class="lead">
+      <span class="i18n-en">We're building the team that reads entertainment industries better than anyone else — and turns that reading into action.</span>
+      <span class="i18n-ko">엔터테인먼트 산업을 누구보다 잘 읽고, 그 독해를 행동으로 전환하는 팀을 만들고 있습니다.</span>
+      <span class="i18n-ja">エンターテインメント産業を誰よりも的確に読み解き、その読解をアクションに変えるチームを築いています。</span>
+    </p>
   </section>
 
-  <!-- CULTURE -->
+  <!-- CULTURE — i18n applied (this is brand messaging, not CMS content) -->
   <section class="culture">
     <div class="culture-grid">
       <div class="culture-left">
-        <div class="label">How we work</div>
+        <div class="label">
+          <span class="i18n-en">How we work</span>
+          <span class="i18n-ko">일하는 방식</span>
+          <span class="i18n-ja">私たちの働き方</span>
+        </div>
       </div>
       <div class="culture-values">
         <div class="value">
-          <h3>Research-first</h3>
-          <p>Every campaign starts with data. We don't pitch creative — we pitch understanding. If the data doesn't support it, we don't ship it.</p>
+          <h3><span class="i18n-en">Research-first</span><span class="i18n-ko">리서치 우선</span><span class="i18n-ja">リサーチファースト</span></h3>
+          <p>
+            <span class="i18n-en">Every campaign starts with data. We don't pitch creative — we pitch understanding. If the data doesn't support it, we don't ship it.</span>
+            <span class="i18n-ko">모든 캠페인은 데이터에서 시작합니다. 크리에이티브가 아니라 이해를 제안합니다. 데이터가 뒷받침하지 않으면 내보내지 않습니다.</span>
+            <span class="i18n-ja">すべてのキャンペーンはデータから始まります。クリエイティブではなく「理解」を提案します。データが裏付けないものは世に出しません。</span>
+          </p>
         </div>
         <div class="value">
-          <h3>Small and intentional</h3>
-          <p>We're a tight team where everyone shapes the work directly. No layers of approval. If you're here, your opinion matters from day one.</p>
+          <h3><span class="i18n-en">Small and intentional</span><span class="i18n-ko">작지만 의도적으로</span><span class="i18n-ja">少数精鋭、意図を持って</span></h3>
+          <p>
+            <span class="i18n-en">We're a tight team where everyone shapes the work directly. No layers of approval. If you're here, your opinion matters from day one.</span>
+            <span class="i18n-ko">모두가 직접 작업을 만들어가는 조밀한 팀입니다. 결재 라인은 없습니다. 여기 있다면, 첫날부터 의견이 중요합니다.</span>
+            <span class="i18n-ja">全員が直接アウトプットに関わる緊密なチームです。承認の階層はありません。加わった日から、あなたの声が力を持ちます。</span>
+          </p>
         </div>
         <div class="value">
-          <h3>Write what you learn</h3>
-          <p>Knowledge that stays in someone's head doesn't compound. We publish our thinking — internally and externally — because that's how teams get smarter.</p>
+          <h3><span class="i18n-en">Write what you learn</span><span class="i18n-ko">배운 것을 기록합니다</span><span class="i18n-ja">学んだことを書く</span></h3>
+          <p>
+            <span class="i18n-en">Knowledge that stays in someone's head doesn't compound. We publish our thinking — internally and externally — because that's how teams get smarter.</span>
+            <span class="i18n-ko">머릿속에만 있는 지식은 복리가 붙지 않습니다. 안과 밖으로 생각을 발행합니다 — 그래야 팀이 더 똑똑해지니까요.</span>
+            <span class="i18n-ja">頭の中にとどまる知識は複利にならない。社内外に考えを発信します — それがチームを賢くする方法だから。</span>
+          </p>
         </div>
         <div class="value">
-          <h3>Seoul + Remote</h3>
-          <p>Our core team is in Seoul, but we work with collaborators across time zones. What matters is the quality of thinking, not where it happens.</p>
+          <h3><span class="i18n-en">Seoul + Remote</span><span class="i18n-ko">서울 + 리모트</span><span class="i18n-ja">ソウル + リモート</span></h3>
+          <p>
+            <span class="i18n-en">Our core team is in Seoul, but we work with collaborators across time zones. What matters is the quality of thinking, not where it happens.</span>
+            <span class="i18n-ko">코어 팀은 서울에 있지만, 시간대를 넘어 협업합니다. 중요한 것은 사고의 질이지, 장소가 아닙니다.</span>
+            <span class="i18n-ja">コアチームはソウルにいますが、タイムゾーンを越えて協働しています。大切なのは思考の質であり、場所ではありません。</span>
+          </p>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- OPEN POSITIONS -->
+  <!-- OPEN POSITIONS — content NOT i18n'd (CMS-managed), section header IS i18n'd -->
   <section class="positions">
     <div class="positions-header">
-      <div class="label">Open positions</div>
+      <div class="label">
+        <span class="i18n-en">Open positions</span>
+        <span class="i18n-ko">공개 채용</span>
+        <span class="i18n-ja">募集中のポジション</span>
+      </div>
       <div>
-        <h2 class="h2" style="margin:0;">Current openings</h2>
+        <h2 class="h2" style="margin:0;">
+          <span class="i18n-en">Current openings</span>
+          <span class="i18n-ko">현재 포지션</span>
+          <span class="i18n-ja">現在の募集</span>
+        </h2>
       </div>
     </div>
 
+    <!-- Position rows — CMS content, no i18n -->
     <a href="#" class="position-row">
       <div class="position-title">Data Analyst — Entertainment</div>
       <div class="position-team"><span class="tag">Research</span></div>
@@ -257,22 +342,34 @@
     </a>
   </section>
 
-  <!-- OPEN APPLICATION -->
+  <!-- OPEN APPLICATION — i18n applied -->
   <section class="open-app">
-    <h2 class="h2">Don't see your role?</h2>
-    <p class="lead">We're always open to hearing from people who share our curiosity about entertainment and data. Send us a note — tell us what you'd want to build here.</p>
-    <a href="mailto:careers@kreatorsnetwork.com" class="btn btn-dark">Send open application <span class="arrow">→</span></a>
+    <h2 class="h2">
+      <span class="i18n-en">Don't see your role?</span>
+      <span class="i18n-ko">원하는 포지션이 없으신가요?</span>
+      <span class="i18n-ja">該当するポジションが見つかりませんか？</span>
+    </h2>
+    <p class="lead">
+      <span class="i18n-en">We're always open to hearing from people who share our curiosity about entertainment and data. Send us a note — tell us what you'd want to build here.</span>
+      <span class="i18n-ko">엔터테인먼트와 데이터에 대한 호기심을 공유하는 분의 이야기를 항상 기다립니다. 여기서 무엇을 만들고 싶은지 들려주세요.</span>
+      <span class="i18n-ja">エンターテインメントとデータへの好奇心を共有する方からのご連絡をいつでもお待ちしています。ここで何を創りたいか、お聞かせください。</span>
+    </p>
+    <a href="mailto:careers@kreatorsnetwork.com" class="btn btn-dark">
+      <span class="i18n-en">Send open application</span><span class="i18n-ko">자유 지원하기</span><span class="i18n-ja">オープンエントリー</span>
+      <span class="arrow">→</span>
+    </a>
   </section>
 
 </main>
+</div>
 
-<!-- FOOTER -->
+<!-- FOOTER — English-only -->
 <footer class="footer">
   <div class="container">
     <div class="footer-grid">
       <div>
         <a href="main.html" class="footer-brand" aria-label="KREATORS home">
-          <img src="kn_logo/Kreators_logo(W).png" alt="KREATORS." />
+          <img src="/assets/Kreators_logo(W).png" alt="KREATORS." />
         </a>
         <p class="ui" style="color:#9A9A9A; max-width: 360px;">
           An entertainment-focused data marketing agency based in Seoul. We read industries and write what we learn.
@@ -281,17 +378,18 @@
       <div>
         <h4>Studio</h4>
         <ul>
-          <li><a href="#">About</a></li>
-          <li><a href="#">HYPEER</a></li>
-          <li><a href="hiring.html">Careers</a></li>
-          <li><a href="main.html#contact">Contact</a></li>
+          <li><a href="main.html#hypeer">HYPEER</a></li>
+          <li><a href="main.html#passport-seoul">Passport Seoul</a></li>
+          <li><a href="#">Talented</a></li>
         </ul>
       </div>
       <div>
-        <h4>Work</h4>
+        <h4>Index</h4>
         <ul>
-          <li><a href="portfolio.html">Portfolio</a></li>
+          <li><a href="portfolio.html">Work</a></li>
           <li><a href="blog.html">Journal</a></li>
+          <li><a href="hiring.html">Careers</a></li>
+          <li><a href="main.html#contact">Contact</a></li>
         </ul>
       </div>
       <div>
@@ -309,6 +407,27 @@
     </div>
   </div>
 </footer>
+
+<script>
+  (function(){
+    var root = document.documentElement;
+    var KEY = 'kn-lang';
+    var valid = { en: true, ko: true, ja: true };
+    try {
+      var stored = localStorage.getItem(KEY);
+      if(stored && valid[stored]) root.setAttribute('lang', stored);
+    } catch(e) {}
+    var btns = document.querySelectorAll('.lang-btn');
+    btns.forEach(function(btn){
+      btn.addEventListener('click', function(){
+        var next = btn.getAttribute('data-lang');
+        if(!valid[next]) return;
+        root.setAttribute('lang', next);
+        try { localStorage.setItem(KEY, next); } catch(e) {}
+      });
+    });
+  })();
+</script>
 
 </body>
 </html>
