@@ -33,6 +33,9 @@
   }
   *{box-sizing:border-box;}
   html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);}
+  /* Reserve scrollbar space on BOTH sides so content stays visually centred
+     even when macOS "Always show scrollbars" takes a gutter on the right. */
+  html{scrollbar-gutter:stable both-edges;}
   body{font-family:var(--font-sans);font-size:var(--fs-ui);line-height:1.5;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;}
   a{color:inherit;text-decoration:none;}
   .container{max-width:var(--container);margin:0 auto;padding:0 var(--pad-x);}
@@ -74,16 +77,16 @@
   html[lang="ja"] .i18n-en{display:none;}
   html[lang="ja"] .i18n-ko{display:none;}
 
-  /* Nav */
+  /* Nav — 3-column grid keeps the menu at exact centre. */
   .nav{position:fixed;top:0;left:0;right:0;z-index:50;background:var(--bg);border-bottom:1px solid var(--rule-strong);}
-  .nav-inner{display:flex;align-items:center;justify-content:space-between;height:72px;}
-  .nav-brand{display:inline-flex;align-items:center;height:28px;}
+  .nav-inner{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;height:72px;gap:var(--s-4);}
+  .nav-brand{display:inline-flex;align-items:center;height:28px;justify-self:start;}
   .nav-brand img{height:20px;width:auto;display:block;}
-  .nav-menu{display:flex;gap:var(--s-6);}
-  .nav-menu a{font-family:var(--font-sans);font-weight:500;font-size:15px;color:var(--ink);}
+  .nav-menu{display:flex;gap:var(--s-6);justify-self:center;}
+  .nav-menu a{font-family:var(--font-sans);font-weight:500;font-size:15px;color:var(--ink);min-width:72px;text-align:center;}
   .nav-menu a:hover{color:var(--hypeer);}
   .nav-menu a.active{border-bottom:2px solid var(--ink);padding-bottom:2px;}
-  .nav-actions{display:flex;align-items:center;gap:var(--s-4);}
+  .nav-actions{display:flex;align-items:center;gap:var(--s-4);justify-self:end;}
   .lang-toggle{display:inline-flex;align-items:center;gap:6px;font-family:var(--font-mono);font-weight:500;font-size:12px;letter-spacing:0.08em;}
   .lang-toggle .lang-sep{color:var(--rule);}
   .lang-btn{background:transparent;border:0;padding:4px 0;color:var(--muted);font:inherit;letter-spacing:inherit;cursor:pointer;transition:color .15s ease;}
@@ -373,128 +376,31 @@
 
   // Blog filter + progressive "load more" — unified state machine.
   //
-  // DATA SOURCE (ARTICLES):
-  //   Stage A — inline placeholder array below.
-  //   Stage B (CMS-connected) — replace the ARTICLES assignment with an async fetch, e.g.:
-  //     var ARTICLES = await fetch('/api/articles?locale=' + document.documentElement.lang)
-  //                          .then(function(r){ return r.json(); });
-  //     then call render() once the promise resolves.
-  //   The render pipeline below does NOT change — it simply consumes whatever array is provided.
+  // DATA SOURCE (Stage B — CMS-connected):
+  //   Articles are fetched live from the Payload REST API (`/api/posts`).
+  //   The Payload Website Template already exposes this endpoint; `depth=1` populates
+  //   relationships (categories, authors, heroImage) in the response.
+  //   Draft posts are filtered out server-side via `where[_status][equals]=published`.
+  //   The fetch/normalization layer is isolated at the bottom of this IIFE — the
+  //   render pipeline itself is unchanged from Stage A.
+  //
+  //   To swap back to hardcoded data (rollback), replace the fetch block at the
+  //   bottom with `ARTICLES = [...]; loadingState = 'ready'; render();`.
   //
   // RENDERING:
-  //   • Articles are sorted by `date` (ISO) descending.
-  //   • Featured = first article matching the current filter (i.e. the latest in that category).
+  //   • Articles are sorted server-side (`sort=-publishedAt`), descending.
+  //   • Featured = first article matching the current filter (latest in that category).
   //   • List     = remaining scoped articles, sliced by `visibleCount`.
   //   • Load more reveals another STEP articles; hides itself when all are shown.
   //   • Filter change resets visibleCount to INITIAL_COUNT.
   //   • URL sync: `?category=<slug>` so filters are shareable / back-nav works.
+  //   • Loading and error states are rendered inline in the list area.
   (function(){
     var INITIAL_COUNT = 5;
     var STEP = 5;
-
-    // --- DATA ---------------------------------------------------------------
-    var ARTICLES = [
-      {
-        href: "#",
-        title: "Where do K-pop fans actually live online in 2026?",
-        excerpt: "A two-year longitudinal study tracking how fandom behavior migrates across streaming platforms, social networks, and commerce ecosystems.",
-        category: "research",
-        categoryLabel: "Research",
-        date: "2026-04-10",
-        dateLabel: "April 10, 2026",
-        readTime: "18 min read",
-        thumbText: "PLATFORM\nMIGRATION"
-      },
-      {
-        href: "#",
-        title: "The attention economy of music discovery: what Spotify's algorithm shift means for labels",
-        excerpt: "How platform discovery mechanics are quietly reshaping label strategy, A&R priorities, and the economics of breaking a new artist.",
-        category: "essay",
-        categoryLabel: "Essay",
-        date: "2026-03-28",
-        dateLabel: "Mar 28, 2026",
-        readTime: "12 min read",
-        thumbText: "ALGORITHM\nSHIFT"
-      },
-      {
-        href: "#",
-        title: "데이터로 보는 2025 한국 OTT 시장: 넷플릭스, 티빙, 웨이브 시청 행태 비교 분석",
-        excerpt: "세 플랫폼의 시청 시간, 장르 편향, 이탈 패턴을 비교 분석하며 2026년을 바라보는 시장 지형을 그려봅니다.",
-        category: "data-story",
-        categoryLabel: "Data Story",
-        date: "2026-03-14",
-        dateLabel: "Mar 14, 2026",
-        readTime: "15 min read",
-        thumbText: "OTT\nMARKET"
-      },
-      {
-        href: "#",
-        title: "Why entertainment brands should think like publishers, not advertisers",
-        excerpt: "When attention is fragmented, distribution is the new creative. An argument for editorial-first brand building in entertainment.",
-        category: "essay",
-        categoryLabel: "Essay",
-        date: "2026-02-22",
-        dateLabel: "Feb 22, 2026",
-        readTime: "10 min read",
-        thumbText: "PUBLISHER\nMINDSET"
-      },
-      {
-        href: "#",
-        title: "Q4 2025 entertainment marketing trend radar: the 7 signals we're watching",
-        excerpt: "From fandom commerce to AI-assisted content, seven movements shaping entertainment marketing budgets into 2026.",
-        category: "industry-brief",
-        categoryLabel: "Industry Brief",
-        date: "2026-01-15",
-        dateLabel: "Jan 15, 2026",
-        readTime: "9 min read",
-        thumbText: "TREND\nRADAR"
-      },
-      {
-        href: "#",
-        title: "팬덤 데이터를 브랜드 전략으로 전환하는 5가지 프레임워크",
-        excerpt: "팬덤 활동 지표를 브랜드 의사결정에 연결하는 방식, 실무에서 바로 쓰이는 다섯 가지 프레임워크로 정리합니다.",
-        category: "research",
-        categoryLabel: "Research",
-        date: "2025-12-08",
-        dateLabel: "Dec 8, 2025",
-        readTime: "14 min read",
-        thumbText: "FANDOM\nFRAMEWORK"
-      },
-      {
-        href: "#",
-        title: "From virality to value: measuring the real ROI of creator-led entertainment campaigns",
-        excerpt: "Reach and impressions are the easy story. We pull apart the harder one — which creator-led campaigns actually moved commercial metrics.",
-        category: "research",
-        categoryLabel: "Research",
-        date: "2025-11-20",
-        dateLabel: "Nov 20, 2025",
-        readTime: "16 min read",
-        thumbText: "CREATOR\nROI"
-      },
-      {
-        href: "#",
-        title: "The geography of streaming: how regional listening patterns shape global marketing strategy",
-        excerpt: "Listening behavior is hyper-local. We mapped eight regions and surfaced the patterns that matter for globally distributed campaigns.",
-        category: "data-story",
-        categoryLabel: "Data Story",
-        date: "2025-10-30",
-        dateLabel: "Oct 30, 2025",
-        readTime: "13 min read",
-        thumbText: "STREAMING\nGEOGRAPHY"
-      },
-      {
-        href: "#",
-        title: "크리에이터 경제의 다음 단계: 데이터가 말하는 2026년 전망",
-        excerpt: "창작자 수익 구조, 플랫폼 경제, 팬 커뮤니티의 재편을 데이터로 살펴보며 2026년을 전망합니다.",
-        category: "industry-brief",
-        categoryLabel: "Industry Brief",
-        date: "2025-10-05",
-        dateLabel: "Oct 5, 2025",
-        readTime: "11 min read",
-        thumbText: "CREATOR\nECONOMY"
-      }
-    ];
-    // --- /DATA --------------------------------------------------------------
+    // Same-origin relative URL — blog.html is served from the same Vercel deployment
+    // as the Payload API, so no CORS config required.
+    var API_URL = '/api/posts?depth=1&limit=100&sort=-publishedAt&where[_status][equals]=published';
 
     var filterBtns = document.querySelectorAll('.filter-btn[data-filter]');
     var featuredEl = document.getElementById('featuredArticle');
@@ -504,10 +410,89 @@
     var loadMoreBtn = document.getElementById('loadMoreBtn');
     if(!filterBtns.length || !featuredEl || !listEl || !loadMoreBtn || !loadMoreEl) return;
 
+    var ARTICLES = [];                                // populated by fetch on load
+    var loadingState = 'loading';                     // 'loading' | 'ready' | 'error'
     var state = { filter: 'all', visibleCount: INITIAL_COUNT };
 
+    // ---------------------------------------------------------------------------
+    // NORMALIZATION — Payload post → the schema our render pipeline expects.
+    // ---------------------------------------------------------------------------
+
+    function extractExcerpt(content, maxChars){
+      // Traverse Lexical root.children to find the first paragraph's text.
+      // Shape: { root: { children: [{ type: 'paragraph', children: [{ type: 'text', text: '...' }] }] } }
+      if(!content || !content.root || !content.root.children) return '';
+      for(var i = 0; i < content.root.children.length; i++){
+        var node = content.root.children[i];
+        if(node.type !== 'paragraph' || !node.children) continue;
+        var text = '';
+        for(var j = 0; j < node.children.length; j++){
+          var child = node.children[j];
+          if(child.type === 'text' && child.text) text += child.text;
+          else if(child.type === 'link' && child.children){
+            for(var k = 0; k < child.children.length; k++){
+              if(child.children[k].text) text += child.children[k].text;
+            }
+          }
+        }
+        text = text.trim();
+        if(text.length === 0) continue;
+        if(maxChars && text.length > maxChars){
+          text = text.substring(0, maxChars).replace(/\s+\S*$/, '') + '…';
+        }
+        return text;
+      }
+      return '';
+    }
+
+    function formatDate(iso){
+      if(!iso) return '';
+      try {
+        var d = new Date(iso);
+        if(isNaN(d.getTime())) return '';
+        var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+        return months[d.getMonth()] + ' ' + d.getDate() + ', ' + d.getFullYear();
+      } catch(e) { return ''; }
+    }
+
+    function normalizePost(doc){
+      var category = (doc.categories && doc.categories[0]) || null;
+      // Prefer explicit meta.description (editor-authored SEO excerpt) when present;
+      // fall back to the first paragraph of the body content.
+      var preferredExcerpt = doc.meta && doc.meta.description;
+      var excerpt = preferredExcerpt || extractExcerpt(doc.content, 180) || '';
+      // Pick a reasonable hero image size — `medium` (900x506) balances quality vs bytes.
+      var heroUrl = '';
+      if(doc.heroImage){
+        if(doc.heroImage.sizes && doc.heroImage.sizes.medium && doc.heroImage.sizes.medium.url){
+          heroUrl = doc.heroImage.sizes.medium.url;
+        } else if(doc.heroImage.url){
+          heroUrl = doc.heroImage.url;
+        }
+      }
+      return {
+        href: '#', // TODO: '/blog/' + doc.slug once a detail page exists
+        title: doc.title || '',
+        excerpt: excerpt,
+        category: category ? category.slug : 'uncategorized',
+        categoryLabel: category ? category.title : 'Uncategorized',
+        date: doc.publishedAt || doc.createdAt || '',
+        dateLabel: formatDate(doc.publishedAt || doc.createdAt),
+        readTime: '', // no CMS field yet — can be derived from word count later
+        heroImageUrl: heroUrl
+      };
+    }
+
+    // ---------------------------------------------------------------------------
+    // RENDER PIPELINE
+    // ---------------------------------------------------------------------------
+
     function getScopedArticles(){
-      var sorted = ARTICLES.slice().sort(function(a, b){ return b.date.localeCompare(a.date); });
+      // ARTICLES is already sorted server-side; still re-sort defensively in case
+      // a future change fetches multiple sources.
+      var sorted = ARTICLES.slice().sort(function(a, b){
+        return String(b.date).localeCompare(String(a.date));
+      });
       if(state.filter === 'all') return sorted;
       return sorted.filter(function(a){ return a.category === state.filter; });
     }
@@ -518,21 +503,26 @@
       });
     }
 
-    function setThumbText(el, text){
-      // Render thumb text with <br> per newline, without exposing innerHTML to untrusted input.
-      el.textContent = '';
-      var parts = String(text || '').split('\n');
-      parts.forEach(function(p, i){
-        if(i > 0) el.appendChild(document.createElement('br'));
-        el.appendChild(document.createTextNode(p));
-      });
-    }
-
     function renderFeatured(article){
       if(!article){ featuredEl.hidden = true; return; }
       featuredEl.hidden = false;
       featuredEl.setAttribute('href', article.href || '#');
-      setThumbText(featuredEl.querySelector('.featured-thumb-text'), article.thumbText);
+
+      // Featured thumb: if a hero image is available, use it as cover background
+      // and hide the decorative text. Otherwise fall back to a clean dark block.
+      var thumbEl = featuredEl.querySelector('.featured-thumb');
+      var thumbTextEl = featuredEl.querySelector('.featured-thumb-text');
+      if(article.heroImageUrl){
+        thumbEl.style.backgroundImage = 'url("' + article.heroImageUrl + '")';
+        thumbEl.style.backgroundSize = 'cover';
+        thumbEl.style.backgroundPosition = 'center';
+        thumbTextEl.style.display = 'none';
+      } else {
+        thumbEl.style.backgroundImage = '';
+        thumbTextEl.style.display = '';
+        thumbTextEl.textContent = '';
+      }
+
       featuredEl.querySelector('.label').textContent = (article.categoryLabel || '') + ' · Featured';
       featuredEl.querySelector('.featured-title').textContent = article.title || '';
       featuredEl.querySelector('.featured-excerpt').textContent = article.excerpt || '';
@@ -556,6 +546,14 @@
       listEl.innerHTML = html;
     }
 
+    function renderStatus(messageHtml){
+      // Inline loading / error message inside the list area; hides featured & empty state.
+      featuredEl.hidden = true;
+      listEl.innerHTML = '<div style="padding:var(--s-8) 0;text-align:center;color:var(--muted);font-family:var(--font-mono);font-size:13px;letter-spacing:0.04em;">' + messageHtml + '</div>';
+      if(emptyEl) emptyEl.hidden = true;
+      loadMoreEl.hidden = true;
+    }
+
     function syncURL(){
       try {
         var url = new URL(window.location.href);
@@ -569,6 +567,26 @@
       filterBtns.forEach(function(b){
         b.classList.toggle('active', b.getAttribute('data-filter') === state.filter);
       });
+
+      // Lifecycle states override regular content rendering.
+      if(loadingState === 'loading'){
+        renderStatus(
+          '<span class="i18n-en">Loading articles…</span>' +
+          '<span class="i18n-ko">기사를 불러오는 중…</span>' +
+          '<span class="i18n-ja">記事を読み込み中…</span>'
+        );
+        syncURL();
+        return;
+      }
+      if(loadingState === 'error'){
+        renderStatus(
+          '<span class="i18n-en">Unable to load articles right now. Please try again later.</span>' +
+          '<span class="i18n-ko">기사를 불러오지 못했습니다. 잠시 후 다시 시도해 주세요.</span>' +
+          '<span class="i18n-ja">記事を読み込めませんでした。しばらくしてから再度お試しください。</span>'
+        );
+        syncURL();
+        return;
+      }
 
       var scoped = getScopedArticles();
       if(scoped.length === 0){
@@ -588,7 +606,7 @@
       syncURL();
     }
 
-    // Initialize from URL (?category=<slug>)
+    // Initialize filter from URL (?category=<slug>)
     try {
       var params = new URLSearchParams(window.location.search);
       var cat = params.get('category');
@@ -608,7 +626,32 @@
       render();
     });
 
+    // Show the loading state immediately, then kick off the fetch.
     render();
+
+    // ---------------------------------------------------------------------------
+    // FETCH — Payload REST API. Response.json() decodes as UTF-8 per Fetch spec,
+    // so Korean/Japanese titles come through cleanly regardless of how the raw
+    // endpoint renders in the browser URL bar.
+    // ---------------------------------------------------------------------------
+    fetch(API_URL, { credentials: 'same-origin' })
+      .then(function(r){
+        if(!r.ok) throw new Error('HTTP ' + r.status);
+        return r.json();
+      })
+      .then(function(data){
+        var docs = (data && data.docs) || [];
+        ARTICLES = docs.map(normalizePost).filter(function(a){ return a.title; });
+        loadingState = 'ready';
+        render();
+      })
+      .catch(function(err){
+        loadingState = 'error';
+        if(typeof console !== 'undefined' && console.error){
+          console.error('[blog] Failed to fetch posts:', err);
+        }
+        render();
+      });
   })();
 </script>
 
