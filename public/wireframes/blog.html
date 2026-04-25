@@ -471,7 +471,11 @@
         }
       }
       return {
-        href: '#', // TODO: '/blog/' + doc.slug once a detail page exists
+        // Detail page is a single template (blog-article.html) parameterised by ?slug=...
+        // When this site is converted to Next.js, this becomes '/blog/' + doc.slug.
+        href: doc.slug
+          ? '/wireframes/blog-article.html?slug=' + encodeURIComponent(doc.slug)
+          : '#',
         title: doc.title || '',
         excerpt: excerpt,
         category: category ? category.slug : 'uncategorized',
