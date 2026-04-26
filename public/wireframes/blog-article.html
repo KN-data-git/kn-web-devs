@@ -50,16 +50,18 @@
   html[lang="ko"] .i18n-en,html[lang="ko"] .i18n-ja{display:none;}
   html[lang="ja"] .i18n-en,html[lang="ja"] .i18n-ko{display:none;}
 
-  /* Nav — matches blog.html / portfolio.html */
+  /* Nav — matches blog.html / portfolio.html / hiring.html / main.html
+     3-column grid (1fr / auto / 1fr) keeps the menu visually centered
+     regardless of brand or actions width. */
   .nav{position:fixed;top:0;left:0;right:0;z-index:50;background:var(--bg);border-bottom:1px solid var(--rule-strong);}
-  .nav-inner{display:flex;align-items:center;justify-content:space-between;height:72px;}
+  .nav-inner{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;height:72px;gap:var(--s-4);}
   .nav-brand{display:inline-flex;align-items:center;height:28px;}
   .nav-brand img{height:20px;width:auto;display:block;}
-  .nav-menu{display:flex;gap:var(--s-6);}
-  .nav-menu a{font-family:var(--font-sans);font-weight:500;font-size:15px;color:var(--ink);}
+  .nav-menu{display:flex;gap:var(--s-6);justify-self:center;}
+  .nav-menu a{font-family:var(--font-sans);font-weight:500;font-size:15px;color:var(--ink);min-width:72px;text-align:center;}
   .nav-menu a:hover{color:var(--hypeer);}
   .nav-menu a.active{border-bottom:2px solid var(--ink);padding-bottom:2px;}
-  .nav-actions{display:flex;align-items:center;gap:var(--s-4);}
+  .nav-actions{display:flex;align-items:center;gap:var(--s-4);justify-self:end;}
   .lang-toggle{display:inline-flex;align-items:center;gap:6px;font-family:var(--font-mono);font-weight:500;font-size:12px;letter-spacing:0.08em;}
   .lang-toggle .lang-sep{color:var(--rule);}
   .lang-btn{background:transparent;border:0;padding:4px 0;color:var(--muted);font:inherit;letter-spacing:inherit;cursor:pointer;transition:color .15s ease;}
@@ -105,7 +107,26 @@
     margin-bottom:var(--s-4);
   }
   .post-meta .label{color:var(--muted);}
-  .post-title{margin:0 0 var(--s-5);}
+  /* Override .display-l for editorial article headers — more compact than landing-page hero
+     so 10-15 word titles wrap to 2-3 readable lines instead of towering over the body. */
+  .post-title{
+    font-size:clamp(28px,3.6vw,46px);
+    line-height:1.1;
+    letter-spacing:-0.015em;
+    margin:0 0 var(--s-3);
+    text-wrap:balance;
+  }
+  /* Optional dek/subtitle — shown below title when CMS provides one.
+     Serif italic + muted = classic editorial deck pattern. */
+  .post-subtitle{
+    font-family:var(--font-serif);
+    font-weight:400;font-style:italic;
+    font-size:clamp(18px,1.9vw,24px);line-height:1.4;
+    color:var(--muted);
+    margin:0 0 var(--s-5);
+    max-width:640px;
+    text-wrap:pretty;
+  }
   .post-byline{
     font-family:var(--font-mono);font-size:12px;letter-spacing:0.04em;
     color:var(--muted);margin:0;
@@ -251,6 +272,7 @@
         <span class="label post-category"></span>
       </div>
       <h1 class="display-l post-title"></h1>
+      <p class="post-subtitle" hidden></p>
       <p class="post-byline"></p>
     </header>
 
@@ -423,6 +445,16 @@
 
       // Title
       postEl.querySelector('.post-title').textContent = post.title || '';
+
+      // Subtitle (optional — shown only when the CMS field is filled in)
+      var subtitleEl = postEl.querySelector('.post-subtitle');
+      if(post.subtitle){
+        subtitleEl.textContent = post.subtitle;
+        subtitleEl.hidden = false;
+      } else {
+        subtitleEl.hidden = true;
+        subtitleEl.textContent = '';
+      }
 
       // Byline: author · date
       var bylineEl = postEl.querySelector('.post-byline');
