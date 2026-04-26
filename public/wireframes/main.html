@@ -30,6 +30,9 @@
   }
   *{box-sizing:border-box;}
   html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);}
+  /* Reserve scrollbar space on BOTH sides so content stays visually centred
+     even when macOS "Always show scrollbars" takes a gutter on the right. */
+  html{scrollbar-gutter:stable both-edges;}
   body{font-family:var(--font-sans);font-size:var(--fs-ui);line-height:1.5;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;}
   a{color:inherit;text-decoration:none;}
   a.link{border-bottom:1px solid var(--ink);padding-bottom:1px;}
@@ -89,13 +92,16 @@
   html[lang="ko"] .value p{word-break:keep-all;overflow-wrap:break-word;}
   .btn,.nav-cta{white-space:nowrap;}
 
-  /* Nav */
+  /* Nav — 3-column grid so the menu sits at the exact centre of the bar,
+     regardless of the brand / actions widths on either side. */
   .nav{position:fixed;top:0;left:0;right:0;z-index:50;background:var(--bg);border-bottom:1px solid var(--rule-strong);}
-  .nav-inner{display:flex;align-items:center;justify-content:space-between;height:72px;}
-  .nav-brand{display:inline-flex;align-items:center;height:28px;}
+  .nav-inner{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;height:72px;gap:var(--s-4);}
+  .nav-brand{display:inline-flex;align-items:center;height:28px;justify-self:start;}
   .nav-brand img{height:20px;width:auto;display:block;}
-  .nav-menu{display:flex;gap:var(--s-6);}
-  .nav-menu a{font-family:var(--font-sans);font-weight:500;font-size:15px;color:var(--ink);}
+  .nav-menu{display:flex;gap:var(--s-6);justify-self:center;}
+  /* Equal min-width on each link so "Journal" (the middle item) sits
+     symmetrically between "Work" and "Careers" even though they differ in length. */
+  .nav-menu a{font-family:var(--font-sans);font-weight:500;font-size:15px;color:var(--ink);min-width:72px;text-align:center;}
   .nav-menu a:hover{color:var(--hypeer);}
   .nav-menu a.active{border-bottom:2px solid var(--ink);padding-bottom:2px;}
   .nav-cta{font-family:var(--font-sans);font-weight:600;font-size:14px;padding:10px 18px;border:1px solid var(--ink);border-radius:0;}
@@ -205,6 +211,15 @@
   .hero-headline{
     margin: 0 0 var(--s-6);
     max-width: 1100px;
+  }
+  /* Hero headline fisheye — per-character hover magnifier.
+     Script splits the active i18n node into .char spans and tweaks transform on pointermove.
+     Scoped to .hero-headline so other text (sub-headline, lead, etc.) is unaffected. */
+  .hero-headline .char{
+    display: inline-block;
+    will-change: transform;
+    transition: transform .12s cubic-bezier(.2,.7,.2,1);
+    transform-origin: 50% 80%;
   }
   .hero-sub{
     max-width: 640px;
@@ -333,6 +348,7 @@
     display: flex;
     align-items: center;
     gap: var(--s-4);
+    justify-self: end;
   }
   .lang-toggle{
     display: inline-flex;
@@ -669,6 +685,178 @@
         try { localStorage.setItem(KEY, next); } catch(e) { /* noop */ }
       });
     });
+  })();
+
+  // ============================================================
+  // Hero headline fisheye — per-character magnifier on hover.
+  // No external dependencies. Scoped to .hero-headline.
+  // ============================================================
+  (function(){
+    // --- Tuning constants (adjust here for design refinement) ---
+    var MAX_SCALE = 1.30;        // peak scale at cursor center
+    var RADIUS    = 50;          // px — falloff radius
+    var Y_WEIGHT  = 0.7;         // <1 weights horizontal proximity over vertical (line-aware)
+
+    // --- Feature gates: bail before any DOM mutation if not applicable ---
+    var reduce  = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var canHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+    if (reduce || !canHover) return;
+
+    var headline = document.querySelector('.hero-headline');
+    if (!headline) return;
+
+    // --- Split text nodes into .char spans, preserving element nesting (.hl-signal/.hl-strategy/<br>) ---
+    function splitNode(node){
+      if (node.nodeType === 3 /* TEXT */) {
+        var text = node.nodeValue;
+        if (!text) return;
+        var graphemes = Array.from(text); // surrogate-pair safe
+        var frag = document.createDocumentFragment();
+        for (var i = 0; i < graphemes.length; i++){
+          var ch = graphemes[i];
+          var span = document.createElement('span');
+          span.setAttribute('aria-hidden', 'true');
+          if (ch === ' ' || ch === ' ') {
+            span.className = 'char char-space';
+            span.innerHTML = '&nbsp;';
+          } else {
+            span.className = 'char';
+            span.textContent = ch;
+          }
+          frag.appendChild(span);
+        }
+        node.parentNode.replaceChild(frag, node);
+      } else if (node.nodeType === 1 /* ELEMENT */) {
+        if (node.classList && node.classList.contains('char')) return;
+        if (node.tagName === 'BR') return;
+        var kids = Array.prototype.slice.call(node.childNodes);
+        for (var j = 0; j < kids.length; j++) splitNode(kids[j]);
+      }
+    }
+
+    function unsplit(){
+      var chars = headline.querySelectorAll('.char');
+      for (var i = 0; i < chars.length; i++){
+        var c = chars[i];
+        var t = c.classList.contains('char-space') ? ' ' : c.textContent;
+        c.parentNode.replaceChild(document.createTextNode(t), c);
+      }
+      headline.normalize(); // merge adjacent text nodes
+    }
+
+    function activeI18nNode(){
+      var lang = document.documentElement.getAttribute('lang') || 'en';
+      return headline.querySelector('.i18n-' + lang);
+    }
+
+    // --- State ---
+    var chars = [];
+    var positions = [];
+
+    function setAriaLabel(){
+      var active = activeI18nNode();
+      if (active){
+        var t = active.textContent.replace(/\s+/g, ' ').trim();
+        headline.setAttribute('aria-label', t);
+      }
+    }
+
+    function build(){
+      unsplit();
+      var active = activeI18nNode();
+      if (!active) { chars = []; positions = []; return; }
+      splitNode(active);
+      chars = Array.prototype.slice.call(active.querySelectorAll('.char'));
+      measure();
+      setAriaLabel();
+    }
+
+    function measure(){
+      positions = chars.map(function(el){
+        var r = el.getBoundingClientRect();
+        return { x: r.left + r.width / 2, y: r.top + r.height / 2 };
+      });
+    }
+
+    // --- Smoothstep falloff: 0 at edge, 1 at center ---
+    function smoothstep(edge0, edge1, x){
+      var t = (x - edge0) / (edge1 - edge0);
+      if (t < 0) t = 0; else if (t > 1) t = 1;
+      return t * t * (3 - 2 * t);
+    }
+
+    // --- Pointer + rAF loop ---
+    var pointerOn = false;
+    var lastX = 0, lastY = 0;
+    var rafId = null;
+
+    function frame(){
+      rafId = null;
+      if (!pointerOn) return;
+      for (var i = 0; i < chars.length; i++){
+        var p = positions[i];
+        if (!p) continue;
+        var dx = lastX - p.x;
+        var dy = (lastY - p.y) * Y_WEIGHT;
+        var d  = Math.sqrt(dx * dx + dy * dy);
+        if (d >= RADIUS){
+          if (chars[i].style.transform) chars[i].style.transform = '';
+        } else {
+          var t = smoothstep(RADIUS, 0, d);
+          var s = 1 + (MAX_SCALE - 1) * t;
+          chars[i].style.transform = 'scale(' + s.toFixed(3) + ')';
+        }
+      }
+    }
+    function schedule(){
+      if (rafId === null) rafId = requestAnimationFrame(frame);
+    }
+
+    function onMove(e){
+      if (e.pointerType === 'touch') return;
+      pointerOn = true;
+      lastX = e.clientX;
+      lastY = e.clientY;
+      schedule();
+    }
+    function onLeave(){
+      pointerOn = false;
+      for (var i = 0; i < chars.length; i++){
+        chars[i].style.transform = '';
+      }
+    }
+
+    headline.addEventListener('pointermove', onMove);
+    headline.addEventListener('pointerleave', onLeave);
+    headline.addEventListener('pointercancel', onLeave);
+
+    // --- Re-measure on layout-affecting events (rAF-throttled, never per frame) ---
+    var measurePending = false;
+    function scheduleMeasure(){
+      if (measurePending) return;
+      measurePending = true;
+      requestAnimationFrame(function(){
+        measurePending = false;
+        measure();
+      });
+    }
+    window.addEventListener('resize', scheduleMeasure);
+    window.addEventListener('scroll', scheduleMeasure, { passive: true });
+    if (typeof ResizeObserver !== 'undefined'){
+      new ResizeObserver(scheduleMeasure).observe(headline);
+    }
+
+    // --- Re-split on language toggle (html[lang] mutation) ---
+    new MutationObserver(build).observe(document.documentElement, {
+      attributes: true, attributeFilter: ['lang']
+    });
+
+    // --- Initial build after fonts settle (Fraunces variable font load) ---
+    if (document.fonts && document.fonts.ready){
+      document.fonts.ready.then(build);
+    } else {
+      build();
+    }
   })();
 </script>
 
