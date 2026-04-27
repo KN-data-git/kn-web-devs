@@ -7,6 +7,7 @@ import { CategoryFilters } from '@/components/CategoryFilters'
 import { getCategoryIdBySlug } from '@/utilities/getCategoriesByParent'
 import configPromise from '@payload-config'
 import { getPayload } from 'payload'
+import type { Where } from 'payload'
 import React from 'react'
 
 import PageClient from './page.client'
@@ -27,7 +28,8 @@ export default async function Page({ searchParams }: Props) {
 
   // Build the optional category filter. When `category` is absent or doesn't
   // match a known slug, the filter is skipped and all posts are returned.
-  const where: Record<string, unknown> = {}
+  // Typed as Payload's `Where` to satisfy the strict type on `find()`.
+  const where: Where = {}
   if (category) {
     const categoryId = await getCategoryIdBySlug(category)
     if (categoryId !== null) {
