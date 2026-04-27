@@ -269,114 +269,13 @@
     </p>
   </section>
 
-  <!-- FILTERS — English-only across all locales (brand/product names kept untranslated). data-filter values map to CMS `category` field. -->
-  <div class="filters">
-    <button class="filter-btn active" data-filter="all">All</button>
-    <button class="filter-btn" data-filter="hypeer-campaign">HYPEER Campaign</button>
-    <button class="filter-btn" data-filter="passport-seoul-research">Passport Seoul Research</button>
-    <button class="filter-btn" data-filter="contents">Contents</button>
-  </div>
+  <!-- FILTERS — populated by JS from CATEGORIES data (see <script> block).
+       Wireframe stage: data lives in this file. CMS stage: same render fn, data swapped for `payload.find({ collection: 'categories' })`. -->
+  <div class="filters" role="group" aria-label="Project category filters"></div>
 
-  <!-- PROJECT GRID — content NOT i18n'd (CMS-managed in production) -->
-  <div class="project-grid">
-
-    <a href="#" class="project-card" data-category="passport-seoul-research">
-      <div class="project-thumb dark">
-        <span class="project-thumb-label">FANDOM<br/>MIGRATION</span>
-      </div>
-      <div class="project-meta">
-        <span class="tag">Passport Seoul</span>
-        <span class="label">2026</span>
-      </div>
-      <h3 class="project-title">K-pop fandom platform migration: a two-year longitudinal study</h3>
-      <p class="project-desc">Mapping where listening, sharing, and purchasing behavior actually lives across 12 platforms and 3 markets.</p>
-    </a>
-
-    <a href="#" class="project-card" data-category="hypeer-campaign">
-      <div class="project-thumb">
-        <span class="project-thumb-label">GLOBAL<br/>ROLLOUT</span>
-      </div>
-      <div class="project-meta">
-        <span class="tag tag-hypeer">HYPEER</span>
-        <span class="label">2025</span>
-      </div>
-      <h3 class="project-title">Streaming signals to brand partnership: 14-market launch playbook</h3>
-      <p class="project-desc">Turning real-time platform data into a coordinated global campaign for a top-tier entertainment IP.</p>
-    </a>
-
-    <a href="#" class="project-card" data-category="hypeer-campaign">
-      <div class="project-thumb hypeer">
-        <span class="project-thumb-label">SOCIAL<br/>ENGINE</span>
-      </div>
-      <div class="project-meta">
-        <span class="tag tag-hypeer">HYPEER</span>
-        <span class="label">2025</span>
-      </div>
-      <h3 class="project-title">Always-on social strategy for independent K-pop label</h3>
-      <p class="project-desc">HYPEER designed and operated a 6-month social content engine across TikTok, Instagram, and Weverse.</p>
-    </a>
-
-    <a href="#" class="project-card" data-category="passport-seoul-research">
-      <div class="project-thumb dark">
-        <span class="project-thumb-label">AUDIENCE<br/>BLUEPRINT</span>
-      </div>
-      <div class="project-meta">
-        <span class="tag">Passport Seoul</span>
-        <span class="label">2025</span>
-      </div>
-      <h3 class="project-title">Audience segmentation blueprint for OTT content studio</h3>
-      <p class="project-desc">Built a behavioral segmentation model that identified four underserved audience clusters for original content development.</p>
-    </a>
-
-    <a href="#" class="project-card" data-category="contents">
-      <div class="project-thumb">
-        <span class="project-thumb-label">TREND<br/>RADAR</span>
-      </div>
-      <div class="project-meta">
-        <span class="tag">Contents</span>
-        <span class="label">2024</span>
-      </div>
-      <h3 class="project-title">Entertainment trend radar: quarterly data briefing series</h3>
-      <p class="project-desc">An ongoing subscription product delivering cross-platform trend analysis to agency partners every quarter.</p>
-    </a>
-
-    <a href="#" class="project-card" data-category="hypeer-campaign">
-      <div class="project-thumb hypeer">
-        <span class="project-thumb-label">CREATOR<br/>COLLAB</span>
-      </div>
-      <div class="project-meta">
-        <span class="tag tag-hypeer">HYPEER</span>
-        <span class="label">2024</span>
-      </div>
-      <h3 class="project-title">Creator partnership campaign for global beauty brand × K-pop</h3>
-      <p class="project-desc">HYPEER matched 12 creators with a beauty brand launch tied to a K-pop comeback, generating 48M organic impressions.</p>
-    </a>
-
-    <a href="#" class="project-card" data-category="passport-seoul-research">
-      <div class="project-thumb dark">
-        <span class="project-thumb-label">WEBTOON<br/>PIPELINE</span>
-      </div>
-      <div class="project-meta">
-        <span class="tag">Passport Seoul</span>
-        <span class="label">2024</span>
-      </div>
-      <h3 class="project-title">Webtoon-to-screen IP adaptation landscape: a market pipeline study</h3>
-      <p class="project-desc">Tracking the commercial lifecycle of 40+ webtoon properties from platform serialization to global studio deal.</p>
-    </a>
-
-    <a href="#" class="project-card" data-category="contents">
-      <div class="project-thumb">
-        <span class="project-thumb-label">STREAMING<br/>ECONOMY</span>
-      </div>
-      <div class="project-meta">
-        <span class="tag">Contents</span>
-        <span class="label">2023</span>
-      </div>
-      <h3 class="project-title">The state of Korean streaming economics: annual data report</h3>
-      <p class="project-desc">A yearly publication examining revenue flows, platform power, and artist economics across Korean entertainment streaming.</p>
-    </a>
-
-  </div>
+  <!-- PROJECT GRID — populated by JS from PROJECTS data (see <script> block).
+       Wireframe stage: data lives in this file. CMS stage: replace with `payload.find({ collection: 'projects' })`. -->
+  <div class="project-grid"></div>
 
   <!-- PAGINATION — dynamically populated by JS. Hidden when total pages ≤ 1. -->
   <nav class="pagination is-hidden" aria-label="Portfolio pagination"></nav>
@@ -448,6 +347,143 @@
         try { localStorage.setItem(KEY, next); } catch(e) {}
       });
     });
+  })();
+
+  // ──────────────────────────────────────────────────────────────────────
+  // WIREFRAME DATA (Stage A) — content lives here for the static demo.
+  //
+  // Stage B (CMS migration): replace these two arrays with Payload responses:
+  //   const CATEGORIES = (await payload.find({ collection: 'categories', sort: 'order' })).docs;
+  //   const PROJECTS   = (await payload.find({ collection: 'projects', sort: '-publishedAt' })).docs;
+  // The render functions below remain unchanged because they consume the same
+  // data shape. Cards link to `/portfolio/[slug]` so detail pages slot in cleanly.
+  // ──────────────────────────────────────────────────────────────────────
+  var CATEGORIES = [
+    { slug: 'all',                       label: 'All' },
+    { slug: 'hypeer-campaign',           label: 'HYPEER Campaign',         tagLabel: 'HYPEER',         accent: 'hypeer' },
+    { slug: 'passport-seoul-research',   label: 'Passport Seoul Research', tagLabel: 'Passport Seoul' },
+    { slug: 'contents',                  label: 'Contents',                tagLabel: 'Contents' }
+  ];
+
+  var PROJECTS = [
+    {
+      slug: 'fandom-migration',
+      thumbLabel: 'FANDOM<br/>MIGRATION',
+      thumbStyle: 'dark',
+      category: 'passport-seoul-research',
+      year: 2026,
+      title: 'K-pop fandom platform migration: a two-year longitudinal study',
+      excerpt: 'Mapping where listening, sharing, and purchasing behavior actually lives across 12 platforms and 3 markets.'
+    },
+    {
+      slug: 'streaming-signals-brand-partnership',
+      thumbLabel: 'GLOBAL<br/>ROLLOUT',
+      thumbStyle: 'default',
+      category: 'hypeer-campaign',
+      year: 2025,
+      title: 'Streaming signals to brand partnership: 14-market launch playbook',
+      excerpt: 'Turning real-time platform data into a coordinated global campaign for a top-tier entertainment IP.'
+    },
+    {
+      slug: 'always-on-social-engine',
+      thumbLabel: 'SOCIAL<br/>ENGINE',
+      thumbStyle: 'hypeer',
+      category: 'hypeer-campaign',
+      year: 2025,
+      title: 'Always-on social strategy for independent K-pop label',
+      excerpt: 'HYPEER designed and operated a 6-month social content engine across TikTok, Instagram, and Weverse.'
+    },
+    {
+      slug: 'audience-segmentation-blueprint',
+      thumbLabel: 'AUDIENCE<br/>BLUEPRINT',
+      thumbStyle: 'dark',
+      category: 'passport-seoul-research',
+      year: 2025,
+      title: 'Audience segmentation blueprint for OTT content studio',
+      excerpt: 'Built a behavioral segmentation model that identified four underserved audience clusters for original content development.'
+    },
+    {
+      slug: 'entertainment-trend-radar',
+      thumbLabel: 'TREND<br/>RADAR',
+      thumbStyle: 'default',
+      category: 'contents',
+      year: 2024,
+      title: 'Entertainment trend radar: quarterly data briefing series',
+      excerpt: 'An ongoing subscription product delivering cross-platform trend analysis to agency partners every quarter.'
+    },
+    {
+      slug: 'creator-collab-beauty-kpop',
+      thumbLabel: 'CREATOR<br/>COLLAB',
+      thumbStyle: 'hypeer',
+      category: 'hypeer-campaign',
+      year: 2024,
+      title: 'Creator partnership campaign for global beauty brand × K-pop',
+      excerpt: 'HYPEER matched 12 creators with a beauty brand launch tied to a K-pop comeback, generating 48M organic impressions.'
+    },
+    {
+      slug: 'webtoon-ip-pipeline',
+      thumbLabel: 'WEBTOON<br/>PIPELINE',
+      thumbStyle: 'dark',
+      category: 'passport-seoul-research',
+      year: 2024,
+      title: 'Webtoon-to-screen IP adaptation landscape: a market pipeline study',
+      excerpt: 'Tracking the commercial lifecycle of 40+ webtoon properties from platform serialization to global studio deal.'
+    },
+    {
+      slug: 'streaming-economy-annual',
+      thumbLabel: 'STREAMING<br/>ECONOMY',
+      thumbStyle: 'default',
+      category: 'contents',
+      year: 2023,
+      title: 'The state of Korean streaming economics: annual data report',
+      excerpt: 'A yearly publication examining revenue flows, platform power, and artist economics across Korean entertainment streaming.'
+    }
+  ];
+
+  // Renderers — pure functions that read CATEGORIES / PROJECTS and write DOM.
+  // They run before the filter+pagination IIFE so the DOM is populated when that code queries it.
+  // NOTE: this is a wireframe — values are trusted. In a CMS-connected build, escape user-authored fields.
+  (function(){
+    function renderFilters(){
+      var host = document.querySelector('.filters');
+      if(!host) return;
+      host.innerHTML = CATEGORIES.map(function(cat, i){
+        return '<button type="button" class="filter-btn' + (i === 0 ? ' active' : '') +
+          '" data-filter="' + cat.slug + '">' + cat.label + '</button>';
+      }).join('');
+    }
+
+    function renderProjects(){
+      var host = document.querySelector('.project-grid');
+      if(!host) return;
+      var catBySlug = {};
+      CATEGORIES.forEach(function(c){ catBySlug[c.slug] = c; });
+
+      host.innerHTML = PROJECTS.map(function(p){
+        var cat = catBySlug[p.category] || {};
+        var thumbClass = 'project-thumb' +
+          (p.thumbStyle && p.thumbStyle !== 'default' ? ' ' + p.thumbStyle : '');
+        var tagClass = 'tag' + (cat.accent === 'hypeer' ? ' tag-hypeer' : '');
+        var tagText = cat.tagLabel || cat.label || p.category;
+        // Wireframe stage: query-string link to portfolio-article.html for static preview.
+        // Stage B (CMS / Next.js): replace with `/portfolio/${p.slug}` for path-based routing.
+        return '' +
+          '<a href="portfolio-article.html?slug=' + p.slug + '" class="project-card" data-category="' + p.category + '">' +
+            '<div class="' + thumbClass + '">' +
+              '<span class="project-thumb-label">' + p.thumbLabel + '</span>' +
+            '</div>' +
+            '<div class="project-meta">' +
+              '<span class="' + tagClass + '">' + tagText + '</span>' +
+              '<span class="label">' + p.year + '</span>' +
+            '</div>' +
+            '<h3 class="project-title">' + p.title + '</h3>' +
+            '<p class="project-desc">' + p.excerpt + '</p>' +
+          '</a>';
+      }).join('');
+    }
+
+    renderFilters();
+    renderProjects();
   })();
 
   // Portfolio filter + pagination — unified state machine.
