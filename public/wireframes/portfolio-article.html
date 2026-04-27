@@ -1,0 +1,790 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Project — KREATORS.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<!-- v2 font stack: Fraunces (display, reserved for main hero) · Geist (UI sans) · Geist Mono (labels) · Newsreader (long-form reading) · Pretendard (Korean) -->
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT,WONK@0,9..144,300..900,0..100,0..1;1,9..144,300..900,0..100,0..1&family=Geist:wght@400;500;600;700;800;900&family=Geist+Mono:wght@400;500;600&family=Newsreader:ital,wght@0,400..700;1,400&display=swap" rel="stylesheet" />
+<link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css" rel="stylesheet" />
+<style>
+  :root{
+    --bg:#FFFFFF;--ink:#0A0A0A;--ink-2:#1A1A1A;--muted:#6B6B6B;
+    --rule:#E5E5E5;--rule-strong:#0A0A0A;
+    --hypeer:#EF4A24;--hypeer-tint:#FCDED8;
+
+    --font-sans:"Geist","Pretendard Variable",system-ui,sans-serif;
+    --font-display:"Fraunces","Pretendard Variable",Georgia,serif;
+    --font-serif:"Newsreader","Pretendard Variable",Georgia,serif;
+    --font-mono:"Geist Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+
+    --fs-display-l:clamp(36px,5vw,64px);
+    --fs-h2:clamp(24px,2.4vw,30px);
+    --fs-h3:22px;--fs-lead:20px;--fs-body:18px;--fs-ui:15px;--fs-label:12px;
+    --s-1:4px;--s-2:8px;--s-3:12px;--s-4:16px;--s-5:24px;--s-6:32px;
+    --s-7:48px;--s-8:64px;--s-9:96px;--s-10:128px;
+    --container:1440px;--gutter:24px;--pad-x:clamp(20px,4vw,56px);
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);}
+  html{scrollbar-gutter:stable both-edges;}
+  body{font-family:var(--font-sans);font-size:var(--fs-ui);line-height:1.5;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;}
+  a{color:inherit;text-decoration:none;}
+  .container{max-width:var(--container);margin:0 auto;padding:0 var(--pad-x);}
+
+  /* Type — sub-page hero, lighter than main.html's (matches blog-article) */
+  .display-l{font-family:var(--font-sans);font-weight:700;font-size:var(--fs-display-l);line-height:1.08;letter-spacing:-0.02em;}
+  .lead{font-family:var(--font-serif);font-weight:400;font-size:var(--fs-lead);line-height:1.55;}
+  .ui{font-family:var(--font-sans);font-weight:500;font-size:var(--fs-ui);line-height:1.4;}
+  .label{font-family:var(--font-mono);font-weight:500;font-size:var(--fs-label);line-height:1.2;letter-spacing:0.08em;text-transform:uppercase;}
+
+  /* Readability */
+  .display-l,.post-body h2,.post-body h3,.post-body h4{text-wrap:balance;}
+  .post-body p,.post-hero-caption{text-wrap:pretty;}
+  html[lang="ko"] .post-body,html[lang="ko"] .post-hero-caption{word-break:keep-all;overflow-wrap:break-word;}
+
+  /* i18n visibility */
+  html[lang="en"] .i18n-ko,html[lang="en"] .i18n-ja{display:none;}
+  html[lang="ko"] .i18n-en,html[lang="ko"] .i18n-ja{display:none;}
+  html[lang="ja"] .i18n-en,html[lang="ja"] .i18n-ko{display:none;}
+
+  /* Nav — matches blog-article.html */
+  .nav{position:fixed;top:0;left:0;right:0;z-index:50;background:var(--bg);border-bottom:1px solid var(--rule-strong);}
+  .nav-inner{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;height:72px;gap:var(--s-4);}
+  .nav-brand{display:inline-flex;align-items:center;height:28px;}
+  .nav-brand img{height:20px;width:auto;display:block;}
+  .nav-menu{display:flex;gap:var(--s-6);justify-self:center;}
+  .nav-menu a{font-family:var(--font-sans);font-weight:500;font-size:15px;color:var(--ink);min-width:72px;text-align:center;}
+  .nav-menu a:hover{color:var(--hypeer);}
+  .nav-menu a.active{border-bottom:2px solid var(--ink);padding-bottom:2px;}
+  .nav-actions{display:flex;align-items:center;gap:var(--s-4);justify-self:end;}
+  .lang-toggle{display:inline-flex;align-items:center;gap:6px;font-family:var(--font-mono);font-weight:500;font-size:12px;letter-spacing:0.08em;}
+  .lang-toggle .lang-sep{color:var(--rule);}
+  .lang-btn{background:transparent;border:0;padding:4px 0;color:var(--muted);font:inherit;letter-spacing:inherit;cursor:pointer;transition:color .15s ease;}
+  .lang-btn:hover{color:var(--ink);}
+  html[lang="en"] .lang-btn[data-lang="en"],
+  html[lang="ko"] .lang-btn[data-lang="ko"],
+  html[lang="ja"] .lang-btn[data-lang="ja"]{color:var(--ink);text-decoration:underline;text-underline-offset:4px;}
+  .nav-cta{font-family:var(--font-sans);font-weight:600;font-size:14px;padding:10px 18px;border:1px solid var(--ink);}
+  .nav-cta:hover{background:var(--ink);color:var(--bg);}
+
+  /* Footer — matches portfolio.html */
+  .footer{margin-top:var(--s-10);background:var(--ink);color:var(--bg);padding:var(--s-9) 0 var(--s-6);}
+  .footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:var(--s-7);}
+  .footer h4{font-family:var(--font-mono);font-weight:500;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#9A9A9A;margin:0 0 var(--s-4);}
+  .footer ul{list-style:none;padding:0;margin:0;display:grid;gap:10px;}
+  .footer ul a{font-family:var(--font-sans);font-size:15px;color:var(--bg);}
+  .footer ul a:hover{color:var(--hypeer);}
+  .footer-brand{display:block;margin:0 0 var(--s-4);}
+  .footer-brand img{height:32px;width:auto;display:block;}
+  .footer-bottom{margin-top:var(--s-8);padding-top:var(--s-4);border-top:1px solid #2A2A2A;display:flex;justify-content:space-between;font-family:var(--font-mono);font-size:12px;letter-spacing:0.04em;color:#6B6B6B;}
+  @media(max-width:800px){.footer-grid{grid-template-columns:1fr 1fr;}}
+
+  /* ---- PAGE: PROJECT DETAIL ---- */
+  .page-content{padding-top:72px;}
+
+  .post{
+    max-width:760px;
+    margin:0 auto;
+    padding:var(--s-9) var(--pad-x) var(--s-9);
+  }
+
+  /* Header */
+  .post-back{
+    display:inline-flex;align-items:center;gap:6px;
+    font-family:var(--font-mono);font-weight:500;font-size:12px;
+    letter-spacing:0.04em;color:var(--muted);
+    margin-bottom:var(--s-6);
+    transition:color .15s ease;
+  }
+  .post-back:hover{color:var(--ink);}
+  .post-meta{
+    display:flex;align-items:center;gap:var(--s-3);
+    margin-bottom:var(--s-4);
+    flex-wrap:wrap;
+  }
+  .post-meta .label{color:var(--muted);}
+  .post-meta .label.post-category-accent{color:var(--hypeer);}
+  /* Editorial article header — compact than landing-page hero
+     so titles wrap to 2-3 readable lines. */
+  .post-title{
+    font-size:clamp(28px,3.6vw,46px);
+    line-height:1.1;
+    letter-spacing:-0.015em;
+    margin:0 0 var(--s-3);
+    text-wrap:balance;
+  }
+  /* Subtitle — serif italic, classic editorial deck */
+  .post-subtitle{
+    font-family:var(--font-serif);
+    font-weight:400;font-style:italic;
+    font-size:clamp(18px,1.9vw,24px);line-height:1.4;
+    color:var(--muted);
+    margin:0 0 var(--s-5);
+    max-width:640px;
+    text-wrap:pretty;
+  }
+  /* Byline — Client · Role · Duration */
+  .post-byline{
+    font-family:var(--font-mono);font-size:12px;letter-spacing:0.04em;
+    color:var(--muted);margin:0;
+  }
+
+  /* Hero — wireframe stage uses a colored block (.post-hero-thumb) in place
+     of the real cover image. CMS stage swaps in <img class="post-hero-img"> from
+     the project's `coverImage` field (Vercel Blob URL). */
+  .post-hero{
+    margin:var(--s-7) 0;
+  }
+  .post-hero-thumb{
+    aspect-ratio:16/9;
+    background:#F1F1F1;
+    display:flex;align-items:flex-end;
+    padding:var(--s-6);
+    overflow:hidden;
+    position:relative;
+  }
+  .post-hero-thumb.dark{background:var(--ink);color:var(--bg);}
+  .post-hero-thumb.hypeer{background:var(--hypeer);color:var(--ink);}
+  .post-hero-thumb-label{
+    font-family:var(--font-sans);font-weight:900;
+    font-size:clamp(40px,5vw,72px);letter-spacing:-0.02em;line-height:1;
+    opacity:0.18;
+  }
+  .post-hero-img{
+    display:block;width:100%;height:auto;
+  }
+  .post-hero-caption{
+    font-family:var(--font-serif);font-style:italic;font-size:14px;
+    line-height:1.55;color:var(--muted);
+    margin-top:var(--s-3);text-align:center;
+  }
+
+  /* Body — prose article */
+  .post-body{
+    font-family:var(--font-serif);
+    font-size:19px;line-height:1.78;
+    color:var(--ink-2);
+    margin-top:var(--s-7);
+  }
+  .post-body p{margin:0 0 var(--s-5);}
+  .post-body h2,.post-body h3,.post-body h4{
+    font-family:var(--font-sans);font-weight:700;
+    letter-spacing:-0.01em;color:var(--ink);
+    margin:var(--s-8) 0 var(--s-4);
+  }
+  .post-body h2{font-size:clamp(24px,2.4vw,30px);line-height:1.2;}
+  .post-body h3{font-size:21px;line-height:1.25;}
+  .post-body h4{font-size:18px;line-height:1.3;}
+  .post-body a{
+    color:var(--ink);
+    border-bottom:1px solid var(--ink);
+    padding-bottom:1px;
+    transition:color .15s ease,border-color .15s ease;
+  }
+  .post-body a:hover{color:var(--hypeer);border-color:var(--hypeer);}
+  .post-body strong{font-weight:700;color:var(--ink);}
+  .post-body em{font-style:italic;}
+  .post-body ul,.post-body ol{
+    margin:0 0 var(--s-5);padding-left:var(--s-6);
+  }
+  .post-body li{margin-bottom:var(--s-3);}
+  .post-body blockquote{
+    margin:var(--s-7) 0;
+    padding:var(--s-3) var(--s-6);
+    border-left:3px solid var(--ink);
+    font-style:italic;color:var(--ink);
+  }
+  .post-body blockquote cite{
+    display:block;
+    margin-top:var(--s-3);
+    font-style:normal;
+    font-family:var(--font-mono);
+    font-size:12px;letter-spacing:0.04em;
+    color:var(--muted);
+  }
+  .post-body figure.post-figure{
+    margin:var(--s-7) 0;
+  }
+  .post-body figure.post-figure-thumb{
+    aspect-ratio:16/9;
+    background:#F1F1F1;
+    display:flex;align-items:flex-end;
+    padding:var(--s-5);
+    margin:var(--s-7) 0 var(--s-2);
+  }
+  .post-body figure.post-figure-thumb.dark{background:var(--ink);color:var(--bg);}
+  .post-body figure.post-figure-thumb-label{
+    font-family:var(--font-sans);font-weight:900;
+    font-size:clamp(28px,3vw,44px);letter-spacing:-0.02em;line-height:1;
+    opacity:0.2;
+  }
+  .post-body figcaption{
+    font-family:var(--font-serif);font-style:italic;font-size:14px;
+    line-height:1.55;color:var(--muted);
+    margin:var(--s-3) 0 var(--s-7);text-align:center;
+  }
+
+  /* Results callout — case-study specific. Big editorial figures.
+     CMS field shape: results: [{ figure: '24M', label: 'Organic impressions' }, ...] */
+  .post-results{
+    display:grid;
+    grid-template-columns:repeat(3, 1fr);
+    gap:var(--s-6);
+    padding:var(--s-7) 0;
+    border-top:1px solid var(--rule-strong);
+    border-bottom:1px solid var(--rule-strong);
+    margin:var(--s-9) 0;
+  }
+  .result{
+    text-align:left;
+  }
+  .result-figure{
+    font-family:var(--font-display);
+    font-weight:700;
+    font-size:clamp(40px,5vw,64px);
+    line-height:1;
+    letter-spacing:-0.02em;
+    margin:0 0 var(--s-3);
+    color:var(--ink);
+    font-variation-settings:"opsz" 144, "SOFT" 30;
+  }
+  .result-label{
+    font-family:var(--font-mono);
+    font-weight:500;
+    font-size:12px;
+    letter-spacing:0.08em;
+    color:var(--muted);
+    text-transform:uppercase;
+    line-height:1.4;
+  }
+  @media(max-width:600px){
+    .post-results{grid-template-columns:1fr;gap:var(--s-5);padding:var(--s-6) 0;}
+  }
+
+  /* Bottom return */
+  .post-footer{
+    margin-top:var(--s-9);
+    padding-top:var(--s-7);
+    border-top:1px solid var(--rule);
+  }
+  .post-footer-back{
+    display:inline-flex;align-items:center;gap:6px;
+    font-family:var(--font-mono);font-weight:500;font-size:12px;
+    letter-spacing:0.04em;color:var(--muted);
+    transition:color .15s ease;
+  }
+  .post-footer-back:hover{color:var(--ink);}
+
+  /* Status: loading / error / not-found */
+  .post-status{
+    padding:var(--s-10) var(--pad-x);
+    text-align:center;
+    font-family:var(--font-mono);font-size:13px;
+    letter-spacing:0.04em;color:var(--muted);
+  }
+
+  @media(max-width:600px){
+    .nav-menu{gap:var(--s-4);}
+    .nav-cta{display:none;}
+    .post{padding:var(--s-7) var(--pad-x);}
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="container nav-inner">
+    <a href="main.html" class="nav-brand" aria-label="KREATORS home">
+      <img src="/assets/Kreators_logo(B)_v2.png" alt="KREATORS." />
+    </a>
+    <div class="nav-menu">
+      <a href="portfolio.html" class="active">Work</a>
+      <a href="blog.html">Journal</a>
+      <a href="hiring.html">Careers</a>
+    </div>
+    <div class="nav-actions">
+      <div class="lang-toggle" role="group" aria-label="Language">
+        <button type="button" class="lang-btn" data-lang="en">EN</button>
+        <span class="lang-sep" aria-hidden="true">·</span>
+        <button type="button" class="lang-btn" data-lang="ko">KR</button>
+        <span class="lang-sep" aria-hidden="true">·</span>
+        <button type="button" class="lang-btn" data-lang="ja">JP</button>
+      </div>
+      <a href="main.html#contact" class="nav-cta">Contact</a>
+    </div>
+  </div>
+</nav>
+
+<div class="page-content">
+
+  <!-- ARTICLE — populated by JS once the slug is resolved -->
+  <article class="post" id="post" hidden>
+    <a href="portfolio.html" class="post-back">
+      <span aria-hidden="true">&larr;</span>
+      <span class="i18n-en">Work</span>
+      <span class="i18n-ko">작업</span>
+      <span class="i18n-ja">実績</span>
+    </a>
+
+    <header class="post-header">
+      <div class="post-meta">
+        <span class="label post-category"></span>
+        <span class="label post-year"></span>
+      </div>
+      <h1 class="display-l post-title"></h1>
+      <p class="post-subtitle" hidden></p>
+      <p class="post-byline"></p>
+    </header>
+
+    <!-- Hero — wireframe stage uses .post-hero-thumb. CMS stage swaps in <img>. -->
+    <div class="post-hero" hidden>
+      <div class="post-hero-thumb">
+        <span class="post-hero-thumb-label"></span>
+      </div>
+      <p class="post-hero-caption"></p>
+    </div>
+
+    <div class="post-body" id="postBody"></div>
+
+    <footer class="post-footer">
+      <a href="portfolio.html" class="post-footer-back">
+        <span aria-hidden="true">&larr;</span>
+        <span class="i18n-en">Back to all work</span>
+        <span class="i18n-ko">전체 프로젝트로 돌아가기</span>
+        <span class="i18n-ja">プロジェクト一覧に戻る</span>
+      </a>
+    </footer>
+  </article>
+
+  <!-- STATUS: loading / error / not-found — replaced by article on success -->
+  <div class="post-status" id="postStatus">
+    <span class="i18n-en">Loading project…</span>
+    <span class="i18n-ko">프로젝트를 불러오는 중…</span>
+    <span class="i18n-ja">プロジェクトを読み込み中…</span>
+  </div>
+
+</div>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <a href="main.html" class="footer-brand" aria-label="KREATORS home">
+          <img src="/assets/Kreators_logo(W).png" alt="KREATORS." />
+        </a>
+        <p class="ui" style="color:#9A9A9A; max-width: 360px;">
+          An entertainment-focused data marketing agency based in Seoul. We read industries and write what we learn.
+        </p>
+      </div>
+      <div>
+        <h4>Studio</h4>
+        <ul>
+          <li><a href="main.html#hypeer">HYPEER</a></li>
+          <li><a href="main.html#passport-seoul">Passport Seoul</a></li>
+          <li><a href="#">Talented</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Index</h4>
+        <ul>
+          <li><a href="portfolio.html">Work</a></li>
+          <li><a href="blog.html">Journal</a></li>
+          <li><a href="hiring.html">Careers</a></li>
+          <li><a href="main.html#contact">Contact</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Follow</h4>
+        <ul>
+          <li><a href="#">Instagram</a></li>
+          <li><a href="#">LinkedIn</a></li>
+          <li><a href="#">Medium</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; 2026 Kreators Network</span>
+      <span>Seoul &middot; Remote</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Language toggle — shared across all pages, persists via localStorage.
+  (function(){
+    var root = document.documentElement;
+    var KEY = 'kn-lang';
+    var valid = { en: true, ko: true, ja: true };
+    try {
+      var stored = localStorage.getItem(KEY);
+      if(stored && valid[stored]) root.setAttribute('lang', stored);
+    } catch(e) {}
+    var btns = document.querySelectorAll('.lang-btn');
+    btns.forEach(function(btn){
+      btn.addEventListener('click', function(){
+        var next = btn.getAttribute('data-lang');
+        if(!valid[next]) return;
+        root.setAttribute('lang', next);
+        try { localStorage.setItem(KEY, next); } catch(e) {}
+      });
+    });
+  })();
+
+  // ──────────────────────────────────────────────────────────────────────
+  // WIREFRAME DATA (Stage A) — project detail content lives here for the static demo.
+  //
+  // Stage B (CMS migration) replaces this with:
+  //   const post = (await payload.find({
+  //     collection: 'projects',
+  //     where: { slug: { equals: slug }, _status: { equals: 'published' } },
+  //     depth: 2, limit: 1
+  //   })).docs[0];
+  //
+  // The renderPost() function below stays as-is. The body content swap:
+  //   Stage A:  content: [{ type:'paragraph', text:'...' }, ...]   ← simple block array
+  //   Stage B:  content: { root: { children: [...] } }             ← Lexical tree
+  // For Stage B, copy the renderLexical() function from blog-article.html.
+  // ──────────────────────────────────────────────────────────────────────
+
+  // Shared category metadata (mirrors portfolio.html CATEGORIES)
+  var CATEGORY_META = {
+    'hypeer-campaign':         { label: 'HYPEER Campaign',         tagLabel: 'HYPEER',         accent: 'hypeer' },
+    'passport-seoul-research': { label: 'Passport Seoul Research', tagLabel: 'Passport Seoul' },
+    'contents':                { label: 'Contents',                tagLabel: 'Contents' }
+  };
+
+  // Project details — keyed by slug. Three flagship case studies are fully detailed
+  // (one per category). The remaining five projects ship as stubs to demonstrate
+  // the "writeup pending" state.
+  var PROJECT_DETAILS = {
+
+    // ===== HYPEER CAMPAIGN — fully detailed case study =====
+    'always-on-social-engine': {
+      category: 'hypeer-campaign',
+      year: 2025,
+      title: 'Always-on social strategy for independent K-pop label',
+      subtitle: 'How HYPEER turned a legacy K-pop label’s digital presence into a 6-month always-on system across TikTok, Instagram, and Weverse.',
+      client: 'Independent K-pop label',
+      role: 'Strategy + Execution',
+      duration: 'Jul – Dec 2025',
+      hero: { thumbStyle: 'hypeer', thumbLabel: 'SOCIAL / ENGINE', caption: 'A six-month always-on cadence built around comeback windows, fandom touchpoints, and weekly creative resets.' },
+      content: [
+        { type: 'paragraph', text: 'When the label engaged HYPEER, their digital footprint was reactive — social activity spiked around comebacks and went silent in between. The challenge was to convert that pulsed pattern into a continuous, audience-shaped publishing engine without diluting the artist’s creative voice.' },
+        { type: 'heading', level: 2, text: 'The brief' },
+        { type: 'paragraph', text: 'Build an always-on social system that maintains audience momentum between comebacks, surfaces fan-driven moments in real time, and delivers measurable lift in organic reach across TikTok, Instagram, and Weverse over six months.' },
+        { type: 'heading', level: 2, text: 'Approach' },
+        { type: 'paragraph', text: 'We designed the engagement model around three concentric loops, each operating at a different cadence:' },
+        { type: 'list', items: [
+          '<strong>Daily fan response loop</strong> — monitoring fandom signals across platforms, surfacing the strongest organic moments within 12 hours.',
+          '<strong>Weekly creative reset</strong> — producing one high-craft hero asset per week, rotated by platform-native context.',
+          '<strong>Monthly narrative arc</strong> — anchoring the month around a single thematic story that connects releases, fan rituals, and label POV.'
+        ]},
+        { type: 'figure-thumb', thumbStyle: 'dark', thumbLabel: 'CADENCE LOOPS', caption: 'Three nested cadences — daily, weekly, monthly — give the engine resilience without making it feel mechanical.' },
+        { type: 'heading', level: 2, text: 'Outcome' },
+        { type: 'paragraph', text: 'Six months in, the label’s organic engagement profile no longer looked like a comeback EKG. The continuous baseline doubled, comeback peaks layered on top of higher floors, and — most importantly — fan content velocity sustained through the comeback gap.' },
+        { type: 'quote', text: 'For the first time we have a social presence that doesn’t go quiet between releases. The fans noticed before we did.', cite: 'Label digital lead' },
+        { type: 'results', items: [
+          { figure: '24M+', label: 'Organic impressions' },
+          { figure: '3.8×', label: 'Follower growth' },
+          { figure: '6mo', label: 'Always-on cadence' }
+        ]}
+      ]
+    },
+
+    // ===== PASSPORT SEOUL RESEARCH — fully detailed case study =====
+    'fandom-migration': {
+      category: 'passport-seoul-research',
+      year: 2026,
+      title: 'K-pop fandom platform migration: a two-year longitudinal study',
+      subtitle: 'Mapping the silent rotation of how, where, and why fans listen, share, and spend across 12 platforms and 3 markets.',
+      client: 'Passport Seoul · multi-client subscription',
+      role: 'Research · Methodology',
+      duration: 'Q1 2024 – Q1 2026',
+      hero: { thumbStyle: 'dark', thumbLabel: 'FANDOM / MIGRATION', caption: 'A panel of 480 K-pop fans across South Korea, Japan, and the United States, instrumented across twelve platforms over two years.' },
+      content: [
+        { type: 'paragraph', text: 'The conventional wisdom is that K-pop fandom “lives on social.” In practice, where fandom lives is in constant rotation, and the rotation is fast enough that quarterly platform-share charts mislead more than they explain. We wanted a methodology that captured movement, not just position.' },
+        { type: 'heading', level: 2, text: 'The question' },
+        { type: 'paragraph', text: 'Across listening, sharing, and purchasing, where does fandom behavior actually rotate — and what causes a platform to gain or shed share over a multi-quarter window?' },
+        { type: 'heading', level: 2, text: 'Methodology' },
+        { type: 'paragraph', text: 'A 480-person panel was instrumented across South Korea, Japan, and the United States. Each panelist contributed self-reported behavior diaries, opt-in passive measurement, and quarterly qualitative interviews. We tracked twelve platforms spanning music streaming, video, social, fan community, and commerce.' },
+        { type: 'list', items: [
+          'Behavioral diaries: weekly, structured around three verbs — <em>listen</em>, <em>share</em>, <em>buy</em>.',
+          'Passive instrumentation: opt-in mobile measurement on a subset (n=180).',
+          'Qualitative depth: 16 interviews per quarter, sampling for divergence, not representativeness.'
+        ]},
+        { type: 'figure-thumb', thumbStyle: 'dark', thumbLabel: 'PANEL / FLOW', caption: 'Quarterly cohort flow — each platform’s share of activity is a function of inflow, retention, and outflow, not of static membership.' },
+        { type: 'heading', level: 2, text: 'Three key findings' },
+        { type: 'paragraph', text: 'The full report runs eighty pages; three findings stand out for marketers and label strategy teams:' },
+        { type: 'list', items: [
+          '<strong>Listening loyalty is shorter than purchase loyalty.</strong> Fans rotate streaming providers more often than they rotate where they spend.',
+          '<strong>Discovery is platform-bound; community is platform-fluid.</strong> Where fans find new music has hardened; where they discuss it has not.',
+          '<strong>Cross-market behavior diverges most around commerce.</strong> Listening looks alike across markets; spending does not.'
+        ]},
+        { type: 'results', items: [
+          { figure: '12', label: 'Platforms tracked' },
+          { figure: '3', label: 'Markets covered' },
+          { figure: '480', label: 'Panelists, 8 quarters' }
+        ]}
+      ]
+    },
+
+    // ===== CONTENTS — fully detailed publication =====
+    'streaming-economy-annual': {
+      category: 'contents',
+      year: 2023,
+      title: 'The state of Korean streaming economics: annual data report',
+      subtitle: 'A yearly publication examining revenue flows, platform power, and artist economics across Korean entertainment streaming.',
+      client: 'Subscription publication',
+      role: 'Editorial + Data',
+      duration: 'Annual since 2023',
+      hero: { thumbStyle: 'default', thumbLabel: 'STREAMING / ECONOMY', caption: 'A long-form data report that has become a reference document inside labels, agencies, and policy desks.' },
+      content: [
+        { type: 'paragraph', text: 'There are no shortage of charts about Korean music streaming. There is a shortage of <em>economics</em> — work that follows the money from listener to platform to rights-holder to artist, and asks where the friction is, who is gaining leverage, and what the next year of negotiations will look like.' },
+        { type: 'heading', level: 2, text: 'About this report' },
+        { type: 'paragraph', text: 'Each annual edition examines a single year through three lenses — revenue mechanics, platform power, and artist economics. We treat the document as a reference, not a press release: it is meant to be cited, argued with, and re-read.' },
+        { type: 'heading', level: 2, text: 'What’s covered in the inaugural edition' },
+        { type: 'list', items: [
+          '<strong>Revenue mechanics</strong> — platform-by-platform breakdown of how a paid subscription becomes royalties, with the friction visible at every step.',
+          '<strong>Platform power</strong> — share movement, lock-in mechanisms, and the strategic role of bundling.',
+          '<strong>Artist economics</strong> — the gap between perceived and actual streaming income, and what changes for independent artists vs. major-label rosters.'
+        ]},
+        { type: 'figure-thumb', thumbStyle: 'default', thumbLabel: 'REVENUE / FLOW', caption: 'Six-platform revenue tracing diagram — the report’s most-cited figure in its first year.' },
+        { type: 'heading', level: 2, text: 'Methodology note' },
+        { type: 'paragraph', text: 'Numbers in this report come from three sources: published filings, anonymized rights-holder data shared under research agreement, and a structured interview series with industry stakeholders. Where sources conflict, we publish the conflict.' },
+        { type: 'quote', text: 'The first piece of writing about Korean streaming I’ve actually circulated to my board.', cite: 'Major label strategy lead' },
+        { type: 'results', items: [
+          { figure: '6', label: 'Platforms analyzed' },
+          { figure: '₩240B+', label: 'Revenue mapped' },
+          { figure: '50+', label: 'Stakeholder interviews' }
+        ]}
+      ]
+    },
+
+    // ===== STUBS — writeups forthcoming. Page renders title + brief + back link. =====
+    'streaming-signals-brand-partnership': {
+      category: 'hypeer-campaign', year: 2025,
+      title: 'Streaming signals to brand partnership: 14-market launch playbook',
+      subtitle: 'Turning real-time platform data into a coordinated global campaign for a top-tier entertainment IP.',
+      stub: true
+    },
+    'audience-segmentation-blueprint': {
+      category: 'passport-seoul-research', year: 2025,
+      title: 'Audience segmentation blueprint for OTT content studio',
+      subtitle: 'Built a behavioral segmentation model that identified four underserved audience clusters for original content development.',
+      stub: true
+    },
+    'entertainment-trend-radar': {
+      category: 'contents', year: 2024,
+      title: 'Entertainment trend radar: quarterly data briefing series',
+      subtitle: 'An ongoing subscription product delivering cross-platform trend analysis to agency partners every quarter.',
+      stub: true
+    },
+    'creator-collab-beauty-kpop': {
+      category: 'hypeer-campaign', year: 2024,
+      title: 'Creator partnership campaign for global beauty brand × K-pop',
+      subtitle: 'HYPEER matched 12 creators with a beauty brand launch tied to a K-pop comeback, generating 48M organic impressions.',
+      stub: true
+    },
+    'webtoon-ip-pipeline': {
+      category: 'passport-seoul-research', year: 2024,
+      title: 'Webtoon-to-screen IP adaptation landscape: a market pipeline study',
+      subtitle: 'Tracking the commercial lifecycle of 40+ webtoon properties from platform serialization to global studio deal.',
+      stub: true
+    }
+  };
+
+  // ──────────────────────────────────────────────────────────────────────
+  // RENDERER — reads slug from URL, looks up content, writes to DOM.
+  // ──────────────────────────────────────────────────────────────────────
+  (function(){
+    var statusEl = document.getElementById('postStatus');
+    var postEl = document.getElementById('post');
+    var bodyEl = document.getElementById('postBody');
+
+    var slug = '';
+    try {
+      var params = new URLSearchParams(window.location.search);
+      slug = params.get('slug') || '';
+    } catch(e) {}
+
+    if(!slug){
+      showStatus(
+        '<span class="i18n-en">No project specified.</span>' +
+        '<span class="i18n-ko">프로젝트를 지정하지 않았습니다.</span>' +
+        '<span class="i18n-ja">プロジェクトが指定されていません。</span>'
+      );
+      return;
+    }
+
+    // Stage A: lookup in local map.
+    // Stage B: replace this block with a fetch to /api/projects?where[slug][equals]=...
+    var post = PROJECT_DETAILS[slug];
+    if(!post){
+      showStatus(
+        '<span class="i18n-en">Project not found.</span>' +
+        '<span class="i18n-ko">프로젝트를 찾을 수 없습니다.</span>' +
+        '<span class="i18n-ja">プロジェクトが見つかりません。</span>'
+      );
+      return;
+    }
+    renderPost(post);
+
+    function showStatus(html){
+      statusEl.innerHTML = html;
+      statusEl.hidden = false;
+      postEl.hidden = true;
+    }
+
+    function renderPost(post){
+      try { document.title = (post.title || 'Project') + ' — KREATORS.'; } catch(e) {}
+
+      // Category — uses CATEGORY_META lookup so HYPEER's accent class auto-applies.
+      var cat = CATEGORY_META[post.category] || {};
+      var catEl = postEl.querySelector('.post-category');
+      catEl.textContent = cat.label || '';
+      if(cat.accent === 'hypeer') catEl.classList.add('post-category-accent');
+
+      // Year
+      postEl.querySelector('.post-year').textContent = post.year || '';
+
+      // Title
+      postEl.querySelector('.post-title').textContent = post.title || '';
+
+      // Subtitle
+      var subtitleEl = postEl.querySelector('.post-subtitle');
+      if(post.subtitle){
+        subtitleEl.textContent = post.subtitle;
+        subtitleEl.hidden = false;
+      }
+
+      // Byline: Client · Role · Duration
+      var bylineEl = postEl.querySelector('.post-byline');
+      var bylineParts = [post.client, post.role, post.duration].filter(Boolean);
+      bylineEl.textContent = bylineParts.join('  ·  ');
+
+      // Hero (only if hero data present and not a stub)
+      if(post.hero && !post.stub){
+        var heroEl = postEl.querySelector('.post-hero');
+        var heroThumb = postEl.querySelector('.post-hero-thumb');
+        var heroLabel = postEl.querySelector('.post-hero-thumb-label');
+        var heroCap = postEl.querySelector('.post-hero-caption');
+        var style = post.hero.thumbStyle;
+        if(style && style !== 'default'){
+          heroThumb.classList.add(style);
+        }
+        heroLabel.innerHTML = post.hero.thumbLabel || '';
+        if(post.hero.caption){
+          heroCap.textContent = post.hero.caption;
+        } else {
+          heroCap.style.display = 'none';
+        }
+        heroEl.hidden = false;
+      }
+
+      // Body — block array → HTML (Stage A renderer)
+      if(post.stub){
+        bodyEl.innerHTML = renderStub(post);
+      } else if(post.content){
+        bodyEl.innerHTML = renderBlocks(post.content);
+      }
+
+      statusEl.hidden = true;
+      postEl.hidden = false;
+    }
+
+    // Stub renderer — for projects where the case study writeup hasn't been published yet.
+    function renderStub(post){
+      return (
+        '<p>' +
+          '<span class="i18n-en">Full case study coming soon. In the meantime, see </span>' +
+          '<span class="i18n-ko">전체 케이스 스터디는 준비 중입니다. 그동안에는 </span>' +
+          '<span class="i18n-ja">フルケーススタディは準備中です。それまでは</span>' +
+          '<a href="portfolio.html">' +
+            '<span class="i18n-en">other published work</span>' +
+            '<span class="i18n-ko">다른 공개된 프로젝트</span>' +
+            '<span class="i18n-ja">他の公開済みプロジェクト</span>' +
+          '</a>' +
+          '<span class="i18n-en"> or get in touch via the </span>' +
+          '<span class="i18n-ko">을 둘러보거나, </span>' +
+          '<span class="i18n-ja">をご覧いただくか、</span>' +
+          '<a href="main.html#contact">' +
+            '<span class="i18n-en">contact form</span>' +
+            '<span class="i18n-ko">문의 페이지</span>' +
+            '<span class="i18n-ja">お問い合わせ</span>' +
+          '</a>' +
+          '<span class="i18n-en"> to request the brief directly.</span>' +
+          '<span class="i18n-ko">로 자료를 직접 요청해 주세요.</span>' +
+          '<span class="i18n-ja">から資料を直接ご請求ください。</span>' +
+        '</p>'
+      );
+    }
+
+    // ─────────────────────────────────────────────────────────────────────
+    // BLOCK RENDERER (Stage A)
+    //
+    // Walks a content array of { type, ... } blocks and emits HTML.
+    // Stage B (CMS): swap this for renderLexical() (copy from blog-article.html)
+    // since Payload's `richText` field uses Lexical's tree shape. The HTML
+    // output structure is identical, so .post-body CSS keeps working.
+    // ─────────────────────────────────────────────────────────────────────
+    function renderBlocks(blocks){
+      return (blocks || []).map(renderBlock).join('');
+    }
+
+    function renderBlock(b){
+      switch(b.type){
+        case 'paragraph':    return '<p>' + (b.text || '') + '</p>';
+        case 'heading':      return renderHeading(b);
+        case 'list':         return renderList(b);
+        case 'quote':        return renderQuote(b);
+        case 'figure-thumb': return renderFigureThumb(b);
+        case 'results':      return renderResults(b);
+        default:             return '';
+      }
+    }
+    function renderHeading(b){
+      var level = b.level || 2;
+      if(level < 2 || level > 4) level = 2;
+      return '<h' + level + '>' + (b.text || '') + '</h' + level + '>';
+    }
+    function renderList(b){
+      var tag = b.ordered ? 'ol' : 'ul';
+      var items = (b.items || []).map(function(it){ return '<li>' + it + '</li>'; }).join('');
+      return '<' + tag + '>' + items + '</' + tag + '>';
+    }
+    function renderQuote(b){
+      var inner = '<p>' + (b.text || '') + '</p>';
+      if(b.cite) inner += '<cite>— ' + b.cite + '</cite>';
+      return '<blockquote>' + inner + '</blockquote>';
+    }
+    function renderFigureThumb(b){
+      // Wireframe stage placeholder figure. CMS stage replaces with <img> from upload node.
+      var styleClass = b.thumbStyle && b.thumbStyle !== 'default' ? ' ' + b.thumbStyle : '';
+      var captionHTML = b.caption ? '<figcaption>' + b.caption + '</figcaption>' : '';
+      return (
+        '<figure class="post-figure-thumb' + styleClass + '">' +
+          '<span class="post-figure-thumb-label">' + (b.thumbLabel || '') + '</span>' +
+        '</figure>' + captionHTML
+      );
+    }
+    function renderResults(b){
+      var items = (b.items || []).map(function(r){
+        return (
+          '<div class="result">' +
+            '<div class="result-figure">' + (r.figure || '') + '</div>' +
+            '<div class="result-label">' + (r.label || '') + '</div>' +
+          '</div>'
+        );
+      }).join('');
+      return '<div class="post-results">' + items + '</div>';
+    }
+  })();
+</script>
+
+</body>
+</html>
