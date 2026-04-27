@@ -4,7 +4,7 @@ import { CollectionArchive } from '@/components/CollectionArchive'
 import { PageRange } from '@/components/PageRange'
 import { Pagination } from '@/components/Pagination'
 import { CategoryFilters } from '@/components/CategoryFilters'
-import { getCategoryIdBySlug } from '@/utilities/getCategoriesByParent'
+import { resolveCategoryFilterIds } from '@/utilities/getCategoriesByParent'
 import configPromise from '@payload-config'
 import { getPayload } from 'payload'
 import type { Where } from 'payload'
@@ -18,6 +18,12 @@ import PageClient from './page.client'
 // where Next.js can take advantage of it.
 export const revalidate = 600
 
+// This page is scoped to the "blog" parent category. Posts under other
+// parents (e.g. `portfolio`) will never appear here, even when "All" is
+// selected. Change this constant if the page should scope to a different
+// parent — the rest of the page logic adapts automatically.
+const BLOG_PARENT_SLUG = 'blog'
+
 type Props = {
   searchParams: Promise<{ category?: string }>
 }
@@ -26,16 +32,26 @@ export default async function Page({ searchParams }: Props) {
   const { category } = await searchParams
   const payload = await getPayload({ config: configPromise })
 
-  // Build the optional category filter. When `category` is absent or doesn't
-  // match a known slug, the filter is skipped and all posts are returned.
-  // Typed as Payload's `Where` to satisfy the strict type on `find()`.
+  // Resolve which category IDs to filter by:
+  //   - no category selected → all children of the blog parent
+  //   - specific category selected → just that one
+  //   - invalid slug → empty array (caller treats as "no posts")
+  const categoryIds = await resolveCategoryFilterIds({
+    parentSlug: BLOG_PARENT_SLUG,
+    activeSlug: category,
+  })
+
   const where: Where = {}
-  if (category) {
-    const categoryId = await getCategoryIdBySlug(category)
-    if (categoryId !== null) {
-      where.categories = { in: [categoryId] }
-    }
+  if (categoryIds.length > 0) {
+    where.categories = { in: categoryIds }
+  } else if (category) {
+    // The user requested a category that doesn't exist under this page's
+    // parent. Render an empty list rather than fall back to "all posts",
+    // which would otherwise leak portfolio posts onto the blog page.
+    where.categories = { in: [-1] }
   }
+  // Else: blog parent has no children configured yet — fall through with
+  // no filter so the page still shows posts gracefully during early setup.
 
   const posts = await payload.find({
     collection: 'posts',
@@ -62,7 +78,7 @@ export default async function Page({ searchParams }: Props) {
 
       <div className="container mb-8">
         <CategoryFilters
-          parentSlug="blog"
+          parentSlug={BLOG_PARENT_SLUG}
           basePath="/posts"
           activeSlug={category}
         />
