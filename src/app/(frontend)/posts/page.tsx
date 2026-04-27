@@ -3,22 +3,44 @@ import type { Metadata } from 'next/types'
 import { CollectionArchive } from '@/components/CollectionArchive'
 import { PageRange } from '@/components/PageRange'
 import { Pagination } from '@/components/Pagination'
+import { CategoryFilters } from '@/components/CategoryFilters'
+import { getCategoryIdBySlug } from '@/utilities/getCategoriesByParent'
 import configPromise from '@payload-config'
 import { getPayload } from 'payload'
 import React from 'react'
+
 import PageClient from './page.client'
 
-export const dynamic = 'force-static'
+// NOTE: `dynamic = 'force-static'` was removed because reading `searchParams`
+// (the `?category=...` query string) requires dynamic rendering. The
+// `revalidate = 600` value is preserved so that data caching still applies
+// where Next.js can take advantage of it.
 export const revalidate = 600
 
-export default async function Page() {
+type Props = {
+  searchParams: Promise<{ category?: string }>
+}
+
+export default async function Page({ searchParams }: Props) {
+  const { category } = await searchParams
   const payload = await getPayload({ config: configPromise })
+
+  // Build the optional category filter. When `category` is absent or doesn't
+  // match a known slug, the filter is skipped and all posts are returned.
+  const where: Record<string, unknown> = {}
+  if (category) {
+    const categoryId = await getCategoryIdBySlug(category)
+    if (categoryId !== null) {
+      where.categories = { in: [categoryId] }
+    }
+  }
 
   const posts = await payload.find({
     collection: 'posts',
     depth: 1,
     limit: 12,
     overrideAccess: false,
+    where,
     select: {
       title: true,
       slug: true,
@@ -34,6 +56,14 @@ export default async function Page() {
         <div className="prose dark:prose-invert max-w-none">
           <h1>Posts</h1>
         </div>
+      </div>
+
+      <div className="container mb-8">
+        <CategoryFilters
+          parentSlug="blog"
+          basePath="/posts"
+          activeSlug={category}
+        />
       </div>
 
       <div className="container mb-8">
