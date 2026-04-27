@@ -25,6 +25,18 @@ type CategoryFiltersProps = {
   allLabel?: string
 }
 
+const chipBase =
+  'inline-flex items-center px-4 py-2 font-mono text-xs font-medium uppercase tracking-wider border transition-colors duration-150'
+
+const chipInactive =
+  'border-border text-muted-foreground hover:border-foreground hover:text-foreground'
+
+const chipActive = 'border-foreground text-foreground'
+
+function chipClasses(active: boolean): string {
+  return `${chipBase} ${active ? chipActive : chipInactive}`
+}
+
 /**
  * Server component that renders filter chips driven by Payload categories.
  *
@@ -37,9 +49,9 @@ type CategoryFiltersProps = {
  * - Each chip is a server-rendered `<Link>`, so URLs are shareable and
  *   back/forward navigation works without client-side JavaScript.
  *
- * Class names (`filters`, `filter-btn`, `active`) match the existing wireframe
- * CSS, so chips inherit the design-system styling once the global stylesheet
- * is loaded.
+ * Styling uses Tailwind utility classes against the design-system tokens
+ * (`border-border`, `text-foreground`, `text-muted-foreground`) so dark mode
+ * is supported automatically.
  */
 export async function CategoryFilters({
   parentSlug,
@@ -55,13 +67,13 @@ export async function CategoryFilters({
 
   return (
     <div
-      className="filters"
+      className="flex flex-wrap gap-3 border-b border-border py-6"
       role="group"
       aria-label={`${parentSlug} category filters`}
     >
       <Link
         href={basePath}
-        className={`filter-btn${isAllActive ? ' active' : ''}`}
+        className={chipClasses(isAllActive)}
         aria-current={isAllActive ? 'true' : undefined}
         prefetch={false}
       >
@@ -74,7 +86,7 @@ export async function CategoryFilters({
           <Link
             key={cat.id}
             href={`${basePath}?category=${encodeURIComponent(slug)}`}
-            className={`filter-btn${isActive ? ' active' : ''}`}
+            className={chipClasses(isActive)}
             aria-current={isActive ? 'true' : undefined}
             prefetch={false}
             data-filter={slug}

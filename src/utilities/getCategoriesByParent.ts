@@ -65,3 +65,43 @@ export async function getCategoryIdBySlug(
 
   return res.docs[0]?.id ?? null
 }
+
+/**
+ * Resolve the list of category IDs that a listing page should filter posts by.
+ *
+ * Designed to keep listing pages page-scoped — `/posts` only ever shows
+ * posts under blog children, `/work` only ever shows posts under portfolio
+ * children. The `activeSlug` parameter narrows further when a specific chip
+ * is selected.
+ *
+ * Behavior:
+ *   - `activeSlug` undefined → returns IDs of all children of `parentSlug`.
+ *     Use this as the default "All" tab on a page scoped to that parent.
+ *   - `activeSlug` matches a child's slug → returns `[that child's id]`.
+ *   - `activeSlug` doesn't match any child → returns `[]`. Caller should treat
+ *     this as "no results" rather than "no filter" to avoid leaking out-of-scope
+ *     posts when a stale or invalid URL is loaded.
+ *
+ * @example
+ *   // Posts page handler
+ *   const ids = await resolveCategoryFilterIds({
+ *     parentSlug: 'blog',
+ *     activeSlug: searchParams.category,
+ *   })
+ */
+export async function resolveCategoryFilterIds({
+  parentSlug,
+  activeSlug,
+}: {
+  parentSlug: string
+  activeSlug?: string
+}): Promise<(number | string)[]> {
+  const children = await getCategoriesByParentSlug(parentSlug)
+
+  if (!activeSlug) {
+    return children.map((c) => c.id)
+  }
+
+  const matched = children.find((c) => c.slug === activeSlug)
+  return matched ? [matched.id] : []
+}
