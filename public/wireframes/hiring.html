@@ -32,21 +32,16 @@
   }
   *{box-sizing:border-box;}
   html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);}
-  /* Reserve scrollbar space on BOTH sides so content stays visually centred
-     even when macOS "Always show scrollbars" takes a gutter on the right. */
   html{scrollbar-gutter:stable both-edges;}
   body{font-family:var(--font-sans);font-size:var(--fs-ui);line-height:1.5;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;}
   a{color:inherit;text-decoration:none;}
   .container{max-width:var(--container);margin:0 auto;padding:0 var(--pad-x);}
-  /* Type — v2 (refined)
-     Display scale is Geist across the site. Fraunces is reserved exclusively for
-     the main-page hero copy via .hero-headline; no other headline uses it. */
-  /* Sub-page hero — smaller and lighter than main.html's hero so the landing page stays the boldest moment. */
+
+  /* Type — v2 (refined) */
   .display-l{font-family:var(--font-sans);font-weight:700;font-size:clamp(36px,5vw,64px);line-height:1.08;letter-spacing:-0.02em;}
   .display-m{font-family:var(--font-sans);font-weight:800;font-size:var(--fs-display-m);line-height:1.05;letter-spacing:-0.025em;}
   .h2{font-family:var(--font-sans);font-weight:800;font-size:var(--fs-h2);line-height:1.15;letter-spacing:-0.015em;}
 
-  /* Reserved Fraunces override — opt-in class, unused on this page but kept for consistency. */
   .hero-headline{
     font-family:var(--font-display);
     font-weight:800;
@@ -58,7 +53,6 @@
   .lead{font-family:var(--font-serif);font-weight:400;font-size:var(--fs-lead);line-height:1.55;}
   .body{font-family:var(--font-serif);font-weight:400;font-size:var(--fs-body);line-height:1.7;color:var(--ink-2);}
   .ui{font-family:var(--font-sans);font-weight:500;font-size:var(--fs-ui);line-height:1.4;}
-  /* Label / Tag — v2 uses Geist Mono for the "data signal" tone */
   .label{font-family:var(--font-mono);font-weight:500;font-size:var(--fs-label);line-height:1.2;letter-spacing:0.08em;text-transform:uppercase;}
   .btn{display:inline-flex;align-items:center;gap:10px;font-family:var(--font-sans);font-weight:600;font-size:15px;padding:14px 22px;border:1px solid var(--ink);background:var(--bg);color:var(--ink);cursor:pointer;transition:all .15s ease;}
   .btn:hover{background:var(--ink);color:var(--bg);}
@@ -162,6 +156,18 @@
   .positions-header .label{color:var(--muted);}
   @media(max-width:800px){.positions-header{grid-template-columns:1fr;}}
 
+  /* Position-type chips — display-only badges sourced from Payload `hiring`
+     category children. No filter wiring; chips are purely informational so the
+     candidate sees what kinds of teams currently have openings. */
+  .position-types{
+    display:flex;gap:var(--s-3);
+    padding:0 0 var(--s-5);
+    flex-wrap:wrap;
+    border-bottom:1px solid var(--rule);
+    margin-bottom:var(--s-2);
+  }
+  .position-types .tag{padding:6px 14px;font-size:12px;}
+
   .position-row{
     display:grid;
     grid-template-columns:2fr 1fr 1fr auto;
@@ -179,6 +185,16 @@
   @media(max-width:700px){
     .position-row{grid-template-columns:1fr 1fr;gap:var(--s-3);}
     .position-arrow{display:none;}
+  }
+
+  /* Inline status row (loading / error / empty) — sits where the position rows go. */
+  .position-status{
+    padding:var(--s-8) 0;
+    text-align:center;
+    font-family:var(--font-mono);font-size:13px;
+    letter-spacing:0.04em;color:var(--muted);
+    border-top:1px solid var(--ink);
+    border-bottom:1px solid var(--ink);
   }
 
   /* Open application */
@@ -291,7 +307,7 @@
     </div>
   </section>
 
-  <!-- OPEN POSITIONS — content NOT i18n'd (CMS-managed), section header IS i18n'd -->
+  <!-- OPEN POSITIONS — content sourced from Payload (parent=hiring) -->
   <section class="positions">
     <div class="positions-header">
       <div class="label">
@@ -308,41 +324,20 @@
       </div>
     </div>
 
-    <!-- Position rows — CMS content, no i18n -->
-    <a href="#" class="position-row">
-      <div class="position-title">Data Analyst — Entertainment</div>
-      <div class="position-team"><span class="tag">Research</span></div>
-      <div class="position-location">Seoul / Remote</div>
-      <div class="position-arrow">→</div>
-    </a>
+    <!-- Position-type chips — display-only, sourced from `hiring` category children.
+         Adding a child category in Payload Admin appears here on next page load.
+         No filter logic; this is purely a visual signal of which teams are hiring. -->
+    <div class="position-types" id="positionTypes" hidden></div>
 
-    <a href="#" class="position-row">
-      <div class="position-title">Marketing Strategist</div>
-      <div class="position-team"><span class="tag">Campaign</span></div>
-      <div class="position-location">Seoul</div>
-      <div class="position-arrow">→</div>
-    </a>
+    <!-- Position rows — populated from Payload posts scoped to hiring children. -->
+    <div id="positionList"></div>
 
-    <a href="#" class="position-row">
-      <div class="position-title">Social Content Lead</div>
-      <div class="position-team"><span class="tag tag-hypeer">HYPEER</span></div>
-      <div class="position-location">Seoul</div>
-      <div class="position-arrow">→</div>
-    </a>
-
-    <a href="#" class="position-row">
-      <div class="position-title">Editorial Writer — Journal</div>
-      <div class="position-team"><span class="tag">Editorial</span></div>
-      <div class="position-location">Remote</div>
-      <div class="position-arrow">→</div>
-    </a>
-
-    <a href="#" class="position-row" style="border-bottom:1px solid var(--ink);">
-      <div class="position-title">Full-stack Engineer</div>
-      <div class="position-team"><span class="tag">Engineering</span></div>
-      <div class="position-location">Seoul / Remote</div>
-      <div class="position-arrow">→</div>
-    </a>
+    <!-- Status: loading / error / empty — replaces position rows when needed. -->
+    <div class="position-status" id="positionStatus">
+      <span class="i18n-en">Loading positions…</span>
+      <span class="i18n-ko">포지션을 불러오는 중…</span>
+      <span class="i18n-ja">ポジションを読み込み中…</span>
+    </div>
   </section>
 
   <!-- OPEN APPLICATION — i18n applied -->
@@ -412,6 +407,7 @@
 </footer>
 
 <script>
+  // Language toggle — shared across all pages, persists via localStorage.
   (function(){
     var root = document.documentElement;
     var KEY = 'kn-lang';
@@ -428,6 +424,238 @@
         root.setAttribute('lang', next);
         try { localStorage.setItem(KEY, next); } catch(e) {}
       });
+    });
+  })();
+
+  // ──────────────────────────────────────────────────────────────────────
+  // CMS-CONNECTED HIRING (mirrors Phase C-2 blog pattern).
+  //
+  // CATEGORY CHIPS: fetched from /api/categories?where[parent.slug][equals]=hiring
+  //   Display only — no filter wiring (per current product brief).
+  //   Adding a child of `hiring` in Payload Admin appears here on next page load.
+  //
+  // POSITIONS: fetched from /api/posts and filtered client-side to those tagged
+  //   with at least one hiring child category. Posts that belong only to blog or
+  //   portfolio parents are intentionally excluded.
+  //
+  // i18n note: chip labels and category column use Payload's `title` verbatim
+  // across all languages (no per-language translation yet). Section labels and
+  // status messages remain bilingual via .i18n-* spans.
+  //
+  // HYPEER orange accent: applied automatically when a category slug equals
+  // 'hypeer' so the brand rule (orange = HYPEER only) holds without hardcoding.
+  // ──────────────────────────────────────────────────────────────────────
+  (function(){
+    var POSTS_API = '/api/posts?depth=1&limit=100&sort=-publishedAt&where[_status][equals]=published';
+
+    var CATEGORIES = [];        // [{slug, label}]
+    var HIRING_CHILD_SLUGS = []; // ['research', 'hypeer', ...]
+
+    var POSITIONS = [];
+    var loadingState = 'loading'; // 'loading' | 'ready' | 'error'
+
+    var typesEl = document.getElementById('positionTypes');
+    var listEl = document.getElementById('positionList');
+    var statusEl = document.getElementById('positionStatus');
+    if(!typesEl || !listEl || !statusEl) return;
+
+    // ---------------------------------------------------------------------------
+    // FETCH HELPERS
+    // ---------------------------------------------------------------------------
+    function fetchPayloadCategories(parentSlug){
+      var params = new URLSearchParams();
+      params.set('where[parent.slug][equals]', parentSlug);
+      params.set('depth', '0');
+      params.set('limit', '100');
+      params.set('sort', 'title');
+      return fetch('/api/categories?' + params.toString(), { credentials: 'same-origin' })
+        .then(function(r){
+          if(!r.ok) throw new Error('Categories fetch failed: ' + r.status);
+          return r.json();
+        })
+        .then(function(data){
+          return (data.docs || []).map(function(c){
+            return { slug: c.slug, label: c.title };
+          });
+        });
+    }
+
+    // ---------------------------------------------------------------------------
+    // ESCAPING + FORMATTING
+    // ---------------------------------------------------------------------------
+    function escapeHtml(s){
+      return String(s == null ? '' : s).replace(/[&<>"']/g, function(c){
+        return { '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c];
+      });
+    }
+
+    // ---------------------------------------------------------------------------
+    // NORMALIZATION — Payload post → row schema.
+    //
+    // Location is read from `meta.description` for now (free-form text in the
+    // post's SEO description), since the Posts collection has no dedicated
+    // `location` field yet. If/when a structured field is added, swap in here.
+    // ---------------------------------------------------------------------------
+    function pickHiringCategory(doc){
+      if(!doc.categories || !doc.categories.length) return null;
+      for(var i = 0; i < doc.categories.length; i++){
+        var c = doc.categories[i];
+        if(c && c.slug && HIRING_CHILD_SLUGS.indexOf(c.slug) !== -1) return c;
+      }
+      return doc.categories[0];
+    }
+
+    function normalizePost(doc){
+      var category = pickHiringCategory(doc);
+      var location = (doc.meta && doc.meta.description) || '';
+      return {
+        href: doc.slug
+          ? '/wireframes/hiring-article.html?slug=' + encodeURIComponent(doc.slug)
+          : '#',
+        title: doc.title || '',
+        categorySlug: category ? category.slug : '',
+        categoryLabel: category ? category.title : '',
+        location: location
+      };
+    }
+
+    // ---------------------------------------------------------------------------
+    // RENDER — chips + position rows.
+    // ---------------------------------------------------------------------------
+    function renderTypeChips(){
+      if(!CATEGORIES.length){
+        typesEl.hidden = true;
+        typesEl.innerHTML = '';
+        return;
+      }
+      var html = CATEGORIES.map(function(cat){
+        var hypeer = cat.slug === 'hypeer' ? ' tag-hypeer' : '';
+        return '<span class="tag' + hypeer + '">' + escapeHtml(cat.label) + '</span>';
+      }).join('');
+      typesEl.innerHTML = html;
+      typesEl.hidden = false;
+    }
+
+    function renderPositions(){
+      if(!POSITIONS.length){
+        listEl.innerHTML = '';
+        return;
+      }
+      var html = POSITIONS.map(function(p, i){
+        var isLast = i === POSITIONS.length - 1;
+        var rowStyle = isLast ? ' style="border-bottom:1px solid var(--ink);"' : '';
+        var hypeer = p.categorySlug === 'hypeer' ? ' tag-hypeer' : '';
+        var teamCell = p.categoryLabel
+          ? '<span class="tag' + hypeer + '">' + escapeHtml(p.categoryLabel) + '</span>'
+          : '';
+        return (
+          '<a href="' + escapeHtml(p.href) + '" class="position-row"' + rowStyle + '>' +
+            '<div class="position-title">' + escapeHtml(p.title) + '</div>' +
+            '<div class="position-team">' + teamCell + '</div>' +
+            '<div class="position-location">' + escapeHtml(p.location) + '</div>' +
+            '<div class="position-arrow">→</div>' +
+          '</a>'
+        );
+      }).join('');
+      listEl.innerHTML = html;
+    }
+
+    function showStatus(html){
+      statusEl.innerHTML = html;
+      statusEl.hidden = false;
+      listEl.innerHTML = '';
+    }
+    function hideStatus(){ statusEl.hidden = true; }
+
+    function render(){
+      renderTypeChips();
+
+      if(loadingState === 'loading'){
+        showStatus(
+          '<span class="i18n-en">Loading positions…</span>' +
+          '<span class="i18n-ko">포지션을 불러오는 중…</span>' +
+          '<span class="i18n-ja">ポジションを読み込み中…</span>'
+        );
+        return;
+      }
+      if(loadingState === 'error'){
+        showStatus(
+          '<span class="i18n-en">Unable to load open positions right now. Please try again later.</span>' +
+          '<span class="i18n-ko">포지션을 불러오지 못했습니다. 잠시 후 다시 시도해 주세요.</span>' +
+          '<span class="i18n-ja">ポジションを読み込めませんでした。しばらくしてから再度お試しください。</span>'
+        );
+        return;
+      }
+
+      if(!POSITIONS.length){
+        showStatus(
+          '<span class="i18n-en">No open positions right now — but we\'re always open to hearing from you.</span>' +
+          '<span class="i18n-ko">현재 공개된 포지션은 없습니다 — 언제든 자유 지원으로 연락 주세요.</span>' +
+          '<span class="i18n-ja">現在募集中のポジションはありません — オープンエントリーはいつでも歓迎です。</span>'
+        );
+        return;
+      }
+
+      hideStatus();
+      renderPositions();
+    }
+
+    // Initial render — chips area is empty (will hide), status shows loading.
+    render();
+
+    // ---------------------------------------------------------------------------
+    // ASYNC STARTUP — fetch categories and posts in parallel.
+    // Categories must arrive before scoping POSITIONS (we need HIRING_CHILD_SLUGS).
+    // ---------------------------------------------------------------------------
+    var categoriesPromise = fetchPayloadCategories('hiring')
+      .then(function(cats){
+        CATEGORIES = cats;
+        HIRING_CHILD_SLUGS = cats.map(function(c){ return c.slug; });
+      })
+      .catch(function(err){
+        if(typeof console !== 'undefined' && console.warn){
+          console.warn('[hiring] category fetch failed; falling back to unscoped post list', err);
+        }
+      });
+
+    var postsPromise = fetch(POSTS_API, { credentials: 'same-origin' })
+      .then(function(r){
+        if(!r.ok) throw new Error('HTTP ' + r.status);
+        return r.json();
+      })
+      .then(function(data){
+        return (data && data.docs) || [];
+      })
+      .catch(function(err){
+        if(typeof console !== 'undefined' && console.error){
+          console.error('[hiring] posts fetch failed:', err);
+        }
+        return null;
+      });
+
+    Promise.all([categoriesPromise, postsPromise]).then(function(results){
+      var docs = results[1];
+      if(docs === null){
+        loadingState = 'error';
+        render();
+        return;
+      }
+
+      // Scope to posts that include at least one hiring-child category.
+      // If category fetch failed (HIRING_CHILD_SLUGS empty), show nothing scoped
+      // — better to show "No open positions" than to leak blog/portfolio posts.
+      var scopedDocs = HIRING_CHILD_SLUGS.length > 0
+        ? docs.filter(function(doc){
+            if(!doc.categories || !Array.isArray(doc.categories)) return false;
+            return doc.categories.some(function(cat){
+              return cat && cat.slug && HIRING_CHILD_SLUGS.indexOf(cat.slug) !== -1;
+            });
+          })
+        : [];
+
+      POSITIONS = scopedDocs.map(normalizePost).filter(function(p){ return p.title; });
+      loadingState = 'ready';
+      render();
     });
   })();
 </script>
