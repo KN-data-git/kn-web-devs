@@ -1,0 +1,713 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Position — KREATORS.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<!-- v2 font stack: Fraunces (display, reserved for main hero), Geist (UI sans), Geist Mono (labels), Newsreader (long-form reading) -->
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT,WONK@0,9..144,300..900,0..100,0..1;1,9..144,300..900,0..100,0..1&family=Geist:wght@400;500;600;700;800;900&family=Geist+Mono:wght@400;500;600&family=Newsreader:ital,wght@0,400..700;1,400&display=swap" rel="stylesheet" />
+<link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css" rel="stylesheet" />
+<style>
+  :root{
+    --bg:#FFFFFF;--ink:#0A0A0A;--ink-2:#1A1A1A;--muted:#6B6B6B;
+    --rule:#E5E5E5;--rule-strong:#0A0A0A;
+    --hypeer:#EF4A24;--hypeer-tint:#FCDED8;
+
+    --font-sans:"Geist","Pretendard Variable",system-ui,sans-serif;
+    --font-display:"Fraunces","Pretendard Variable",Georgia,serif;
+    --font-serif:"Newsreader","Pretendard Variable",Georgia,serif;
+    --font-mono:"Geist Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+
+    --fs-display-l:clamp(36px,5vw,64px);
+    --fs-h2:clamp(24px,2.4vw,30px);
+    --fs-h3:22px;--fs-lead:20px;--fs-body:18px;--fs-ui:15px;--fs-label:12px;
+    --s-1:4px;--s-2:8px;--s-3:12px;--s-4:16px;--s-5:24px;--s-6:32px;
+    --s-7:48px;--s-8:64px;--s-9:96px;--s-10:128px;
+    --container:1440px;--gutter:24px;--pad-x:clamp(20px,4vw,56px);
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);}
+  html{scrollbar-gutter:stable both-edges;}
+  body{font-family:var(--font-sans);font-size:var(--fs-ui);line-height:1.5;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;}
+  a{color:inherit;text-decoration:none;}
+  .container{max-width:var(--container);margin:0 auto;padding:0 var(--pad-x);}
+
+  .display-l{font-family:var(--font-sans);font-weight:700;font-size:var(--fs-display-l);line-height:1.08;letter-spacing:-0.02em;}
+  .lead{font-family:var(--font-serif);font-weight:400;font-size:var(--fs-lead);line-height:1.55;}
+  .ui{font-family:var(--font-sans);font-weight:500;font-size:var(--fs-ui);line-height:1.4;}
+  .label{font-family:var(--font-mono);font-weight:500;font-size:var(--fs-label);line-height:1.2;letter-spacing:0.08em;text-transform:uppercase;}
+
+  .tag{display:inline-block;font-family:var(--font-mono);font-weight:500;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;padding:4px 10px;border:1px solid var(--ink);color:var(--ink);background:transparent;}
+  .tag.tag-hypeer{border-color:var(--hypeer);color:var(--hypeer);}
+
+  .btn{display:inline-flex;align-items:center;gap:10px;font-family:var(--font-sans);font-weight:600;font-size:15px;padding:14px 22px;border:1px solid var(--ink);background:var(--bg);color:var(--ink);cursor:pointer;transition:all .15s ease;}
+  .btn:hover{background:var(--ink);color:var(--bg);}
+  .btn.btn-dark{background:var(--ink);color:var(--bg);}
+  .btn.btn-dark:hover{background:transparent;color:var(--ink);}
+  .btn .arrow{display:inline-block;transform:translateX(0);transition:transform .15s ease;}
+  .btn:hover .arrow{transform:translateX(4px);}
+
+  /* Readability */
+  .display-l,.post-body h2,.post-body h3,.post-body h4{text-wrap:balance;}
+  .post-body p,.post-hero-caption{text-wrap:pretty;}
+  html[lang="ko"] .post-body,html[lang="ko"] .post-hero-caption{word-break:keep-all;overflow-wrap:break-word;}
+
+  /* i18n visibility */
+  html[lang="en"] .i18n-ko,html[lang="en"] .i18n-ja{display:none;}
+  html[lang="ko"] .i18n-en,html[lang="ko"] .i18n-ja{display:none;}
+  html[lang="ja"] .i18n-en,html[lang="ja"] .i18n-ko{display:none;}
+
+  /* Nav — matches blog.html / portfolio.html / hiring.html / main.html */
+  .nav{position:fixed;top:0;left:0;right:0;z-index:50;background:var(--bg);border-bottom:1px solid var(--rule-strong);}
+  .nav-inner{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;height:72px;gap:var(--s-4);}
+  .nav-brand{display:inline-flex;align-items:center;height:28px;}
+  .nav-brand img{height:20px;width:auto;display:block;}
+  .nav-menu{display:flex;gap:var(--s-6);justify-self:center;}
+  .nav-menu a{font-family:var(--font-sans);font-weight:500;font-size:15px;color:var(--ink);min-width:72px;text-align:center;}
+  .nav-menu a:hover{color:var(--hypeer);}
+  .nav-menu a.active{border-bottom:2px solid var(--ink);padding-bottom:2px;}
+  .nav-actions{display:flex;align-items:center;gap:var(--s-4);justify-self:end;}
+  .lang-toggle{display:inline-flex;align-items:center;gap:6px;font-family:var(--font-mono);font-weight:500;font-size:12px;letter-spacing:0.08em;}
+  .lang-toggle .lang-sep{color:var(--rule);}
+  .lang-btn{background:transparent;border:0;padding:4px 0;color:var(--muted);font:inherit;letter-spacing:inherit;cursor:pointer;transition:color .15s ease;}
+  .lang-btn:hover{color:var(--ink);}
+  html[lang="en"] .lang-btn[data-lang="en"],
+  html[lang="ko"] .lang-btn[data-lang="ko"],
+  html[lang="ja"] .lang-btn[data-lang="ja"]{color:var(--ink);text-decoration:underline;text-underline-offset:4px;}
+  .nav-cta{font-family:var(--font-sans);font-weight:600;font-size:14px;padding:10px 18px;border:1px solid var(--ink);}
+  .nav-cta:hover{background:var(--ink);color:var(--bg);}
+
+  /* Footer — matches blog.html */
+  .footer{margin-top:var(--s-10);background:var(--ink);color:var(--bg);padding:var(--s-9) 0 var(--s-6);}
+  .footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:var(--s-7);}
+  .footer h4{font-family:var(--font-mono);font-weight:500;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#9A9A9A;margin:0 0 var(--s-4);}
+  .footer ul{list-style:none;padding:0;margin:0;display:grid;gap:10px;}
+  .footer ul a{font-family:var(--font-sans);font-size:15px;color:var(--bg);}
+  .footer ul a:hover{color:var(--hypeer);}
+  .footer-brand{display:block;margin:0 0 var(--s-4);}
+  .footer-brand img{height:32px;width:auto;display:block;}
+  .footer-bottom{margin-top:var(--s-8);padding-top:var(--s-4);border-top:1px solid #2A2A2A;display:flex;justify-content:space-between;font-family:var(--font-mono);font-size:12px;letter-spacing:0.04em;color:#6B6B6B;}
+  @media(max-width:800px){.footer-grid{grid-template-columns:1fr 1fr;}}
+
+  /* ---- PAGE: HIRING ARTICLE ---- */
+  .page-content{padding-top:72px;}
+
+  .post{
+    max-width:760px;
+    margin:0 auto;
+    padding:var(--s-9) var(--pad-x) var(--s-9);
+  }
+
+  /* Header */
+  .post-back{
+    display:inline-flex;align-items:center;gap:6px;
+    font-family:var(--font-mono);font-weight:500;font-size:12px;
+    letter-spacing:0.04em;color:var(--muted);
+    margin-bottom:var(--s-6);
+    transition:color .15s ease;
+  }
+  .post-back:hover{color:var(--ink);}
+  .post-meta{
+    display:flex;align-items:center;gap:var(--s-3);flex-wrap:wrap;
+    margin-bottom:var(--s-4);
+  }
+  .post-meta .label{color:var(--muted);}
+  .post-title{
+    font-size:clamp(28px,3.6vw,46px);
+    line-height:1.1;
+    letter-spacing:-0.015em;
+    margin:0 0 var(--s-3);
+    text-wrap:balance;
+  }
+  .post-subtitle{
+    font-family:var(--font-serif);
+    font-weight:400;font-style:italic;
+    font-size:clamp(18px,1.9vw,24px);line-height:1.4;
+    color:var(--muted);
+    margin:0 0 var(--s-5);
+    max-width:640px;
+    text-wrap:pretty;
+  }
+
+  /* Position-specific facts strip — sits above the body, below the title.
+     Each fact is a label/value pair: TYPE / LOCATION / POSTED. */
+  .post-facts{
+    display:grid;grid-template-columns:repeat(3,minmax(0,1fr));
+    gap:var(--s-5);
+    margin:var(--s-5) 0 var(--s-5);
+    padding:var(--s-5) 0;
+    border-top:1px solid var(--rule);
+    border-bottom:1px solid var(--rule);
+  }
+  .post-fact .label{display:block;color:var(--muted);margin-bottom:6px;}
+  .post-fact .value{font-family:var(--font-sans);font-weight:600;font-size:15px;color:var(--ink);}
+  @media(max-width:600px){
+    .post-facts{grid-template-columns:1fr;gap:var(--s-3);}
+  }
+
+  /* Hero image */
+  .post-hero{
+    margin:var(--s-7) 0;
+  }
+  .post-hero-img{
+    display:block;width:100%;height:auto;
+  }
+  .post-hero-caption{
+    font-family:var(--font-serif);font-style:italic;font-size:14px;
+    line-height:1.55;color:var(--muted);
+    margin-top:var(--s-3);text-align:center;
+  }
+  .post-hero-caption a{
+    color:inherit;border-bottom:1px solid var(--muted);padding-bottom:1px;
+  }
+  .post-hero-caption a:hover{color:var(--ink);border-color:var(--ink);}
+
+  /* Body — Lexical-rendered content */
+  .post-body{
+    font-family:var(--font-serif);
+    font-size:19px;line-height:1.78;
+    color:var(--ink-2);
+    margin-top:var(--s-7);
+  }
+  .post-body p{margin:0 0 var(--s-5);}
+  .post-body h2,.post-body h3,.post-body h4{
+    font-family:var(--font-sans);font-weight:700;
+    letter-spacing:-0.01em;color:var(--ink);
+    margin:var(--s-8) 0 var(--s-4);
+  }
+  .post-body h2{font-size:clamp(24px,2.4vw,30px);line-height:1.2;}
+  .post-body h3{font-size:21px;line-height:1.25;}
+  .post-body h4{font-size:18px;line-height:1.3;}
+  .post-body a{
+    color:var(--ink);
+    border-bottom:1px solid var(--ink);
+    padding-bottom:1px;
+    transition:color .15s ease,border-color .15s ease;
+  }
+  .post-body a:hover{color:var(--hypeer);border-color:var(--hypeer);}
+  .post-body strong{font-weight:700;color:var(--ink);}
+  .post-body em{font-style:italic;}
+  .post-body s{text-decoration:line-through;}
+  .post-body u{text-decoration:underline;text-underline-offset:3px;}
+  .post-body code{
+    font-family:var(--font-mono);font-size:0.9em;
+    background:#F5F5F5;padding:2px 6px;
+  }
+  .post-body blockquote{
+    margin:var(--s-7) 0;
+    padding:var(--s-3) var(--s-6);
+    border-left:3px solid var(--ink);
+    font-style:italic;color:var(--ink);
+  }
+  .post-body ul,.post-body ol{
+    margin:0 0 var(--s-5);padding-left:var(--s-6);
+  }
+  .post-body li{margin-bottom:var(--s-3);}
+  .post-body figure.post-figure{
+    margin:var(--s-7) 0;
+  }
+  .post-body figure.post-figure img{
+    display:block;width:100%;height:auto;
+  }
+  .post-body figure.post-figure figcaption{
+    font-family:var(--font-serif);font-style:italic;font-size:14px;
+    line-height:1.55;color:var(--muted);
+    margin-top:var(--s-3);text-align:center;
+  }
+
+  /* Apply CTA — sits at the bottom of the body, before the back link.
+     i18n applied so the headline + button copy travels across languages. */
+  .post-apply{
+    margin-top:var(--s-9);
+    padding:var(--s-7) 0;
+    border-top:1px solid var(--ink);
+    text-align:center;
+  }
+  .post-apply h2{
+    font-family:var(--font-sans);font-weight:800;
+    font-size:var(--fs-h2);line-height:1.15;letter-spacing:-0.015em;
+    margin:0 0 var(--s-3);
+  }
+  .post-apply p{
+    font-family:var(--font-serif);font-size:18px;line-height:1.6;
+    color:var(--muted);
+    margin:0 auto var(--s-5);max-width:520px;
+  }
+
+  /* Bottom return */
+  .post-footer{
+    margin-top:var(--s-7);
+    padding-top:var(--s-7);
+    border-top:1px solid var(--rule);
+  }
+  .post-footer-back{
+    display:inline-flex;align-items:center;gap:6px;
+    font-family:var(--font-mono);font-weight:500;font-size:12px;
+    letter-spacing:0.04em;color:var(--muted);
+    transition:color .15s ease;
+  }
+  .post-footer-back:hover{color:var(--ink);}
+
+  /* Status: loading / error / not-found */
+  .post-status{
+    padding:var(--s-10) var(--pad-x);
+    text-align:center;
+    font-family:var(--font-mono);font-size:13px;
+    letter-spacing:0.04em;color:var(--muted);
+  }
+
+  @media(max-width:600px){
+    .nav-menu{gap:var(--s-4);}
+    .nav-cta{display:none;}
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="container nav-inner">
+    <a href="main.html" class="nav-brand" aria-label="KREATORS home">
+      <img src="/assets/Kreators_logo(B)_v2.png" alt="KREATORS." />
+    </a>
+    <div class="nav-menu">
+      <a href="portfolio.html">Work</a>
+      <a href="blog.html">Journal</a>
+      <a href="hiring.html" class="active">Careers</a>
+    </div>
+    <div class="nav-actions">
+      <div class="lang-toggle" role="group" aria-label="Language">
+        <button type="button" class="lang-btn" data-lang="en">EN</button>
+        <span class="lang-sep" aria-hidden="true">·</span>
+        <button type="button" class="lang-btn" data-lang="ko">KR</button>
+        <span class="lang-sep" aria-hidden="true">·</span>
+        <button type="button" class="lang-btn" data-lang="ja">JP</button>
+      </div>
+      <a href="main.html#contact" class="nav-cta">Contact</a>
+    </div>
+  </div>
+</nav>
+
+<div class="page-content">
+
+  <!-- ARTICLE — populated by JS once fetch resolves -->
+  <article class="post" id="post" hidden>
+    <a href="hiring.html" class="post-back">
+      <span aria-hidden="true">&larr;</span>
+      <span class="i18n-en">Careers</span>
+      <span class="i18n-ko">채용</span>
+      <span class="i18n-ja">採用</span>
+    </a>
+
+    <header class="post-header">
+      <div class="post-meta">
+        <span class="label post-category"></span>
+      </div>
+      <h1 class="display-l post-title"></h1>
+      <p class="post-subtitle" hidden></p>
+
+      <!-- Facts strip — TYPE / LOCATION / POSTED. Each fact's value is filled in
+           from Payload data; if a value is missing, the cell falls back to "—". -->
+      <div class="post-facts">
+        <div class="post-fact">
+          <span class="label">
+            <span class="i18n-en">Type</span>
+            <span class="i18n-ko">유형</span>
+            <span class="i18n-ja">タイプ</span>
+          </span>
+          <span class="value post-fact-type">—</span>
+        </div>
+        <div class="post-fact">
+          <span class="label">
+            <span class="i18n-en">Location</span>
+            <span class="i18n-ko">근무지</span>
+            <span class="i18n-ja">勤務地</span>
+          </span>
+          <span class="value post-fact-location">—</span>
+        </div>
+        <div class="post-fact">
+          <span class="label">
+            <span class="i18n-en">Posted</span>
+            <span class="i18n-ko">게시일</span>
+            <span class="i18n-ja">掲載日</span>
+          </span>
+          <span class="value post-fact-date">—</span>
+        </div>
+      </div>
+    </header>
+
+    <figure class="post-hero" hidden>
+      <img class="post-hero-img" alt="" />
+      <figcaption class="post-hero-caption"></figcaption>
+    </figure>
+
+    <div class="post-body" id="postBody"></div>
+
+    <!-- Apply CTA — opens a mailto with subject line prefilled to the role title. -->
+    <section class="post-apply">
+      <h2>
+        <span class="i18n-en">Interested in this role?</span>
+        <span class="i18n-ko">이 포지션에 지원하고 싶으신가요?</span>
+        <span class="i18n-ja">このポジションに興味がありますか？</span>
+      </h2>
+      <p>
+        <span class="i18n-en">Send a short note about what you'd want to build here, with your CV or portfolio attached.</span>
+        <span class="i18n-ko">이력서 또는 포트폴리오와 함께, 여기서 무엇을 만들고 싶은지 짧게 적어 보내주세요.</span>
+        <span class="i18n-ja">履歴書またはポートフォリオを添えて、ここで何を創りたいかを簡潔にお書きください。</span>
+      </p>
+      <a id="applyLink" href="mailto:careers@kreatorsnetwork.com" class="btn btn-dark">
+        <span class="i18n-en">Apply via email</span>
+        <span class="i18n-ko">이메일로 지원하기</span>
+        <span class="i18n-ja">メールで応募する</span>
+        <span class="arrow">→</span>
+      </a>
+    </section>
+
+    <footer class="post-footer">
+      <a href="hiring.html" class="post-footer-back">
+        <span aria-hidden="true">&larr;</span>
+        <span class="i18n-en">Back to all positions</span>
+        <span class="i18n-ko">전체 포지션으로 돌아가기</span>
+        <span class="i18n-ja">ポジション一覧に戻る</span>
+      </a>
+    </footer>
+  </article>
+
+  <!-- STATUS: loading / error / not-found — replaced by article on success -->
+  <div class="post-status" id="postStatus">
+    <span class="i18n-en">Loading position…</span>
+    <span class="i18n-ko">포지션을 불러오는 중…</span>
+    <span class="i18n-ja">ポジションを読み込み中…</span>
+  </div>
+
+</div>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <a href="main.html" class="footer-brand" aria-label="KREATORS home">
+          <img src="/assets/Kreators_logo(W).png" alt="KREATORS." />
+        </a>
+        <p class="ui" style="color:#9A9A9A; max-width: 360px;">
+          An entertainment-focused data marketing agency based in Seoul. We read industries and write what we learn.
+        </p>
+      </div>
+      <div>
+        <h4>Studio</h4>
+        <ul>
+          <li><a href="main.html#hypeer">HYPEER</a></li>
+          <li><a href="main.html#passport-seoul">Passport Seoul</a></li>
+          <li><a href="hiring.html">Careers</a></li>
+          <li><a href="main.html#contact">Contact</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Index</h4>
+        <ul>
+          <li><a href="portfolio.html">Work</a></li>
+          <li><a href="blog.html">Journal</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Follow</h4>
+        <ul>
+          <li><a href="#">Instagram</a></li>
+          <li><a href="#">LinkedIn</a></li>
+          <li><a href="#">Medium</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; 2026 Kreators Network</span>
+      <span>Seoul &middot; Remote</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Language toggle — shared across all pages, persists via localStorage.
+  (function(){
+    var root = document.documentElement;
+    var KEY = 'kn-lang';
+    var valid = { en: true, ko: true, ja: true };
+    try {
+      var stored = localStorage.getItem(KEY);
+      if(stored && valid[stored]) root.setAttribute('lang', stored);
+    } catch(e) {}
+    var btns = document.querySelectorAll('.lang-btn');
+    btns.forEach(function(btn){
+      btn.addEventListener('click', function(){
+        var next = btn.getAttribute('data-lang');
+        if(!valid[next]) return;
+        root.setAttribute('lang', next);
+        try { localStorage.setItem(KEY, next); } catch(e) {}
+      });
+    });
+  })();
+
+  // ──────────────────────────────────────────────────────────────────────
+  // POSITION DETAIL — fetches a single hiring post by slug.
+  //
+  // Mirrors blog-article.html: same Lexical → HTML traversal handles paragraph,
+  // heading, text formatting, link, list, quote, and upload nodes. Hiring-only
+  // bits: facts strip (Type / Location / Posted) and Apply CTA mailto subject.
+  //
+  // Field mapping:
+  //   Type      ← first category title (preferred from `hiring` children)
+  //   Location  ← post.meta.description (free-form text for now)
+  //   Posted    ← publishedAt
+  //
+  // If the Posts collection later gains structured fields (e.g. `location`,
+  // `employmentType`), swap the lookup site below — the rest of the page is
+  // unchanged.
+  // ──────────────────────────────────────────────────────────────────────
+  (function(){
+    var statusEl = document.getElementById('postStatus');
+    var postEl = document.getElementById('post');
+    var bodyEl = document.getElementById('postBody');
+    var applyEl = document.getElementById('applyLink');
+
+    var slug = '';
+    try {
+      var params = new URLSearchParams(window.location.search);
+      slug = params.get('slug') || '';
+    } catch(e) {}
+
+    if(!slug){
+      showStatus(
+        '<span class="i18n-en">No position specified.</span>' +
+        '<span class="i18n-ko">포지션이 지정되지 않았습니다.</span>' +
+        '<span class="i18n-ja">ポジションが指定されていません。</span>'
+      );
+      return;
+    }
+
+    // Same-origin relative — no CORS config needed.
+    var url = '/api/posts'
+      + '?where[slug][equals]=' + encodeURIComponent(slug)
+      + '&where[_status][equals]=published'
+      + '&depth=2&limit=1';
+
+    fetch(url, { credentials: 'same-origin' })
+      .then(function(r){
+        if(!r.ok) throw new Error('HTTP ' + r.status);
+        return r.json();
+      })
+      .then(function(data){
+        var post = data && data.docs && data.docs[0];
+        if(!post){
+          showStatus(
+            '<span class="i18n-en">Position not found.</span>' +
+            '<span class="i18n-ko">포지션을 찾을 수 없습니다.</span>' +
+            '<span class="i18n-ja">ポジションが見つかりません。</span>'
+          );
+          return;
+        }
+        renderPost(post);
+      })
+      .catch(function(err){
+        if(typeof console !== 'undefined' && console.error){
+          console.error('[hiring-article] fetch failed:', err);
+        }
+        showStatus(
+          '<span class="i18n-en">Unable to load this position right now.</span>' +
+          '<span class="i18n-ko">포지션을 불러오지 못했습니다.</span>' +
+          '<span class="i18n-ja">ポジションを読み込めませんでした。</span>'
+        );
+      });
+
+    function showStatus(html){
+      statusEl.innerHTML = html;
+      statusEl.hidden = false;
+      postEl.hidden = true;
+    }
+
+    // Pick the most relevant category for display: prefer one whose parent slug
+    // is `hiring` so multi-tagged posts still surface the careers-side label.
+    function pickCategory(post){
+      var cats = post.categories || [];
+      for(var i = 0; i < cats.length; i++){
+        var c = cats[i];
+        if(c && c.parent){
+          // depth=2 populates parent as object; check its slug.
+          var parentSlug = (typeof c.parent === 'object' && c.parent.slug) || '';
+          if(parentSlug === 'hiring') return c;
+        }
+      }
+      return cats[0] || null;
+    }
+
+    function renderPost(post){
+      try { document.title = (post.title || 'Position') + ' — KREATORS.'; } catch(e) {}
+
+      var category = pickCategory(post);
+      var catEl = postEl.querySelector('.post-category');
+      catEl.textContent = (category && category.title) || '';
+
+      // Title
+      var title = post.title || '';
+      postEl.querySelector('.post-title').textContent = title;
+
+      // Subtitle (optional)
+      var subtitleEl = postEl.querySelector('.post-subtitle');
+      if(post.subtitle){
+        subtitleEl.textContent = post.subtitle;
+        subtitleEl.hidden = false;
+      } else {
+        subtitleEl.hidden = true;
+        subtitleEl.textContent = '';
+      }
+
+      // Facts strip
+      var typeEl = postEl.querySelector('.post-fact-type');
+      var locEl = postEl.querySelector('.post-fact-location');
+      var dateEl = postEl.querySelector('.post-fact-date');
+      typeEl.textContent = (category && category.title) || '—';
+      locEl.textContent = (post.meta && post.meta.description) || '—';
+      var dateLabel = formatDate(post.publishedAt || post.createdAt);
+      dateEl.textContent = dateLabel || '—';
+
+      // Apply CTA — prefill mailto subject with the role title for legibility.
+      if(title){
+        try {
+          applyEl.href = 'mailto:careers@kreatorsnetwork.com'
+            + '?subject=' + encodeURIComponent('Application — ' + title);
+        } catch(e) {}
+      }
+
+      // Hero image (large size)
+      if(post.heroImage){
+        var hero = post.heroImage;
+        var heroFig = postEl.querySelector('.post-hero');
+        var heroImg = postEl.querySelector('.post-hero-img');
+        var heroCap = postEl.querySelector('.post-hero-caption');
+        var src = (hero.sizes && hero.sizes.large && hero.sizes.large.url) || hero.url || '';
+        if(src){
+          heroImg.src = src;
+          heroImg.alt = hero.alt || '';
+          if(hero.caption){
+            heroCap.innerHTML = renderLexical(hero.caption);
+          } else {
+            heroCap.textContent = '';
+          }
+          heroFig.hidden = false;
+        }
+      }
+
+      // Body — Lexical → HTML
+      bodyEl.innerHTML = post.content ? renderLexical(post.content) : '';
+
+      // Reveal
+      statusEl.hidden = true;
+      postEl.hidden = false;
+    }
+
+    function formatDate(iso){
+      if(!iso) return '';
+      var d = new Date(iso);
+      if(isNaN(d.getTime())) return '';
+      var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+      return months[d.getMonth()] + ' ' + d.getDate() + ', ' + d.getFullYear();
+    }
+
+    function escapeHtml(s){
+      return String(s == null ? '' : s).replace(/[&<>"']/g, function(c){
+        return { '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c];
+      });
+    }
+
+    // -------------------------------------------------------------------------
+    // SIMPLIFIED LEXICAL RENDERER — mirrors blog-article.html.
+    //
+    // Walks a Lexical content tree and emits HTML for the node types Payload
+    // Website Template uses out of the box. Anything unrecognised delegates to
+    // its children so future block types degrade gracefully.
+    //
+    // Format bitmask (Lexical core): bold=1, italic=2, strike=4, underline=8, code=16
+    // -------------------------------------------------------------------------
+    var FMT = { BOLD: 1, ITALIC: 2, STRIKE: 4, UNDERLINE: 8, CODE: 16 };
+
+    function renderLexical(content){
+      if(!content || !content.root) return '';
+      return renderChildren(content.root.children || []);
+    }
+    function renderChildren(children){
+      return (children || []).map(renderNode).join('');
+    }
+    function renderNode(node){
+      if(!node) return '';
+      switch(node.type){
+        case 'paragraph':  return renderParagraph(node);
+        case 'heading':    return renderHeading(node);
+        case 'text':       return renderText(node);
+        case 'link':       return renderLink(node);
+        case 'linebreak':  return '<br/>';
+        case 'tab':        return '\t';
+        case 'list':       return renderList(node);
+        case 'listitem':   return renderListItem(node);
+        case 'quote':      return renderQuote(node);
+        case 'upload':     return renderUpload(node);
+        default:
+          return node.children ? renderChildren(node.children) : '';
+      }
+    }
+    function renderParagraph(node){
+      var inner = renderChildren(node.children);
+      return '<p>' + (inner || '<br/>') + '</p>';
+    }
+    function renderHeading(node){
+      var tag = (node.tag || 'h2').toLowerCase();
+      if(['h1','h2','h3','h4','h5','h6'].indexOf(tag) === -1) tag = 'h2';
+      return '<' + tag + '>' + renderChildren(node.children) + '</' + tag + '>';
+    }
+    function renderText(node){
+      var t = escapeHtml(node.text || '');
+      var f = node.format || 0;
+      if(f & FMT.CODE)      t = '<code>'   + t + '</code>';
+      if(f & FMT.STRIKE)    t = '<s>'      + t + '</s>';
+      if(f & FMT.UNDERLINE) t = '<u>'      + t + '</u>';
+      if(f & FMT.ITALIC)    t = '<em>'     + t + '</em>';
+      if(f & FMT.BOLD)      t = '<strong>' + t + '</strong>';
+      return t;
+    }
+    function renderLink(node){
+      var fields = node.fields || {};
+      var url = fields.url || '#';
+      var newTab = !!fields.newTab;
+      var inner = renderChildren(node.children);
+      var attrs = 'href="' + escapeHtml(url) + '"';
+      if(newTab) attrs += ' target="_blank" rel="noopener"';
+      return '<a ' + attrs + '>' + inner + '</a>';
+    }
+    function renderList(node){
+      var tag = (node.listType === 'number' || node.tag === 'ol') ? 'ol' : 'ul';
+      return '<' + tag + '>' + renderChildren(node.children) + '</' + tag + '>';
+    }
+    function renderListItem(node){
+      return '<li>' + renderChildren(node.children) + '</li>';
+    }
+    function renderQuote(node){
+      return '<blockquote>' + renderChildren(node.children) + '</blockquote>';
+    }
+    function renderUpload(node){
+      var v = node.value || {};
+      var url = (v.sizes && v.sizes.large && v.sizes.large.url) || v.url || '';
+      if(!url) return '';
+      var alt = escapeHtml(v.alt || '');
+      var captionHTML = v.caption ? renderLexical(v.caption) : '';
+      return (
+        '<figure class="post-figure">' +
+          '<img src="' + escapeHtml(url) + '" alt="' + alt + '" />' +
+          (captionHTML ? '<figcaption>' + captionHTML + '</figcaption>' : '') +
+        '</figure>'
+      );
+    }
+  })();
+</script>
+
+</body>
+</html>
