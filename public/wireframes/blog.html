@@ -251,27 +251,12 @@
     </p>
   </section>
 
-  <!-- FILTERS — i18n applied. data-filter values map to the CMS `category` field. -->
-  <div class="filters">
-    <button class="filter-btn active" data-filter="all">
-      <span class="i18n-en">All</span><span class="i18n-ko">전체</span><span class="i18n-ja">すべて</span>
-    </button>
-    <button class="filter-btn" data-filter="research">
-      <span class="i18n-en">Research</span><span class="i18n-ko">리서치</span><span class="i18n-ja">リサーチ</span>
-    </button>
-    <button class="filter-btn" data-filter="essay">
-      <span class="i18n-en">Essay</span><span class="i18n-ko">에세이</span><span class="i18n-ja">エッセイ</span>
-    </button>
-    <button class="filter-btn" data-filter="data-story">
-      <span class="i18n-en">Data Story</span><span class="i18n-ko">데이터 스토리</span><span class="i18n-ja">データストーリー</span>
-    </button>
-    <button class="filter-btn" data-filter="industry-brief">
-      <span class="i18n-en">Industry Brief</span><span class="i18n-ko">산업 브리프</span><span class="i18n-ja">インダストリーブリーフ</span>
-    </button>
-  </div>
+  <!-- FILTERS — populated by JS at runtime from Payload `/api/categories` (parent=blog).
+       Adding/removing a child of the `blog` parent in Payload Admin is reflected here
+       on next page load (no code change). -->
+  <div class="filters" role="group" aria-label="Article category filters"></div>
 
-  <!-- FEATURED ARTICLE — shell; populated by JS from the ARTICLES data source.
-       Stage A: inline ARTICLES array. Stage B: swapped for CMS fetch. -->
+  <!-- FEATURED ARTICLE — shell; populated by JS from the ARTICLES data source. -->
   <a href="#" class="featured" id="featuredArticle" hidden>
     <div class="featured-thumb">
       <div class="featured-thumb-text"></div>
@@ -374,45 +359,101 @@
     });
   })();
 
-  // Blog filter + progressive "load more" — unified state machine.
+  // ──────────────────────────────────────────────────────────────────────
+  // CMS-CONNECTED BLOG (Phase C-2 of CMS migration).
   //
-  // DATA SOURCE (Stage B — CMS-connected):
-  //   Articles are fetched live from the Payload REST API (`/api/posts`).
-  //   The Payload Website Template already exposes this endpoint; `depth=1` populates
-  //   relationships (categories, authors, heroImage) in the response.
-  //   Draft posts are filtered out server-side via `where[_status][equals]=published`.
-  //   The fetch/normalization layer is isolated at the bottom of this IIFE — the
-  //   render pipeline itself is unchanged from Stage A.
+  // CATEGORIES: fetched at runtime from /api/categories?where[parent.slug][equals]=blog
+  // ARTICLES:   fetched from /api/posts and scoped to those whose categories include
+  //             at least one blog child slug. Posts tagged only with portfolio
+  //             categories (e.g. CONTENTS, Data Research, HYPEER CAMPAIGN) are
+  //             intentionally excluded from this page.
   //
-  //   To swap back to hardcoded data (rollback), replace the fetch block at the
-  //   bottom with `ARTICLES = [...]; loadingState = 'ready'; render();`.
-  //
-  // RENDERING:
-  //   • Articles are sorted server-side (`sort=-publishedAt`), descending.
-  //   • Featured = first article matching the current filter (latest in that category).
-  //   • List     = remaining scoped articles, sliced by `visibleCount`.
-  //   • Load more reveals another STEP articles; hides itself when all are shown.
-  //   • Filter change resets visibleCount to INITIAL_COUNT.
-  //   • URL sync: `?category=<slug>` so filters are shareable / back-nav works.
-  //   • Loading and error states are rendered inline in the list area.
+  // i18n note: chip labels for fetched categories use Payload's `title` field
+  // verbatim across all languages (no per-language translation yet). The "All"
+  // chip retains its EN/KO/JA labels because it is rendered in JS, not from
+  // Payload data. Future enhancement: add an `i18n` field to Categories and
+  // pick the right language at render time.
+  // ──────────────────────────────────────────────────────────────────────
   (function(){
     var INITIAL_COUNT = 5;
     var STEP = 5;
+
     // Same-origin relative URL — blog.html is served from the same Vercel deployment
     // as the Payload API, so no CORS config required.
-    var API_URL = '/api/posts?depth=1&limit=100&sort=-publishedAt&where[_status][equals]=published';
+    var POSTS_API = '/api/posts?depth=1&limit=100&sort=-publishedAt&where[_status][equals]=published';
 
-    var filterBtns = document.querySelectorAll('.filter-btn[data-filter]');
+    // CATEGORIES is populated by fetchPayloadCategories() below. Default contains
+    // only nothing here; renderFilters always prepends "All" itself.
+    var CATEGORIES = [];
+    // Slugs of blog children, derived from CATEGORIES. Used to scope ARTICLES.
+    var BLOG_CHILD_SLUGS = [];
+
+    var ARTICLES = [];                                // populated by fetch on load
+    var loadingState = 'loading';                     // 'loading' | 'ready' | 'error'
+    var state = { filter: 'all', visibleCount: INITIAL_COUNT };
+
+    var filtersHost = document.querySelector('.filters');
     var featuredEl = document.getElementById('featuredArticle');
     var listEl = document.getElementById('articleList');
     var emptyEl = document.getElementById('emptyState');
     var loadMoreEl = document.getElementById('loadMoreContainer');
     var loadMoreBtn = document.getElementById('loadMoreBtn');
-    if(!filterBtns.length || !featuredEl || !listEl || !loadMoreBtn || !loadMoreEl) return;
+    var filterBtns = []; // re-queried after every renderFilters()
 
-    var ARTICLES = [];                                // populated by fetch on load
-    var loadingState = 'loading';                     // 'loading' | 'ready' | 'error'
-    var state = { filter: 'all', visibleCount: INITIAL_COUNT };
+    if(!filtersHost || !featuredEl || !listEl || !loadMoreBtn || !loadMoreEl) return;
+
+    // ---------------------------------------------------------------------------
+    // FETCH HELPERS
+    // ---------------------------------------------------------------------------
+    function fetchPayloadCategories(parentSlug){
+      var params = new URLSearchParams();
+      params.set('where[parent.slug][equals]', parentSlug);
+      params.set('depth', '0');
+      params.set('limit', '100');
+      params.set('sort', 'title');
+      return fetch('/api/categories?' + params.toString(), { credentials: 'same-origin' })
+        .then(function(r){
+          if(!r.ok) throw new Error('Categories fetch failed: ' + r.status);
+          return r.json();
+        })
+        .then(function(data){
+          return (data.docs || []).map(function(c){
+            return { slug: c.slug, label: c.title };
+          });
+        });
+    }
+
+    // ---------------------------------------------------------------------------
+    // RENDER FILTERS — chips driven by fetched CATEGORIES + a fixed "All" chip.
+    // Re-binds click handlers to the freshly rendered buttons every call.
+    // ---------------------------------------------------------------------------
+    function renderFilters(){
+      var allActive = state.filter === 'all' ? ' active' : '';
+      var html = '<button type="button" class="filter-btn' + allActive + '" data-filter="all">' +
+        '<span class="i18n-en">All</span>' +
+        '<span class="i18n-ko">전체</span>' +
+        '<span class="i18n-ja">すべて</span>' +
+        '</button>';
+
+      CATEGORIES.forEach(function(cat){
+        var isActive = state.filter === cat.slug ? ' active' : '';
+        html += '<button type="button" class="filter-btn' + isActive + '" data-filter="' + cat.slug + '">' +
+          escapeHtml(cat.label) +
+          '</button>';
+      });
+
+      filtersHost.innerHTML = html;
+
+      // Re-query and re-bind handlers since DOM was rewritten.
+      filterBtns = document.querySelectorAll('.filter-btn[data-filter]');
+      filterBtns.forEach(function(btn){
+        btn.addEventListener('click', function(){
+          state.filter = btn.getAttribute('data-filter') || 'all';
+          state.visibleCount = INITIAL_COUNT; // reset on filter change
+          render();
+        });
+      });
+    }
 
     // ---------------------------------------------------------------------------
     // NORMALIZATION — Payload post → the schema our render pipeline expects.
@@ -456,12 +497,24 @@
     }
 
     function normalizePost(doc){
-      var category = (doc.categories && doc.categories[0]) || null;
-      // Prefer explicit meta.description (editor-authored SEO excerpt) when present;
-      // fall back to the first paragraph of the body content.
+      // Prefer the FIRST category that's a known blog child for display purposes.
+      // This matters when a post is tagged with both a blog and a non-blog category;
+      // we want the chip filter to reflect the blog-side category.
+      var category = null;
+      if(doc.categories && doc.categories.length){
+        for(var i = 0; i < doc.categories.length; i++){
+          var c = doc.categories[i];
+          if(c && c.slug && BLOG_CHILD_SLUGS.indexOf(c.slug) !== -1){
+            category = c;
+            break;
+          }
+        }
+        if(!category) category = doc.categories[0]; // fallback to whatever's first
+      }
+
       var preferredExcerpt = doc.meta && doc.meta.description;
       var excerpt = preferredExcerpt || extractExcerpt(doc.content, 180) || '';
-      // Pick a reasonable hero image size — `medium` (900x506) balances quality vs bytes.
+
       var heroUrl = '';
       if(doc.heroImage){
         if(doc.heroImage.sizes && doc.heroImage.sizes.medium && doc.heroImage.sizes.medium.url){
@@ -471,8 +524,6 @@
         }
       }
       return {
-        // Detail page is a single template (blog-article.html) parameterised by ?slug=...
-        // When this site is converted to Next.js, this becomes '/blog/' + doc.slug.
         href: doc.slug
           ? '/wireframes/blog-article.html?slug=' + encodeURIComponent(doc.slug)
           : '#',
@@ -482,7 +533,7 @@
         categoryLabel: category ? category.title : 'Uncategorized',
         date: doc.publishedAt || doc.createdAt || '',
         dateLabel: formatDate(doc.publishedAt || doc.createdAt),
-        readTime: '', // no CMS field yet — can be derived from word count later
+        readTime: '',
         heroImageUrl: heroUrl
       };
     }
@@ -492,8 +543,6 @@
     // ---------------------------------------------------------------------------
 
     function getScopedArticles(){
-      // ARTICLES is already sorted server-side; still re-sort defensively in case
-      // a future change fetches multiple sources.
       var sorted = ARTICLES.slice().sort(function(a, b){
         return String(b.date).localeCompare(String(a.date));
       });
@@ -512,8 +561,6 @@
       featuredEl.hidden = false;
       featuredEl.setAttribute('href', article.href || '#');
 
-      // Featured thumb: if a hero image is available, use it as cover background
-      // and hide the decorative text. Otherwise fall back to a clean dark block.
       var thumbEl = featuredEl.querySelector('.featured-thumb');
       var thumbTextEl = featuredEl.querySelector('.featured-thumb-text');
       if(article.heroImageUrl){
@@ -551,7 +598,6 @@
     }
 
     function renderStatus(messageHtml){
-      // Inline loading / error message inside the list area; hides featured & empty state.
       featuredEl.hidden = true;
       listEl.innerHTML = '<div style="padding:var(--s-8) 0;text-align:center;color:var(--muted);font-family:var(--font-mono);font-size:13px;letter-spacing:0.04em;">' + messageHtml + '</div>';
       if(emptyEl) emptyEl.hidden = true;
@@ -572,7 +618,6 @@
         b.classList.toggle('active', b.getAttribute('data-filter') === state.filter);
       });
 
-      // Lifecycle states override regular content rendering.
       if(loadingState === 'loading'){
         renderStatus(
           '<span class="i18n-en">Loading articles…</span>' +
@@ -617,45 +662,73 @@
       if(cat) state.filter = cat;
     } catch(e) {}
 
-    filterBtns.forEach(function(btn){
-      btn.addEventListener('click', function(){
-        state.filter = btn.getAttribute('data-filter') || 'all';
-        state.visibleCount = INITIAL_COUNT; // reset on filter change
-        render();
-      });
-    });
-
     loadMoreBtn.addEventListener('click', function(){
       state.visibleCount += STEP;
       render();
     });
 
-    // Show the loading state immediately, then kick off the fetch.
+    // Initial render: only "All" chip is visible (CATEGORIES not yet fetched).
+    // Loading state in render() will show "Loading articles…" inline.
+    renderFilters();
     render();
 
     // ---------------------------------------------------------------------------
-    // FETCH — Payload REST API. Response.json() decodes as UTF-8 per Fetch spec,
-    // so Korean/Japanese titles come through cleanly regardless of how the raw
-    // endpoint renders in the browser URL bar.
+    // ASYNC STARTUP — fetch categories and posts in parallel.
+    // Categories must arrive before we can scope posts (we need BLOG_CHILD_SLUGS).
     // ---------------------------------------------------------------------------
-    fetch(API_URL, { credentials: 'same-origin' })
+    var categoriesPromise = fetchPayloadCategories('blog')
+      .then(function(cats){
+        CATEGORIES = cats;
+        BLOG_CHILD_SLUGS = cats.map(function(c){ return c.slug; });
+        renderFilters(); // re-render now that we have real chips
+      })
+      .catch(function(err){
+        if(typeof console !== 'undefined' && console.warn){
+          console.warn('[blog] category fetch failed; rendering with default "All" only', err);
+        }
+        // CATEGORIES stays empty; only "All" chip remains. ARTICLES below will
+        // not be parent-scoped, falling back to showing all posts.
+      });
+
+    var postsPromise = fetch(POSTS_API, { credentials: 'same-origin' })
       .then(function(r){
         if(!r.ok) throw new Error('HTTP ' + r.status);
         return r.json();
       })
       .then(function(data){
-        var docs = (data && data.docs) || [];
-        ARTICLES = docs.map(normalizePost).filter(function(a){ return a.title; });
-        loadingState = 'ready';
-        render();
+        return (data && data.docs) || [];
       })
       .catch(function(err){
-        loadingState = 'error';
         if(typeof console !== 'undefined' && console.error){
           console.error('[blog] Failed to fetch posts:', err);
         }
-        render();
+        return null; // signal failure
       });
+
+    Promise.all([categoriesPromise, postsPromise]).then(function(results){
+      var docs = results[1];
+      if(docs === null){
+        loadingState = 'error';
+        render();
+        return;
+      }
+
+      // Scope posts to those that include at least one blog-child category.
+      // If categories fetch failed (BLOG_CHILD_SLUGS empty), fall through to
+      // unscoped behavior so the page still shows something useful.
+      var scopedDocs = BLOG_CHILD_SLUGS.length > 0
+        ? docs.filter(function(doc){
+            if(!doc.categories || !Array.isArray(doc.categories)) return false;
+            return doc.categories.some(function(cat){
+              return cat && cat.slug && BLOG_CHILD_SLUGS.indexOf(cat.slug) !== -1;
+            });
+          })
+        : docs;
+
+      ARTICLES = scopedDocs.map(normalizePost).filter(function(a){ return a.title; });
+      loadingState = 'ready';
+      render();
+    });
   })();
 </script>
 
