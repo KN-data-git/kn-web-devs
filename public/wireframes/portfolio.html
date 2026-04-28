@@ -177,9 +177,11 @@
     overflow:hidden;
     position:relative;
     display:flex;align-items:flex-end;padding:var(--s-5);
+    background-size:cover;
+    background-position:center;
   }
-  .project-thumb.dark{background:var(--ink);color:var(--bg);}
-  .project-thumb.hypeer{background:var(--hypeer);color:var(--ink);}
+  .project-thumb.dark{background-color:var(--ink);color:var(--bg);}
+  .project-thumb.hypeer{background-color:var(--hypeer);color:var(--ink);}
   .project-thumb-label{
     font-family:var(--font-sans);font-weight:900;
     font-size:clamp(24px,3vw,40px);letter-spacing:-0.02em;line-height:1;
@@ -198,6 +200,15 @@
   .project-desc{
     font-family:var(--font-serif);font-size:16px;line-height:1.55;
     color:var(--ink-2);margin:0;max-width:520px;
+  }
+  /* Loading / empty / error status — shown in the grid area while fetching or
+     when no posts match. */
+  .grid-status{
+    grid-column:1 / -1;
+    text-align:center;
+    color:var(--muted);
+    font-family:var(--font-mono);font-size:13px;letter-spacing:0.04em;
+    padding:var(--s-8) 0;
   }
   @media(max-width:600px){
     .nav-menu{gap:var(--s-4);}
@@ -253,8 +264,8 @@
        Adding/removing a child of the `portfolio` parent in Payload Admin is
        reflected here on next page load (no code change). -->
   <div class="filters" role="group" aria-label="Project category filters"></div>
-  <!-- PROJECT GRID — populated by JS from PROJECTS data (still wireframe demo).
-       Phase C-2 will swap PROJECTS for a Payload `posts` fetch. -->
+  <!-- PROJECT GRID — populated by JS from Payload posts (`/api/posts`) scoped
+       to portfolio child categories. Phase C-3: posts are now CMS-driven. -->
   <div class="project-grid"></div>
   <!-- PAGINATION — dynamically populated by JS. Hidden when total pages ≤ 1. -->
   <nav class="pagination is-hidden" aria-label="Portfolio pagination"></nav>
@@ -326,136 +337,165 @@
   })();
 
   // ──────────────────────────────────────────────────────────────────────
-  // CMS-CONNECTED CATEGORIES (Phase C-1 of CMS migration).
+  // CMS-CONNECTED PORTFOLIO (Phase C-3 of CMS migration).
   //
-  // CATEGORIES are now fetched at runtime from Payload's REST API:
-  //   GET /api/categories?where[parent.slug][equals]=portfolio
-  // Adding or removing a child category in Payload Admin is reflected here
-  // on the next page load — no code change required.
+  // CATEGORIES: fetched from /api/categories?where[parent.slug][equals]=portfolio
+  // PROJECTS:   fetched from /api/posts and scoped to those whose categories
+  //             include at least one portfolio child slug. Posts under blog
+  //             children (Industry Brief, Essay, Research, Data Story, FOR FUN)
+  //             are intentionally excluded.
   //
-  // PROJECTS are still hardcoded demo data (Phase C-2 will migrate these).
-  // Demo PROJECTS use slugs that match Payload's actual portfolio child
-  // categories ('hypeer-campaign', 'data-research', 'contents'), so every
-  // chip filters to a non-empty set during the demo phase.
+  // Per-card data mapping:
+  //   - title       ← post.title
+  //   - excerpt     ← post.meta.description, or first paragraph of post.content
+  //   - year        ← year of post.publishedAt
+  //   - category    ← first portfolio-child category in post.categories
+  //   - thumbStyle  ← 'hypeer' if hypeer-campaign, else 'default'
+  //   - thumbImage  ← post.heroImage (medium size); falls back to title placeholder
+  //   - href        ← /wireframes/portfolio-article.html?slug=<post.slug>
+  //
+  // Empty state: when no posts match (e.g. fresh CMS, or all unpublished),
+  // the grid renders a "No projects yet" message instead of an empty area.
   // ──────────────────────────────────────────────────────────────────────
 
-  // CATEGORIES is filled at runtime by the async startup below. The default
-  // contains only "All" so the page is functional even if the API call
-  // fails (offline, API down, etc.). The fetch result replaces this list.
+  // CATEGORIES filled by fetchPayloadCategories() at runtime. Default has only
+  // "All" so the page is functional even if the API call fails.
   var CATEGORIES = [
     { slug: 'all', label: 'All' }
   ];
 
-  // PROJECTS — wireframe demo data. Slugs aligned to Payload portfolio
-  // children. Migrate to a Payload `posts` fetch in Phase C-2.
-  var PROJECTS = [
-    {
-      slug: 'fandom-migration',
-      thumbLabel: 'FANDOM<br/>MIGRATION',
-      thumbStyle: 'dark',
-      category: 'data-research',
-      year: 2026,
-      title: 'K-pop fandom platform migration: a two-year longitudinal study',
-      excerpt: 'Mapping where listening, sharing, and purchasing behavior actually lives across 12 platforms and 3 markets.'
-    },
-    {
-      slug: 'streaming-signals-brand-partnership',
-      thumbLabel: 'GLOBAL<br/>ROLLOUT',
-      thumbStyle: 'default',
-      category: 'hypeer-campaign',
-      year: 2025,
-      title: 'Streaming signals to brand partnership: 14-market launch playbook',
-      excerpt: 'Turning real-time platform data into a coordinated global campaign for a top-tier entertainment IP.'
-    },
-    {
-      slug: 'always-on-social-engine',
-      thumbLabel: 'SOCIAL<br/>ENGINE',
-      thumbStyle: 'hypeer',
-      category: 'hypeer-campaign',
-      year: 2025,
-      title: 'Always-on social strategy for independent K-pop label',
-      excerpt: 'HYPEER designed and operated a 6-month social content engine across TikTok, Instagram, and Weverse.'
-    },
-    {
-      slug: 'audience-segmentation-blueprint',
-      thumbLabel: 'AUDIENCE<br/>BLUEPRINT',
-      thumbStyle: 'dark',
-      category: 'data-research',
-      year: 2025,
-      title: 'Audience segmentation blueprint for OTT content studio',
-      excerpt: 'Built a behavioral segmentation model that identified four underserved audience clusters for original content development.'
-    },
-    {
-      slug: 'entertainment-trend-radar',
-      thumbLabel: 'TREND<br/>RADAR',
-      thumbStyle: 'default',
-      category: 'contents',
-      year: 2024,
-      title: 'Entertainment trend radar: quarterly data briefing series',
-      excerpt: 'An ongoing subscription product delivering cross-platform trend analysis to agency partners every quarter.'
-    },
-    {
-      slug: 'creator-collab-beauty-kpop',
-      thumbLabel: 'CREATOR<br/>COLLAB',
-      thumbStyle: 'hypeer',
-      category: 'hypeer-campaign',
-      year: 2024,
-      title: 'Creator partnership campaign for global beauty brand × K-pop',
-      excerpt: 'HYPEER matched 12 creators with a beauty brand launch tied to a K-pop comeback, generating 48M organic impressions.'
-    },
-    {
-      slug: 'webtoon-ip-pipeline',
-      thumbLabel: 'WEBTOON<br/>PIPELINE',
-      thumbStyle: 'dark',
-      category: 'data-research',
-      year: 2024,
-      title: 'Webtoon-to-screen IP adaptation landscape: a market pipeline study',
-      excerpt: 'Tracking the commercial lifecycle of 40+ webtoon properties from platform serialization to global studio deal.'
-    },
-    {
-      slug: 'streaming-economy-annual',
-      thumbLabel: 'STREAMING<br/>ECONOMY',
-      thumbStyle: 'default',
-      category: 'contents',
-      year: 2023,
-      title: 'The state of Korean streaming economics: annual data report',
-      excerpt: 'A yearly publication examining revenue flows, platform power, and artist economics across Korean entertainment streaming.'
-    }
-  ];
+  // PORTFOLIO_CHILD_SLUGS derived from CATEGORIES; used to scope post fetch.
+  var PORTFOLIO_CHILD_SLUGS = [];
+
+  // PROJECTS filled by fetchPayloadPosts(). Empty until fetch resolves.
+  var PROJECTS = [];
+
+  // Loading lifecycle: 'loading' → 'ready' or 'error'. Affects grid rendering.
+  var loadingState = 'loading';
 
   // ──────────────────────────────────────────────────────────────────────
-  // Fetch helper — pulls direct children of the given parent category slug.
-  // Mirrors the server-side resolveCategoryFilterIds() logic used by the
-  // Next.js /work page so behavior stays consistent across pages.
+  // FETCH HELPERS
   // ──────────────────────────────────────────────────────────────────────
-  async function fetchPayloadCategories(parentSlug) {
+  function fetchPayloadCategories(parentSlug) {
     var params = new URLSearchParams();
     params.set('where[parent.slug][equals]', parentSlug);
     params.set('depth', '0');
     params.set('limit', '100');
     params.set('sort', 'title');
-    var res = await fetch('/api/categories?' + params.toString(), {
-      credentials: 'same-origin'
-    });
-    if (!res.ok) {
-      throw new Error('Categories fetch failed: ' + res.status);
-    }
-    var data = await res.json();
-    return (data.docs || []).map(function(c) {
-      return {
-        slug: c.slug,
-        label: c.title,
-        // tagLabel and accent are wireframe-only styling fields. Default to
-        // the title; the renderer skips the accent class when absent.
-        tagLabel: c.title
-      };
-    });
+    return fetch('/api/categories?' + params.toString(), { credentials: 'same-origin' })
+      .then(function(r){
+        if (!r.ok) throw new Error('Categories fetch failed: ' + r.status);
+        return r.json();
+      })
+      .then(function(data){
+        return (data.docs || []).map(function(c) {
+          return { slug: c.slug, label: c.title, tagLabel: c.title };
+        });
+      });
+  }
+
+  function fetchPayloadPosts() {
+    var url = '/api/posts?depth=1&limit=100&sort=-publishedAt&where[_status][equals]=published';
+    return fetch(url, { credentials: 'same-origin' })
+      .then(function(r){
+        if (!r.ok) throw new Error('Posts fetch failed: ' + r.status);
+        return r.json();
+      })
+      .then(function(data){
+        return (data.docs || []);
+      });
   }
 
   // ──────────────────────────────────────────────────────────────────────
-  // Renderers — pure functions that read CATEGORIES / PROJECTS and write DOM.
-  // Extracted from the original IIFEs so the async startup can call them
-  // after the categories fetch resolves.
+  // POST → PROJECT MAPPER
+  // Converts a Payload post document into the shape the renderer expects.
+  // Handles missing fields (no hero image, no description, no publishedAt).
+  // ──────────────────────────────────────────────────────────────────────
+  function extractExcerpt(content, maxChars){
+    // Traverse Lexical root.children to find the first paragraph's text.
+    if (!content || !content.root || !content.root.children) return '';
+    for (var i = 0; i < content.root.children.length; i++) {
+      var node = content.root.children[i];
+      if (node.type !== 'paragraph' || !node.children) continue;
+      var text = '';
+      for (var j = 0; j < node.children.length; j++) {
+        var child = node.children[j];
+        if (child.type === 'text' && child.text) text += child.text;
+        else if (child.type === 'link' && child.children) {
+          for (var k = 0; k < child.children.length; k++) {
+            if (child.children[k].text) text += child.children[k].text;
+          }
+        }
+      }
+      text = text.trim();
+      if (text.length === 0) continue;
+      if (maxChars && text.length > maxChars) {
+        text = text.substring(0, maxChars).replace(/\s+\S*$/, '') + '…';
+      }
+      return text;
+    }
+    return '';
+  }
+
+  function pickPortfolioCategory(categories) {
+    if (!Array.isArray(categories)) return null;
+    for (var i = 0; i < categories.length; i++) {
+      var c = categories[i];
+      if (c && c.slug && PORTFOLIO_CHILD_SLUGS.indexOf(c.slug) !== -1) {
+        return c;
+      }
+    }
+    return categories[0] || null;
+  }
+
+  function payloadPostToProject(doc) {
+    var category = pickPortfolioCategory(doc.categories);
+
+    // Year from publishedAt, if available.
+    var year = '';
+    if (doc.publishedAt) {
+      var d = new Date(doc.publishedAt);
+      if (!isNaN(d.getTime())) year = d.getFullYear();
+    }
+
+    // Excerpt: meta.description preferred, else first paragraph of content.
+    var excerpt = (doc.meta && doc.meta.description) || extractExcerpt(doc.content, 180) || '';
+
+    // Hero image (medium size if available).
+    var heroUrl = '';
+    if (doc.heroImage) {
+      if (doc.heroImage.sizes && doc.heroImage.sizes.medium && doc.heroImage.sizes.medium.url) {
+        heroUrl = doc.heroImage.sizes.medium.url;
+      } else if (doc.heroImage.url) {
+        heroUrl = doc.heroImage.url;
+      }
+    }
+
+    // Thumb label fallback when there's no hero image: uppercase title,
+    // broken into two lines if it's long, to mimic the wireframe demo style.
+    var thumbLabel = (doc.title || '').toUpperCase();
+    if (thumbLabel.length > 18) {
+      var words = thumbLabel.split(/\s+/);
+      if (words.length >= 2) {
+        var midpoint = Math.ceil(words.length / 2);
+        thumbLabel = words.slice(0, midpoint).join(' ') + '<br/>' + words.slice(midpoint).join(' ');
+      }
+    }
+
+    return {
+      slug: doc.slug || '',
+      thumbLabel: thumbLabel,
+      thumbStyle: category && category.slug === 'hypeer-campaign' ? 'hypeer' : 'dark',
+      heroImageUrl: heroUrl,
+      category: category ? category.slug : '',
+      year: year,
+      title: doc.title || '',
+      excerpt: excerpt
+    };
+  }
+
+  // ──────────────────────────────────────────────────────────────────────
+  // RENDERERS — pure functions reading CATEGORIES / PROJECTS, writing DOM.
   // NOTE: this is a wireframe — values are trusted. In a CMS-connected build
   // with user-authored content, escape user input before injecting as HTML.
   // ──────────────────────────────────────────────────────────────────────
@@ -471,6 +511,36 @@
   function renderProjects() {
     var host = document.querySelector('.project-grid');
     if (!host) return;
+
+    // Loading / error / empty states use a single status row that spans the grid.
+    if (loadingState === 'loading') {
+      host.innerHTML =
+        '<div class="grid-status">' +
+          '<span class="i18n-en">Loading projects…</span>' +
+          '<span class="i18n-ko">프로젝트를 불러오는 중…</span>' +
+          '<span class="i18n-ja">プロジェクトを読み込み中…</span>' +
+        '</div>';
+      return;
+    }
+    if (loadingState === 'error') {
+      host.innerHTML =
+        '<div class="grid-status">' +
+          '<span class="i18n-en">Unable to load projects right now. Please try again later.</span>' +
+          '<span class="i18n-ko">프로젝트를 불러오지 못했습니다. 잠시 후 다시 시도해 주세요.</span>' +
+          '<span class="i18n-ja">プロジェクトを読み込めませんでした。しばらくしてから再度お試しください。</span>' +
+        '</div>';
+      return;
+    }
+    if (PROJECTS.length === 0) {
+      host.innerHTML =
+        '<div class="grid-status">' +
+          '<span class="i18n-en">No projects published yet.</span>' +
+          '<span class="i18n-ko">아직 등록된 프로젝트가 없습니다.</span>' +
+          '<span class="i18n-ja">公開されているプロジェクトはまだありません。</span>' +
+        '</div>';
+      return;
+    }
+
     var catBySlug = {};
     CATEGORIES.forEach(function(c){ catBySlug[c.slug] = c; });
 
@@ -480,35 +550,58 @@
         (p.thumbStyle && p.thumbStyle !== 'default' ? ' ' + p.thumbStyle : '');
       var tagClass = 'tag' + (cat.accent === 'hypeer' ? ' tag-hypeer' : '');
       var tagText = cat.tagLabel || cat.label || p.category;
-      // Wireframe stage: query-string link to portfolio-article.html for static preview.
-      // Stage B (CMS / Next.js): replace with `/portfolio/${p.slug}` for path-based routing.
+
+      // If a hero image is uploaded, use it as the thumb background and hide
+      // the placeholder text. Otherwise fall back to the wireframe placeholder.
+      var thumbStyleAttr = '';
+      var thumbLabelStyle = '';
+      if (p.heroImageUrl) {
+        thumbStyleAttr = ' style="background-image:url(\'' + p.heroImageUrl + '\');"';
+        thumbLabelStyle = ' style="display:none;"';
+      }
+
+      var href = p.slug
+        ? '/wireframes/portfolio-article.html?slug=' + encodeURIComponent(p.slug)
+        : '#';
+
       return '' +
-        '<a href="portfolio-article.html?slug=' + p.slug + '" class="project-card" data-category="' + p.category + '">' +
-          '<div class="' + thumbClass + '">' +
-            '<span class="project-thumb-label">' + p.thumbLabel + '</span>' +
+        '<a href="' + href + '" class="project-card" data-category="' + p.category + '">' +
+          '<div class="' + thumbClass + '"' + thumbStyleAttr + '>' +
+            '<span class="project-thumb-label"' + thumbLabelStyle + '>' + p.thumbLabel + '</span>' +
           '</div>' +
           '<div class="project-meta">' +
             '<span class="' + tagClass + '">' + tagText + '</span>' +
-            '<span class="label">' + p.year + '</span>' +
+            (p.year ? '<span class="label">' + p.year + '</span>' : '') +
           '</div>' +
           '<h3 class="project-title">' + p.title + '</h3>' +
-          '<p class="project-desc">' + p.excerpt + '</p>' +
+          (p.excerpt ? '<p class="project-desc">' + p.excerpt + '</p>' : '') +
         '</a>';
     }).join('');
   }
 
   // ──────────────────────────────────────────────────────────────────────
-  // Filter + pagination state machine. Reads from DOM after renderProjects().
-  // Filter narrows the card pool by data-category. Pagination slices the
-  // narrowed pool by PER_PAGE. Both reflected in URL as ?category=<x>&page=<n>
-  // so links are shareable and back/forward navigation works.
+  // FILTER + PAGINATION STATE MACHINE
+  // Reads cards from DOM after renderProjects() has run.
   // ──────────────────────────────────────────────────────────────────────
   function initFilterStateMachine() {
     var PER_PAGE = 6;
     var filterBtns = document.querySelectorAll('.filter-btn');
     var cards = Array.prototype.slice.call(document.querySelectorAll('.project-card'));
     var pagination = document.querySelector('.pagination');
-    if (!filterBtns.length || !cards.length || !pagination) return;
+    if (!filterBtns.length || !pagination) return;
+    if (cards.length === 0) {
+      // Empty grid — keep filters interactive but hide pagination.
+      pagination.classList.add('is-hidden');
+      pagination.innerHTML = '';
+      filterBtns.forEach(function(btn){
+        btn.addEventListener('click', function(){
+          // Toggle active state visually only; nothing to filter.
+          filterBtns.forEach(function(b){ b.classList.remove('active'); });
+          btn.classList.add('active');
+        });
+      });
+      return;
+    }
 
     var state = { filter: 'all', page: 1 };
 
@@ -519,8 +612,6 @@
     }
 
     function computePageList(current, total) {
-      // Compact page list: 1 … (current-1) current (current+1) … total.
-      // If total ≤ 7, show all numbers; otherwise collapse with ellipsis.
       if (total <= 7) {
         var arr = [];
         for (var i = 1; i <= total; i++) arr.push(i);
@@ -577,7 +668,6 @@
           else if (nav === 'next' && state.page < totalPages) state.page++;
           else if (page) state.page = parseInt(page, 10);
           render();
-          // Scroll to top of filters so user sees the new page in context.
           var filtersEl = document.querySelector('.filters');
           if (filtersEl) filtersEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
         });
@@ -637,24 +727,61 @@
   }
 
   // ──────────────────────────────────────────────────────────────────────
-  // Async startup: fetch categories, then render and initialize.
-  // If the fetch fails (offline / API down), CATEGORIES stays at the default
-  // "All" only and the page still renders the demo PROJECTS list. This keeps
-  // the wireframe usable as a static demo even if Payload is unreachable.
+  // ASYNC STARTUP — fetch categories + posts in parallel, then render.
+  // Renders a loading state immediately so the grid is never empty during
+  // the request. On error, shows a polite message and lets users retry by
+  // refreshing.
   // ──────────────────────────────────────────────────────────────────────
-  (async function() {
-    try {
-      var fetched = await fetchPayloadCategories('portfolio');
-      CATEGORIES = [{ slug: 'all', label: 'All' }].concat(fetched);
-    } catch (err) {
-      console.warn('[portfolio] category fetch failed; rendering with default "All" only', err);
-      // CATEGORIES stays as the placeholder default.
+  renderFilters();   // initial render: only "All" chip
+  renderProjects();  // initial render: loading state in grid
+
+  Promise.all([
+    fetchPayloadCategories('portfolio').catch(function(err){
+      if (typeof console !== 'undefined' && console.warn) {
+        console.warn('[portfolio] category fetch failed', err);
+      }
+      return [];
+    }),
+    fetchPayloadPosts().catch(function(err){
+      if (typeof console !== 'undefined' && console.error) {
+        console.error('[portfolio] posts fetch failed', err);
+      }
+      return null;
+    })
+  ]).then(function(results){
+    var fetchedCategories = results[0];
+    var fetchedDocs = results[1];
+
+    CATEGORIES = [{ slug: 'all', label: 'All' }].concat(fetchedCategories);
+    PORTFOLIO_CHILD_SLUGS = fetchedCategories.map(function(c){ return c.slug; });
+
+    if (fetchedDocs === null) {
+      loadingState = 'error';
+      renderFilters();
+      renderProjects();
+      initFilterStateMachine();
+      return;
     }
+
+    // Scope posts to those including at least one portfolio child slug.
+    // If categories fetch failed (PORTFOLIO_CHILD_SLUGS empty), fall through
+    // to showing nothing — better than leaking blog posts onto /work.
+    var scopedDocs = PORTFOLIO_CHILD_SLUGS.length > 0
+      ? fetchedDocs.filter(function(doc){
+          if (!doc.categories || !Array.isArray(doc.categories)) return false;
+          return doc.categories.some(function(cat){
+            return cat && cat.slug && PORTFOLIO_CHILD_SLUGS.indexOf(cat.slug) !== -1;
+          });
+        })
+      : [];
+
+    PROJECTS = scopedDocs.map(payloadPostToProject).filter(function(p){ return p.title; });
+    loadingState = 'ready';
+
     renderFilters();
     renderProjects();
     initFilterStateMachine();
-  })();
+  });
 </script>
 </body>
 </html>
-
