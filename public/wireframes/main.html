@@ -53,6 +53,8 @@
   .hero-headline{
     font-family:var(--font-display);
     font-weight:800;
+    /* ~12% smaller than the global --fs-display-l (44/6.4vw/84) — bumped up by 10% from the prior 20%-reduced value, still leaves headroom for JA wraps */
+    font-size:clamp(39px, 5.63vw, 74px);
     letter-spacing:-0.02em;
     line-height:1.02;
     font-variation-settings:"opsz" 144, "SOFT" 40, "WONK" 1;
@@ -68,18 +70,21 @@
   /* In-headline definition line — matches .sub-headline's serif treatment for typographic unity with the tagline below */
   .headline-def{display:block;font-family:var(--font-serif);font-weight:400;font-size:clamp(22px,2.4vw,32px);line-height:1.3;margin-top:var(--s-2);}
 
-  /* Hero headline word-level hover accents — introduces ink + HYPEER orange on interaction */
-  .hl-signal, .hl-strategy{
+  /* Hero headline word-level hover accents.
+     .hl-ink   — data/content highlights → ink block (Passport Seoul-flavored monochrome).
+     .hl-orange — strategy highlight → HYPEER orange block (introduces the sub-brand accent).
+     Reads visually as: data (ink) → strategy (orange) → content (ink). */
+  .hl-ink, .hl-orange{
     padding: 0 0.08em;
     transition: background-color .15s ease, color .15s ease;
     box-decoration-break: clone;
     -webkit-box-decoration-break: clone;
   }
-  .hl-signal:hover{
+  .hl-ink:hover{
     background-color: var(--ink);
     color: var(--bg);
   }
-  .hl-strategy:hover{
+  .hl-orange:hover{
     background-color: var(--hypeer);
     color: var(--ink);
   }
@@ -210,19 +215,10 @@
   }
   .hero-headline{
     margin: 0 0 var(--s-6);
-    max-width: 1100px;
-  }
-  /* Hero headline fisheye — per-character hover magnifier.
-     Script splits the active i18n node into .char spans and tweaks transform on pointermove.
-     Scoped to .hero-headline so other text (sub-headline, lead, etc.) is unaffected. */
-  .hero-headline .char{
-    display: inline-block;
-    will-change: transform;
-    transition: transform .12s cubic-bezier(.2,.7,.2,1);
-    transform-origin: 50% 80%;
+    max-width: 1300px; /* widened so "We read the data in entertainment." fits on one line at display-l 84px cap */
   }
   .hero-sub{
-    max-width: 640px;
+    max-width: 1100px; /* enough room for the second sentence to flow on a single line at desktop */
     margin: 0;
   }
 
@@ -400,7 +396,7 @@
   }
   .cta-section .lead{
     margin: 0 auto var(--s-6);
-    max-width: 560px;
+    max-width: 900px; /* widened so each KO sentence fits on its intended single line via <br/> */
     color: var(--muted);
   }
 
@@ -418,7 +414,7 @@
     <img src="/assets/Kreators_logo(B)_v2.png" alt="KREATORS." />
   </div>
   <div class="intro-cue" aria-hidden="true">
-    <span class="i18n-en">Scroll</span><span class="i18n-ko">스크롤</span><span class="i18n-ja">スクロール</span>
+    <span lang="en">Scroll</span>
   </div>
 </section>
 
@@ -451,20 +447,18 @@
 
   <!-- HERO -->
   <section class="hero">
-    <div class="label" style="color:var(--muted); margin-bottom: var(--s-4);">
-      <span class="i18n-en">Entertainment · Data · Marketing</span>
-      <span class="i18n-ko">엔터테인먼트 · 데이터 · 마케팅</span>
-      <span class="i18n-ja">エンターテインメント · データ · マーケティング</span>
+    <div class="label" style="color:var(--muted); margin-bottom: var(--s-4);" lang="en">
+      Entertainment · Data · Marketing
     </div>
     <h1 class="display-l hero-headline">
-      <span class="i18n-en">We read the <span class="hl-signal">signal</span>.<br/>We write the <span class="hl-strategy">strategy</span>.</span>
-      <span class="i18n-ko"><span class="hl-signal">신호</span>를 읽고,<br/><span class="hl-strategy">전략</span>을 씁니다.</span>
-      <span class="i18n-ja"><span class="hl-signal">シグナル</span>を読み、<br/><span class="hl-strategy">戦略</span>を描く。</span>
+      <span class="i18n-en">We read the <span class="hl-ink">data</span> in entertainment.<br/>We write the <span class="hl-orange">strategy</span>.</span>
+      <span class="i18n-ko">엔터테인먼트의 <span class="hl-ink">데이터</span>를 읽고,<br/><span class="hl-orange">전략</span>으로 설계합니다.</span>
+      <span class="i18n-ja">エンターテインメントの<span class="hl-ink">データ</span>を読み、<br/><span class="hl-orange">戦略</span>を描く。</span>
     </h1>
     <p class="lead hero-sub">
-      <span class="i18n-en">Kreators Network is a Seoul-based agency that turns entertainment industry data into marketing strategies for labels and artists worldwide.</span>
-      <span class="i18n-ko">Kreators Network는 엔터테인먼트 산업 데이터를 전 세계 레이블과 아티스트를 위한 마케팅 전략으로 전환하는 서울 기반의 에이전시입니다.</span>
-      <span class="i18n-ja">エンターテインメント産業のデータを、世界のレーベルとアーティストのためのマーケティング戦略へ。ソウルを拠点に活動するエージェンシーです。</span>
+      <span class="i18n-en">Kreators Network is a Seoul-based agency.<br/>We turn entertainment industry data into marketing strategies for labels and artists worldwide.</span>
+      <span class="i18n-ko">Kreators Network는 엔터테인먼트 데이터 마케팅 에이전시입니다.<br/>음악 산업의 데이터를 통해 마케팅 전략을 세우고, 전 세계 레이블과 아티스트의 성장을 돕습니다.</span>
+      <span class="i18n-ja">Kreators Networkは、ソウルを拠点に活動するエージェンシーです。<br/>エンターテインメント産業のデータを、世界のレーベルとアーティストのためのマーケティング戦略へと変えます。</span>
     </p>
   </section>
 
@@ -472,43 +466,43 @@
   <section class="manifesto" id="about">
     <div class="manifesto-grid">
       <div class="manifesto-left">
-        <div class="label"><span class="i18n-en">About</span><span class="i18n-ko">소개</span><span class="i18n-ja">紹介</span></div>
+        <div class="label" lang="en">About</div>
         <p class="manifesto-statement">
-          <span class="i18n-en">A trusted partner to labels and artists at home and abroad — HYPEER for marketing, Passport Seoul for data, Talented for curation. As Luminate&rsquo;s exclusive Korea sales partner, we deliver content, experiences, analytics, and strategy.</span>
-          <span class="i18n-ko">국내외 레이블과 아티스트의 신뢰받는 파트너 — 마케팅은 HYPEER, 데이터는 Passport Seoul, 큐레이션은 Talented. 루미네이트의 한국 독점 세일즈 파트너로서 콘텐츠, 경험, 분석, 전략을 제공합니다.</span>
-          <span class="i18n-ja">国内外のレーベルとアーティストに信頼されるパートナー — マーケティングはHYPEER、データはPassport Seoul、キュレーションはTalented。Luminateの韓国独占セールスパートナーとして、コンテンツ・体験・分析・戦略をワンストップで届けます。</span>
+          <span class="i18n-en">A trusted partner to labels and artists at home and abroad — HYPEER for marketing, Passport Seoul for data, Talented for curation. We are also Luminate&rsquo;s exclusive Korea sales partner. We deliver content, experiences, analytics, and strategy.</span>
+          <span class="i18n-ko">Kreators Network는 국내외 레이블과 아티스트의 성장을 함께 설계하는 파트너입니다. 시장 데이터 분석, 마케팅 전략, 콘텐츠 제작, 오프라인 이벤트 운영까지 음악 비즈니스의 다양한 접점에서 아티스트의 성공을 돕습니다. 또한 Luminate의 한국 독점 세일즈 파트너로서, 글로벌 음악 데이터와 시장 인사이트를 국내 산업에 연결하고 있습니다.</span>
+          <span class="i18n-ja">国内外のレーベルとアーティストに信頼されるパートナー — マーケティングはHYPEER、データはPassport Seoul、キュレーションはTalented。さらに、Luminateの韓国独占セールスパートナーでもあります。コンテンツ・体験・分析・戦略を届けます。</span>
         </p>
         <a href="#" class="btn" style="margin-top: var(--s-6);">
-          <span class="i18n-en">Learn about us</span><span class="i18n-ko">스튜디오 소개</span><span class="i18n-ja">スタジオ紹介</span>
+          <span class="i18n-en">Learn about us</span><span class="i18n-ko">더 알아보기</span><span class="i18n-ja">スタジオ紹介</span>
           <span class="arrow">→</span>
         </a>
       </div>
       <div class="manifesto-right">
         <div class="capability">
           <div class="capability-num">01</div>
-          <h3><span class="i18n-en">Data Intelligence</span><span class="i18n-ko">데이터 인텔리전스</span><span class="i18n-ja">データインテリジェンス</span></h3>
+          <h3 lang="en">Data Intelligence</h3>
           <p>
-            <span class="i18n-en">We map streaming platforms, social ecosystems, and fan communities to surface the metrics that actually predict cultural impact.</span>
-            <span class="i18n-ko">스트리밍 플랫폼, 소셜 생태계, 팬 커뮤니티를 정교하게 맵핑해, 문화적 임팩트를 실제로 예측할 수 있는 지표를 찾아냅니다.</span>
-            <span class="i18n-ja">ストリーミング、ソーシャル、ファンコミュニティを精密にマッピングし、文化的インパクトを実際に予測できる指標を導き出します。</span>
+            <span class="i18n-en">We analyze streaming, social, and fandom data in depth to surface the key metrics that explain and predict how artists and content grow. We design our clients&rsquo; data strategy and walk the entire journey with them.</span>
+            <span class="i18n-ko">스트리밍, 소셜, 팬덤 데이터를 입체적으로 분석해 아티스트와 콘텐츠의 성장을 설명하고 예측할 수 있는 핵심 지표를 찾아냅니다. 고객사의 데이터 전략을 설계하고 여정 전체를 함께합니다.</span>
+            <span class="i18n-ja">ストリーミング、ソーシャル、ファンダムのデータを多角的に分析し、アーティストとコンテンツの成長を説明・予測できる主要指標を見出します。クライアントのデータ戦略を設計し、その道のりを共に歩みます。</span>
           </p>
         </div>
         <div class="capability">
           <div class="capability-num">02</div>
-          <h3><span class="i18n-en">Strategic Marketing</span><span class="i18n-ko">전략적 마케팅</span><span class="i18n-ja">戦略的マーケティング</span></h3>
+          <h3 lang="en">Artist Marketing</h3>
           <p>
-            <span class="i18n-en">Data becomes direction. We design campaigns grounded in audience behavior — not assumptions — for music, film, and IP properties.</span>
-            <span class="i18n-ko">데이터가 방향이 됩니다. 음악, 영화, IP 캠페인을 가정이 아닌 오디언스의 실제 행동 위에 설계합니다.</span>
-            <span class="i18n-ja">データが方向性になる。音楽、映画、IPキャンペーンを、仮説ではなくオーディエンスの実際の行動に基づいて設計します。</span>
+            <span class="i18n-en">We design artist brands and campaigns grounded in audience behavior — not assumptions — end-to-end across music entertainment.</span>
+            <span class="i18n-ko">직감이 아닌 오디언스의 실제 행동을 바탕으로, 아티스트 브랜드와 캠페인을 설계합니다. 음악 엔터테인먼트의 전략부터 실행까지 전 과정을 함께합니다.</span>
+            <span class="i18n-ja">アーティストのブランドとキャンペーンを、仮説ではなく — オーディエンスの実際の行動の上でデザインします。音楽エンターテインメントを、始まりから終わりまで。</span>
           </p>
         </div>
         <div class="capability">
           <div class="capability-num">03</div>
-          <h3><span class="i18n-en">Research &amp; Editorial</span><span class="i18n-ko">리서치 &amp; 에디토리얼</span><span class="i18n-ja">リサーチ＆エディトリアル</span></h3>
+          <h3 lang="en">Content Production</h3>
           <p>
-            <span class="i18n-en">We publish what we learn. Our journal is where industry knowledge becomes shared knowledge — reports, essays, and data stories.</span>
-            <span class="i18n-ko">우리가 배운 것을 씁니다. 저널은 산업의 지식이 공유된 지식으로 전환되는 공간입니다 — 리포트, 에세이, 데이터 스토리.</span>
-            <span class="i18n-ja">学んだことを発信します。ジャーナルは、業界の知見が共有知に変わる場です — レポート、エッセイ、データストーリー。</span>
+            <span class="i18n-en">We craft videos, social content, and the visual assets that bring artist brands to life — every detail designed with care.</span>
+            <span class="i18n-ko">영상, 소셜 콘텐츠, 비주얼 에셋까지, 아티스트 브랜드가 선명하게 전달될 수 있도록 모든 디테일을 설계합니다.</span>
+            <span class="i18n-ja">映像、SNSコンテンツ、そしてアーティストブランドを形づくるすべてのビジュアルアセット。ディテールまで丁寧にデザインします。</span>
           </p>
         </div>
       </div>
@@ -521,23 +515,21 @@
       <div class="hypeer-logo">
         <img src="/assets/HYPR_logo_B.png" alt="HYPEER" />
       </div>
-      <div class="label"><span class="i18n-en">Introducing</span><span class="i18n-ko">소개합니다</span><span class="i18n-ja">紹介</span></div>
-      <h2 class="display-m" style="margin: var(--s-3) 0 var(--s-3); max-width: 900px;">
-        <span class="i18n-en">HYPEER<span class="headline-def">MX marketing lab of Kreators Network.</span></span>
-        <span class="i18n-ko">HYPEER<span class="headline-def">Kreators Network의 MX 마케팅 랩.</span></span>
-        <span class="i18n-ja">HYPEER<span class="headline-def">Kreators NetworkのMXマーケティングラボ。</span></span>
+      <div class="label" lang="en">Introducing</div>
+      <h2 class="display-m" style="margin: var(--s-3) 0 var(--s-3); max-width: 900px;" lang="en">
+        HYPEER<span class="headline-def">Marketing Experience lab of Kreators Network.</span>
       </h2>
       <p class="lead" style="max-width: 640px; margin: 0 0 var(--s-6);">
-        <span class="i18n-en">We unite creative storytelling with data intelligence to build artist brands that capture imagination and stand the test of markets.</span>
-        <span class="i18n-ko">크리에이티브 스토리텔링과 데이터 인텔리전스를 결합해, 상상력을 사로잡고 시장의 검증을 견디는 아티스트 브랜드를 만듭니다.</span>
-        <span class="i18n-ja">クリエイティブなストーリーテリングとデータインテリジェンスを融合し、想像力を捉え、市場に耐えうるアーティストブランドを築きます。</span>
+        <span class="i18n-en">We unite creative storytelling with data intelligence to build artist brands that people remember and markets reward.</span>
+        <span class="i18n-ko">HYPEER는 크리에이티브 스토리텔링과 데이터 인텔리전스를 연결해<br/>사람들이 기억하고 시장이 반응하는 아티스트 브랜드를 설계합니다.</span>
+        <span class="i18n-ja">クリエイティブなストーリーテリングとデータインテリジェンスを併せて扱い、人々が覚え、市場が認めるアーティストブランドをつくります。</span>
       </p>
       <!-- Brand motto: kept in English across all locales for typographic consistency (Newsreader is Latin-only variable) -->
       <p class="sub-headline" lang="en">
         Right music to right people &mdash; in a right way.
       </p>
-      <a href="portfolio.html?brand=hypeer" class="btn" style="background:var(--ink);color:var(--hypeer);border-color:var(--ink);">
-        <span class="i18n-en">See HYPEER work</span><span class="i18n-ko">HYPEER 작업 보기</span><span class="i18n-ja">HYPEERの実績を見る</span>
+      <a href="portfolio.html?brand=hypeer" class="btn" style="background:var(--ink);color:var(--hypeer);border-color:var(--ink);" lang="en">
+        See HYPEER work
         <span class="arrow">→</span>
       </a>
     </div>
@@ -549,24 +541,20 @@
       <div class="passport-logo">
         <img src="/assets/PPS_logo_white.png" alt="Passport Seoul" />
       </div>
-      <div class="label"><span class="i18n-en">Introducing</span><span class="i18n-ko">소개합니다</span><span class="i18n-ja">紹介</span></div>
-      <h2 class="display-m" style="margin: var(--s-3) 0 var(--s-3); max-width: 900px;">
-        <span class="i18n-en">Passport Seoul</span>
-        <span class="i18n-ko">Passport Seoul</span>
-        <span class="i18n-ja">Passport Seoul</span>
+      <div class="label" lang="en">Introducing</div>
+      <h2 class="display-m" style="margin: var(--s-3) 0 var(--s-3); max-width: 900px;" lang="en">
+        Passport Seoul
       </h2>
-      <p class="sub-headline">
-        <span class="i18n-en">Our data-driven strategy &amp; planning unit.</span>
-        <span class="i18n-ko">데이터 기반 전략 &amp; 기획 유닛.</span>
-        <span class="i18n-ja">データドリブンな戦略＆プランニングユニット。</span>
+      <p class="sub-headline" lang="en">
+        Data-driven strategy &amp; planning unit.
       </p>
       <p class="lead" style="max-width: 640px; margin: 0 0 var(--s-6);">
-        <span class="i18n-en">Where HYPEER activates, Passport Seoul plans. We translate entertainment market data into strategic playbooks for brands entering — or scaling within — Korea and beyond.</span>
-        <span class="i18n-ko">HYPEER가 실행하고, Passport Seoul이 설계합니다. 엔터테인먼트 시장 데이터를, 한국과 그 너머로 진입하거나 확장하려는 브랜드의 전략 플레이북으로 옮깁니다.</span>
-        <span class="i18n-ja">HYPEERが実行し、Passport Seoulが設計する。エンターテインメント市場のデータを、韓国とその先へ進出・拡大するブランドの戦略プレイブックへと変えます。</span>
+        <span class="i18n-en">We use entertainment market data to provide artist strategy guides for entering or expanding into the Korean and overseas markets.</span>
+        <span class="i18n-ko">엔터테인먼트 시장 데이터를 바탕으로 아티스트의 시장 진입과 확장을 위한 전략 가이드를 설계합니다.<br/>한국 시장 진출부터 해외 확장까지, 데이터에 기반한 방향을 제시합니다.</span>
+        <span class="i18n-ja">エンターテインメント市場のデータをもとに、アーティストの戦略ガイドをつくります。韓国市場への進出も、海外への展開も。</span>
       </p>
-      <a href="portfolio.html?brand=passport-seoul" class="btn btn-on-dark">
-        <span class="i18n-en">See Passport Seoul work</span><span class="i18n-ko">Passport Seoul 작업 보기</span><span class="i18n-ja">Passport Seoulの実績を見る</span>
+      <a href="portfolio.html?brand=passport-seoul" class="btn btn-on-dark" lang="en">
+        See Passport Seoul work
         <span class="arrow">→</span>
       </a>
     </div>
@@ -575,17 +563,17 @@
   <!-- CONTACT CTA -->
   <section class="cta-section" id="contact">
     <h2 class="display-m">
-      <span class="i18n-en">Let's read the industry together.</span>
-      <span class="i18n-ko">함께 산업을 읽어갑시다.</span>
-      <span class="i18n-ja">業界を、共に読み解こう。</span>
+      <span class="i18n-en">Let's lead the industry together.</span>
+      <span class="i18n-ko">엔터테인먼트의 성장을<br/>함께 설계합니다.</span>
+      <span class="i18n-ja">業界を、ともにリードしよう。</span>
     </h2>
     <p class="lead">
-      <span class="i18n-en">We work with brands, agencies, and platforms looking for data-driven entertainment marketing. Tell us what you're building.</span>
-      <span class="i18n-ko">데이터 기반 엔터테인먼트 마케팅을 찾는 브랜드, 에이전시, 플랫폼과 함께합니다. 지금 무엇을 만들고 계신지 들려주세요.</span>
-      <span class="i18n-ja">データドリブンなエンターテインメントマーケティングを求めるブランド、エージェンシー、プラットフォームと共に歩みます。今取り組んでいることを、お聞かせください。</span>
+      <span class="i18n-en">We work with labels, agencies, and platforms looking for data-driven entertainment marketing.<br/>Tell us what you're building.</span>
+      <span class="i18n-ko">우리는 데이터 기반 엔터테인먼트 마케팅을 필요로 하는 레이블, 에이전시, 플랫폼과 함께합니다.<br/>새로운 발매, 캠페인, 시장 확장을 준비하고 있다면 Kreators Network가 도와드리겠습니다.</span>
+      <span class="i18n-ja">データドリブンなエンターテインメントマーケティングを求めるレーベル、エージェンシー、<br/>プラットフォームと共に歩みます。今取り組んでいることを、お聞かせください。</span>
     </p>
-    <a href="mailto:hello@kreatorsnetwork.com" class="btn btn-dark">
-      <span class="i18n-en">Get in touch</span><span class="i18n-ko">연락하기</span><span class="i18n-ja">お問い合わせ</span>
+    <a href="mailto:hello@kreatorsnetwork.com" class="btn btn-dark" lang="en">
+      Get in touch
       <span class="arrow">→</span>
     </a>
   </section>
@@ -687,177 +675,6 @@
     });
   })();
 
-  // ============================================================
-  // Hero headline fisheye — per-character magnifier on hover.
-  // No external dependencies. Scoped to .hero-headline.
-  // ============================================================
-  (function(){
-    // --- Tuning constants (adjust here for design refinement) ---
-    var MAX_SCALE = 1.30;        // peak scale at cursor center
-    var RADIUS    = 50;          // px — falloff radius
-    var Y_WEIGHT  = 0.7;         // <1 weights horizontal proximity over vertical (line-aware)
-
-    // --- Feature gates: bail before any DOM mutation if not applicable ---
-    var reduce  = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    var canHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
-    if (reduce || !canHover) return;
-
-    var headline = document.querySelector('.hero-headline');
-    if (!headline) return;
-
-    // --- Split text nodes into .char spans, preserving element nesting (.hl-signal/.hl-strategy/<br>) ---
-    function splitNode(node){
-      if (node.nodeType === 3 /* TEXT */) {
-        var text = node.nodeValue;
-        if (!text) return;
-        var graphemes = Array.from(text); // surrogate-pair safe
-        var frag = document.createDocumentFragment();
-        for (var i = 0; i < graphemes.length; i++){
-          var ch = graphemes[i];
-          var span = document.createElement('span');
-          span.setAttribute('aria-hidden', 'true');
-          if (ch === ' ' || ch === ' ') {
-            span.className = 'char char-space';
-            span.innerHTML = '&nbsp;';
-          } else {
-            span.className = 'char';
-            span.textContent = ch;
-          }
-          frag.appendChild(span);
-        }
-        node.parentNode.replaceChild(frag, node);
-      } else if (node.nodeType === 1 /* ELEMENT */) {
-        if (node.classList && node.classList.contains('char')) return;
-        if (node.tagName === 'BR') return;
-        var kids = Array.prototype.slice.call(node.childNodes);
-        for (var j = 0; j < kids.length; j++) splitNode(kids[j]);
-      }
-    }
-
-    function unsplit(){
-      var chars = headline.querySelectorAll('.char');
-      for (var i = 0; i < chars.length; i++){
-        var c = chars[i];
-        var t = c.classList.contains('char-space') ? ' ' : c.textContent;
-        c.parentNode.replaceChild(document.createTextNode(t), c);
-      }
-      headline.normalize(); // merge adjacent text nodes
-    }
-
-    function activeI18nNode(){
-      var lang = document.documentElement.getAttribute('lang') || 'en';
-      return headline.querySelector('.i18n-' + lang);
-    }
-
-    // --- State ---
-    var chars = [];
-    var positions = [];
-
-    function setAriaLabel(){
-      var active = activeI18nNode();
-      if (active){
-        var t = active.textContent.replace(/\s+/g, ' ').trim();
-        headline.setAttribute('aria-label', t);
-      }
-    }
-
-    function build(){
-      unsplit();
-      var active = activeI18nNode();
-      if (!active) { chars = []; positions = []; return; }
-      splitNode(active);
-      chars = Array.prototype.slice.call(active.querySelectorAll('.char'));
-      measure();
-      setAriaLabel();
-    }
-
-    function measure(){
-      positions = chars.map(function(el){
-        var r = el.getBoundingClientRect();
-        return { x: r.left + r.width / 2, y: r.top + r.height / 2 };
-      });
-    }
-
-    // --- Smoothstep falloff: 0 at edge, 1 at center ---
-    function smoothstep(edge0, edge1, x){
-      var t = (x - edge0) / (edge1 - edge0);
-      if (t < 0) t = 0; else if (t > 1) t = 1;
-      return t * t * (3 - 2 * t);
-    }
-
-    // --- Pointer + rAF loop ---
-    var pointerOn = false;
-    var lastX = 0, lastY = 0;
-    var rafId = null;
-
-    function frame(){
-      rafId = null;
-      if (!pointerOn) return;
-      for (var i = 0; i < chars.length; i++){
-        var p = positions[i];
-        if (!p) continue;
-        var dx = lastX - p.x;
-        var dy = (lastY - p.y) * Y_WEIGHT;
-        var d  = Math.sqrt(dx * dx + dy * dy);
-        if (d >= RADIUS){
-          if (chars[i].style.transform) chars[i].style.transform = '';
-        } else {
-          var t = smoothstep(RADIUS, 0, d);
-          var s = 1 + (MAX_SCALE - 1) * t;
-          chars[i].style.transform = 'scale(' + s.toFixed(3) + ')';
-        }
-      }
-    }
-    function schedule(){
-      if (rafId === null) rafId = requestAnimationFrame(frame);
-    }
-
-    function onMove(e){
-      if (e.pointerType === 'touch') return;
-      pointerOn = true;
-      lastX = e.clientX;
-      lastY = e.clientY;
-      schedule();
-    }
-    function onLeave(){
-      pointerOn = false;
-      for (var i = 0; i < chars.length; i++){
-        chars[i].style.transform = '';
-      }
-    }
-
-    headline.addEventListener('pointermove', onMove);
-    headline.addEventListener('pointerleave', onLeave);
-    headline.addEventListener('pointercancel', onLeave);
-
-    // --- Re-measure on layout-affecting events (rAF-throttled, never per frame) ---
-    var measurePending = false;
-    function scheduleMeasure(){
-      if (measurePending) return;
-      measurePending = true;
-      requestAnimationFrame(function(){
-        measurePending = false;
-        measure();
-      });
-    }
-    window.addEventListener('resize', scheduleMeasure);
-    window.addEventListener('scroll', scheduleMeasure, { passive: true });
-    if (typeof ResizeObserver !== 'undefined'){
-      new ResizeObserver(scheduleMeasure).observe(headline);
-    }
-
-    // --- Re-split on language toggle (html[lang] mutation) ---
-    new MutationObserver(build).observe(document.documentElement, {
-      attributes: true, attributeFilter: ['lang']
-    });
-
-    // --- Initial build after fonts settle (Fraunces variable font load) ---
-    if (document.fonts && document.fonts.ready){
-      document.fonts.ready.then(build);
-    } else {
-      build();
-    }
-  })();
 </script>
 
 </body>
