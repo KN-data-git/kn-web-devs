@@ -388,7 +388,13 @@
     var STEP = 5;
     // Same-origin relative URL — blog.html is served from the same Vercel deployment
     // as the Payload API, so no CORS config required.
-    var API_URL = '/api/posts?depth=1&limit=100&sort=-publishedAt&where[_status][equals]=published';
+    // depth=2 populates the category's `parent` field (full Category object, not just an
+    // ID) so we can filter to posts whose category sits under the "blog" parent.
+    var API_URL = '/api/posts?depth=2&limit=100&sort=-publishedAt&where[_status][equals]=published';
+    // Top-level Category slug that defines the Journal section. Posts whose category is
+    // this slug, or whose category's parent slug is this, are kept. Anything tagged under
+    // "portfolio" or "hiring" parents is excluded automatically.
+    var JOURNAL_PARENT_SLUG = 'blog';
 
     var filterBtns = document.querySelectorAll('.filter-btn[data-filter]');
     var featuredEl = document.getElementById('featuredArticle');
@@ -626,6 +632,22 @@
     // so Korean/Japanese titles come through cleanly regardless of how the raw
     // endpoint renders in the browser URL bar.
     // ---------------------------------------------------------------------------
+    // True if the post belongs to the Journal section — i.e. its primary category is
+    // either the top-level "blog" category itself, or has the top-level "blog" as its
+    // direct parent. Posts under the "portfolio" or "hiring" parent trees fail this
+    // check and are excluded from the Journal listing.
+    function isJournalPost(doc){
+      var cats = doc && doc.categories;
+      if(!cats || !cats.length) return false;
+      for(var i = 0; i < cats.length; i++){
+        var cat = cats[i];
+        if(!cat) continue;
+        if(cat.slug === JOURNAL_PARENT_SLUG) return true;
+        if(cat.parent && cat.parent.slug === JOURNAL_PARENT_SLUG) return true;
+      }
+      return false;
+    }
+
     fetch(API_URL, { credentials: 'same-origin' })
       .then(function(r){
         if(!r.ok) throw new Error('HTTP ' + r.status);
@@ -633,7 +655,10 @@
       })
       .then(function(data){
         var docs = (data && data.docs) || [];
-        ARTICLES = docs.map(normalizePost).filter(function(a){ return a.title; });
+        ARTICLES = docs
+          .filter(isJournalPost)                       // exclude portfolio + hiring trees
+          .map(normalizePost)
+          .filter(function(a){ return a.title; });
         loadingState = 'ready';
         render();
       })
