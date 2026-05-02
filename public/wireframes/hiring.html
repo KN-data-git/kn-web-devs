@@ -3,11 +3,9 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Careers — KREATORS.</title>
+<title>KREATORS. — Entertainment Data Marketing Agency</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<!-- v2 font stack: Fraunces (display, reserved for .hero-headline only), Geist (UI sans),
-     Geist Mono (labels / data signal), Newsreader (long-form reading) -->
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT,WONK@0,9..144,300..900,0..100,0..1;1,9..144,300..900,0..100,0..1&family=Geist:wght@400;500;600;700;800;900&family=Geist+Mono:wght@400;500;600&family=Newsreader:ital,wght@0,400..700;1,400&display=swap" rel="stylesheet" />
 <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css" rel="stylesheet" />
 <style>
@@ -15,15 +13,15 @@
     --bg:#FFFFFF;--ink:#0A0A0A;--ink-2:#1A1A1A;--muted:#6B6B6B;
     --rule:#E5E5E5;--rule-strong:#0A0A0A;
     --hypeer:#EF4A24;--hypeer-tint:#FCDED8;
-
-    /* v2 font stacks — matches main/portfolio/blog */
+    /* v2 font stacks */
     --font-sans:"Geist","Pretendard Variable",system-ui,sans-serif;
     --font-display:"Fraunces","Pretendard Variable",Georgia,serif;
     --font-serif:"Newsreader","Pretendard Variable",Georgia,serif;
     --font-mono:"Geist Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
-
+    --fs-display-xl:clamp(56px,9vw,120px);
     --fs-display-l:clamp(44px,6.4vw,84px);
     --fs-display-m:clamp(36px,4.4vw,60px);
+    --fs-h1:clamp(32px,3.4vw,48px);
     --fs-h2:clamp(24px,2.4vw,34px);
     --fs-h3:22px;--fs-lead:20px;--fs-body:18px;--fs-ui:15px;--fs-label:12px;
     --s-1:4px;--s-2:8px;--s-3:12px;--s-4:16px;--s-5:24px;--s-6:32px;
@@ -32,74 +30,100 @@
   }
   *{box-sizing:border-box;}
   html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);}
+  /* Reserve scrollbar space on BOTH sides so content stays visually centred
+     even when macOS "Always show scrollbars" takes a gutter on the right. */
   html{scrollbar-gutter:stable both-edges;}
   body{font-family:var(--font-sans);font-size:var(--fs-ui);line-height:1.5;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;}
   a{color:inherit;text-decoration:none;}
+  a.link{border-bottom:1px solid var(--ink);padding-bottom:1px;}
+  a.link:hover{color:var(--hypeer);border-color:var(--hypeer);}
   .container{max-width:var(--container);margin:0 auto;padding:0 var(--pad-x);}
 
-  /* Type — v2 (refined) */
-  .display-l{font-family:var(--font-sans);font-weight:700;font-size:clamp(36px,5vw,64px);line-height:1.08;letter-spacing:-0.02em;}
+  /* Type — v2 (refined)
+     Display scale is Geist by default for architectural weight and consistency.
+     Fraunces is reserved for a single editorial moment — the main hero copy
+     (.hero-headline) — to prevent the serif from feeling overused. */
+  .display-xl{font-family:var(--font-sans);font-weight:900;font-size:var(--fs-display-xl);line-height:0.95;letter-spacing:-0.035em;}
+  .display-l{font-family:var(--font-sans);font-weight:900;font-size:var(--fs-display-l);line-height:1.0;letter-spacing:-0.03em;}
   .display-m{font-family:var(--font-sans);font-weight:800;font-size:var(--fs-display-m);line-height:1.05;letter-spacing:-0.025em;}
+  .h1{font-family:var(--font-sans);font-weight:800;font-size:var(--fs-h1);line-height:1.1;letter-spacing:-0.02em;}
   .h2{font-family:var(--font-sans);font-weight:800;font-size:var(--fs-h2);line-height:1.15;letter-spacing:-0.015em;}
 
+  /* Fraunces override — opt-in via .hero-headline, applied only to the main-page hero. */
   .hero-headline{
     font-family:var(--font-display);
     font-weight:800;
+    /* ~12% smaller than the global --fs-display-l (44/6.4vw/84) — bumped up by 10% from the prior 20%-reduced value, still leaves headroom for JA wraps */
+    font-size:clamp(39px, 5.63vw, 74px);
     letter-spacing:-0.02em;
     line-height:1.02;
     font-variation-settings:"opsz" 144, "SOFT" 40, "WONK" 1;
   }
-
+  .h3{font-family:var(--font-sans);font-weight:700;font-size:var(--fs-h3);line-height:1.25;letter-spacing:-0.01em;}
   .lead{font-family:var(--font-serif);font-weight:400;font-size:var(--fs-lead);line-height:1.55;}
   .body{font-family:var(--font-serif);font-weight:400;font-size:var(--fs-body);line-height:1.7;color:var(--ink-2);}
   .ui{font-family:var(--font-sans);font-weight:500;font-size:var(--fs-ui);line-height:1.4;}
+  /* Label — v2 uses Geist Mono for the "data signal" tone */
   .label{font-family:var(--font-mono);font-weight:500;font-size:var(--fs-label);line-height:1.2;letter-spacing:0.08em;text-transform:uppercase;}
-  .btn{display:inline-flex;align-items:center;gap:10px;font-family:var(--font-sans);font-weight:600;font-size:15px;padding:14px 22px;border:1px solid var(--ink);background:var(--bg);color:var(--ink);cursor:pointer;transition:all .15s ease;}
-  .btn:hover{background:var(--ink);color:var(--bg);}
-  .btn.btn-dark{background:var(--ink);color:var(--bg);}
-  .btn.btn-dark:hover{background:transparent;color:var(--ink);}
-  .btn .arrow{display:inline-block;transform:translateX(0);transition:transform .15s ease;}
-  .btn:hover .arrow{transform:translateX(4px);}
-  .tag{display:inline-block;font-family:var(--font-mono);font-weight:500;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;padding:4px 10px;border:1px solid var(--ink);color:var(--ink);background:transparent;}
-  .tag.tag-hypeer{border-color:var(--hypeer);color:var(--hypeer);}
+  .sub-headline{font-family:var(--font-serif);font-weight:400;font-size:clamp(22px,2.4vw,32px);line-height:1.3;max-width:800px;margin:0 0 var(--s-6);transition:font-weight .2s ease;}
+  .sub-headline:hover{font-weight:600;}
+  /* In-headline definition line — matches .sub-headline's serif treatment for typographic unity with the tagline below */
+  .headline-def{display:block;font-family:var(--font-serif);font-weight:400;font-size:clamp(22px,2.4vw,32px);line-height:1.3;margin-top:var(--s-2);}
 
-  /* Readability */
-  .display-l,.display-m,.h2{text-wrap:balance;}
-  .lead,.body,.value p{text-wrap:pretty;}
-  html[lang="ko"] .lead,html[lang="ko"] .body,
+  /* Hero headline word-level hover accents.
+     .hl-ink   — data/content highlights → ink block (Passport Seoul-flavored monochrome).
+     .hl-orange — strategy highlight → HYPEER orange block (introduces the sub-brand accent).
+     Reads visually as: data (ink) → strategy (orange) → content (ink). */
+  .hl-ink, .hl-orange{
+    padding: 0 0.08em;
+    transition: background-color .15s ease, color .15s ease;
+    box-decoration-break: clone;
+    -webkit-box-decoration-break: clone;
+  }
+  .hl-ink:hover{
+    background-color: var(--ink);
+    color: var(--bg);
+  }
+  .hl-orange:hover{
+    background-color: var(--hypeer);
+    color: var(--ink);
+  }
+
+  /* Readability — balanced headings, no orphans, Korean word-break */
+  .display-xl,.display-l,.display-m,.h1,.h2,.h3{text-wrap:balance;}
+  .lead,.body,.sub-headline,.manifesto-statement{text-wrap:pretty;}
+  html[lang="ko"] .lead,html[lang="ko"] .body,html[lang="ko"] .sub-headline,
+  html[lang="ko"] .manifesto-statement,html[lang="ko"] .capability p,
   html[lang="ko"] .value p{word-break:keep-all;overflow-wrap:break-word;}
   .btn,.nav-cta{white-space:nowrap;}
 
-  /* i18n visibility */
-  html[lang="en"] .i18n-ko{display:none;}
-  html[lang="en"] .i18n-ja{display:none;}
-  html[lang="ko"] .i18n-en{display:none;}
-  html[lang="ko"] .i18n-ja{display:none;}
-  html[lang="ja"] .i18n-en{display:none;}
-  html[lang="ja"] .i18n-ko{display:none;}
-
-  /* Nav — 3-column grid keeps the menu at exact centre. */
+  /* Nav — 3-column grid so the menu sits at the exact centre of the bar,
+     regardless of the brand / actions widths on either side. */
   .nav{position:fixed;top:0;left:0;right:0;z-index:50;background:var(--bg);border-bottom:1px solid var(--rule-strong);}
   .nav-inner{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;height:72px;gap:var(--s-4);}
   .nav-brand{display:inline-flex;align-items:center;height:28px;justify-self:start;}
   .nav-brand img{height:20px;width:auto;display:block;}
   .nav-menu{display:flex;gap:var(--s-6);justify-self:center;}
+  /* Equal min-width on each link so "Journal" (the middle item) sits
+     symmetrically between "Work" and "Careers" even though they differ in length. */
   .nav-menu a{font-family:var(--font-sans);font-weight:500;font-size:15px;color:var(--ink);min-width:72px;text-align:center;}
   .nav-menu a:hover{color:var(--hypeer);}
   .nav-menu a.active{border-bottom:2px solid var(--ink);padding-bottom:2px;}
-  .nav-actions{display:flex;align-items:center;gap:var(--s-4);justify-self:end;}
-  .lang-toggle{display:inline-flex;align-items:center;gap:6px;font-family:var(--font-mono);font-weight:500;font-size:12px;letter-spacing:0.08em;}
-  .lang-toggle .lang-sep{color:var(--rule);}
-  .lang-btn{background:transparent;border:0;padding:4px 0;color:var(--muted);font:inherit;letter-spacing:inherit;cursor:pointer;transition:color .15s ease;}
-  .lang-btn:hover{color:var(--ink);}
-  html[lang="en"] .lang-btn[data-lang="en"],
-  html[lang="ko"] .lang-btn[data-lang="ko"],
-  html[lang="ja"] .lang-btn[data-lang="ja"]{color:var(--ink);text-decoration:underline;text-underline-offset:4px;}
   .nav-cta{font-family:var(--font-sans);font-weight:600;font-size:14px;padding:10px 18px;border:1px solid var(--ink);border-radius:0;}
   .nav-cta:hover{background:var(--ink);color:var(--bg);}
 
+  /* Buttons */
+  .btn{display:inline-flex;align-items:center;gap:10px;font-family:var(--font-sans);font-weight:600;font-size:15px;padding:14px 22px;border:1px solid var(--ink);background:var(--bg);color:var(--ink);cursor:pointer;transition:all .15s ease;}
+  .btn:hover{background:var(--ink);color:var(--bg);}
+  .btn.btn-dark{background:var(--ink);color:var(--bg);}
+  .btn.btn-dark:hover{background:transparent;color:var(--ink);}
+  .btn.btn-on-dark{background:transparent;color:var(--bg);border-color:var(--bg);}
+  .btn.btn-on-dark:hover{background:var(--bg);color:var(--ink);}
+  .btn .arrow{display:inline-block;transform:translateX(0);transition:transform .15s ease;}
+  .btn:hover .arrow{transform:translateX(4px);}
+
   /* Footer */
-  .footer{margin-top:var(--s-10);background:var(--ink);color:var(--bg);padding:var(--s-9) 0 var(--s-6);}
+  .footer{margin-top:0;background:var(--ink);color:var(--bg);padding:var(--s-9) 0 var(--s-6);}
   .footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:var(--s-7);}
   .footer h4{font-family:var(--font-mono);font-weight:500;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#9A9A9A;margin:0 0 var(--s-4);}
   .footer ul{list-style:none;padding:0;margin:0;display:grid;gap:10px;}
@@ -110,101 +134,271 @@
   .footer-bottom{margin-top:var(--s-8);padding-top:var(--s-4);border-top:1px solid #2A2A2A;display:flex;justify-content:space-between;font-family:var(--font-mono);font-size:12px;letter-spacing:0.04em;color:#6B6B6B;}
   @media(max-width:800px){.footer-grid{grid-template-columns:1fr 1fr;}}
 
-  /* ---- PAGE: HIRING ---- */
-  .page-content{padding-top:72px;}
+  /* HYPEER Island */
+  .hypeer-island{background:var(--hypeer);color:var(--ink);padding:var(--s-9) var(--pad-x);margin:0 calc(-1 * var(--pad-x));}
 
-  .page-header{
-    padding:var(--s-9) 0 var(--s-7);
-    border-bottom:1px solid var(--rule);
+  /* Sub-brand headline weight override
+     Rationale — KREATORS (master brand) speaks in Fraunces (editorial voice);
+     HYPEER and Passport Seoul are activation/strategic product voices that need
+     architectural weight. Switching their .display-m to Geist Black gives the
+     sub-brand announcements more gravity without losing the Fraunces italic
+     subtitle (.headline-def) that still provides the creative counterpoint. */
+  .hypeer-island .display-m,
+  .passport-island .display-m{
+    font-family: var(--font-sans);
+    font-weight: 900;
+    letter-spacing: -0.025em;
+    line-height: 1.02;
+    font-variation-settings: normal;
   }
-  .page-header .label{color:var(--muted);margin-bottom:var(--s-3);}
-  .page-header h1{margin:0 0 var(--s-4);}
-  .page-header .lead{max-width:640px;margin:0;color:var(--muted);}
 
-  /* Culture section — i18n applied */
-  .culture{
-    padding:var(--s-9) 0;
-    border-bottom:1px solid var(--rule);
+  /* ---- PAGE-SPECIFIC ---- */
+
+  /* Intro — brand title card that fades on scroll */
+  .intro{
+    position: relative;
+    min-height: 100vh;
+    padding-top: 72px; /* offset for fixed nav so logo sits centered in the visible area */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg);
+    overflow: hidden;
   }
-  .culture-grid{
-    display:grid;grid-template-columns:1fr 2fr;gap:var(--s-8);
+  .intro-logo{
+    will-change: opacity, transform;
+    transform-origin: 50% 50%;
   }
-  .culture-left .label{color:var(--muted);}
-  .culture-values{
-    display:grid;grid-template-columns:1fr 1fr;gap:var(--s-6);
+  .intro-logo img{
+    display: block;
+    width: clamp(260px, 48vw, 720px);
+    height: auto;
   }
-  .value{border-top:1px solid var(--rule);padding-top:var(--s-4);}
-  .value h3{
-    font-family:var(--font-sans);font-weight:800;font-size:20px;
-    line-height:1.25;letter-spacing:-0.01em;margin:0 0 var(--s-2);
+  .intro-cue{
+    position: absolute;
+    bottom: var(--s-7);
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    /* v2: mono for the scroll cue — subtle technical signal */
+    font-family: var(--font-mono);
+    font-weight: 500;
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted);
+    will-change: opacity;
   }
-  .value p{
-    font-family:var(--font-serif);font-size:16px;line-height:1.6;
-    color:var(--ink-2);margin:0;
+  .intro-cue::after{
+    content: "";
+    width: 1px;
+    height: 36px;
+    background: var(--ink);
+    transform-origin: top center;
+    animation: introPulse 1.8s ease-in-out infinite;
+  }
+  @keyframes introPulse{
+    0%,100%{transform: scaleY(.3); opacity: .4;}
+    50%{transform: scaleY(1); opacity: 1;}
+  }
+  @media (prefers-reduced-motion: reduce){
+    .intro-cue::after{animation: none; transform: scaleY(1); opacity: 1;}
+  }
+
+  /* Hero */
+  .hero{
+    padding: var(--s-10) 0 var(--s-9);
+    border-bottom: 1px solid var(--rule);
+  }
+  .hero-headline{
+    margin: 0 0 var(--s-6);
+    max-width: 1300px; /* widened so "We read the data in entertainment." fits on one line at display-l 84px cap */
+  }
+  .hero-sub{
+    max-width: 1100px; /* enough room for the second sentence to flow on a single line at desktop */
+    margin: 0;
+  }
+
+  /* Manifesto */
+  .manifesto{
+    padding: var(--s-9) 0;
+    border-bottom: 1px solid var(--rule);
+  }
+  .manifesto-grid{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--s-8);
+  }
+  .manifesto-left .label{
+    color: var(--muted);
+    margin-bottom: var(--s-4);
+  }
+  .manifesto-statement{
+    font-family: var(--font-serif);
+    font-weight: 400;
+    font-size: clamp(17px, 1.5vw, 19px);
+    line-height: 1.65;
+    margin: 0;
+    max-width: 560px;
+  }
+  .manifesto-right{
+    display: grid;
+    gap: var(--s-7);
+  }
+  .capability{
+    border-top: 1px solid var(--rule);
+    padding: var(--s-4);
+    transition: background-color .15s ease, color .15s ease, border-top-color .15s ease;
+  }
+  .capability-num,
+  .capability p{
+    transition: color .15s ease;
+  }
+  /* Default hover (cards 1 & 3) — ink block with white text */
+  .capability:hover{
+    background-color: var(--ink);
+    color: var(--bg);
+    border-top-color: var(--ink);
+  }
+  .capability:hover .capability-num,
+  .capability:hover p{
+    color: var(--bg);
+  }
+  /* Card #2 (Strategic Marketing) — HYPEER orange block with ink text */
+  .capability:nth-child(2):hover{
+    background-color: var(--hypeer);
+    color: var(--ink);
+    border-top-color: var(--hypeer);
+  }
+  .capability:nth-child(2):hover .capability-num,
+  .capability:nth-child(2):hover p{
+    color: var(--ink);
+  }
+  /* v2: capability numbers now in Geist Mono — reads like a data index */
+  .capability-num{
+    font-family: var(--font-mono);
+    font-weight: 500;
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+    margin-bottom: var(--s-2);
+  }
+  .capability h3{
+    font-family: var(--font-sans);
+    font-weight: 800;
+    font-size: 20px;
+    line-height: 1.25;
+    letter-spacing: -0.01em;
+    margin: 0 0 var(--s-2);
+  }
+  .capability p{
+    font-family: var(--font-serif);
+    font-size: 16px;
+    line-height: 1.6;
+    color: var(--ink-2);
+    margin: 0;
+    max-width: 440px;
   }
   @media(max-width:900px){
-    .culture-grid{grid-template-columns:1fr;}
-    .culture-values{grid-template-columns:1fr;}
+    .manifesto-grid{grid-template-columns:1fr;gap:var(--s-6);}
   }
 
-  /* Open positions — content NOT i18n'd (CMS-managed) */
-  .positions{padding:var(--s-9) 0;}
-  .positions-header{
-    display:grid;grid-template-columns:1fr 2fr;gap:var(--s-8);
-    margin-bottom:var(--s-7);
-  }
-  .positions-header .label{color:var(--muted);}
-  @media(max-width:800px){.positions-header{grid-template-columns:1fr;}}
-
-  /* Position-type chips — display-only badges sourced from Payload `hiring`
-     category children. No filter wiring; chips are purely informational so the
-     candidate sees what kinds of teams currently have openings. */
-  .position-types{
-    display:flex;gap:var(--s-3);
-    padding:0 0 var(--s-5);
-    flex-wrap:wrap;
-    border-bottom:1px solid var(--rule);
-    margin-bottom:var(--s-2);
-  }
-  .position-types .tag{padding:6px 14px;font-size:12px;}
-
-  .position-row{
-    display:grid;
-    grid-template-columns:2fr 1fr 1fr auto;
-    gap:var(--s-5);
-    align-items:center;
-    padding:var(--s-5) 0;
-    border-top:1px solid var(--ink);
-    transition:background .15s ease;
-  }
-  .position-row:hover{background:#FAFAFA;}
-  .position-title{font-family:var(--font-sans);font-weight:700;font-size:18px;letter-spacing:-0.01em;}
-  .position-team,.position-type,.position-location{font-family:var(--font-mono);font-size:12px;letter-spacing:0.04em;color:var(--muted);}
-  .position-arrow{font-size:20px;color:var(--ink);transition:transform .15s ease;}
-  .position-row:hover .position-arrow{transform:translateX(4px);}
-  @media(max-width:700px){
-    .position-row{grid-template-columns:1fr 1fr;gap:var(--s-3);}
-    .position-arrow{display:none;}
+  /* HYPEER section */
+  .hypeer-section{
+    padding: var(--s-9) 0 0;
   }
 
-  /* Inline status row (loading / error / empty) — sits where the position rows go. */
-  .position-status{
-    padding:var(--s-8) 0;
-    text-align:center;
-    font-family:var(--font-mono);font-size:13px;
-    letter-spacing:0.04em;color:var(--muted);
-    border-top:1px solid var(--ink);
-    border-bottom:1px solid var(--ink);
+  /* Passport Seoul section — sibling sub-brand island, stacks directly under HYPEER */
+  .passport-section{
+    padding: 0;
+  }
+  .passport-island{
+    background: var(--ink);
+    color: var(--bg);
+    padding: var(--s-9) var(--pad-x);
+    margin: 0 calc(-1 * var(--pad-x));
+  }
+  .passport-logo,
+  .hypeer-logo{
+    margin: 0 0 var(--s-6);
+  }
+  .passport-logo img,
+  .hypeer-logo img{
+    width: auto;
+    display: block;
+  }
+  .passport-logo img{ height: 40px; }
+  .hypeer-logo img{ height: 60px; } /* hand-drawn HYPR mark has more presence, sized up vs. PPS wordmark */
+  .passport-island .label{
+    color: #9A9A9A;
+  }
+  .passport-island .lead{
+    color: #C9C9C9;
   }
 
-  /* Open application */
-  .open-app{
-    padding:var(--s-9) 0;
-    border-top:1px solid var(--rule);
-    text-align:center;
+  /* Language toggle + i18n visibility */
+  .nav-actions{
+    display: flex;
+    align-items: center;
+    gap: var(--s-4);
+    justify-self: end;
   }
-  .open-app .h2{margin:0 0 var(--s-3);}
-  .open-app .lead{max-width:560px;margin:0 auto var(--s-5);color:var(--muted);}
+  .lang-toggle{
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    /* v2: mono for the locale switch reads as a system indicator */
+    font-family: var(--font-mono);
+    font-weight: 500;
+    font-size: 12px;
+    letter-spacing: 0.08em;
+  }
+  .lang-toggle .lang-sep{
+    color: var(--rule);
+  }
+  .lang-btn{
+    background: transparent;
+    border: 0;
+    padding: 4px 0;
+    color: var(--muted);
+    font: inherit;
+    letter-spacing: inherit;
+    cursor: pointer;
+    transition: color .15s ease;
+  }
+  .lang-btn:hover{ color: var(--ink); }
+  html[lang="en"] .lang-btn[data-lang="en"],
+  html[lang="ko"] .lang-btn[data-lang="ko"],
+  html[lang="ja"] .lang-btn[data-lang="ja"]{
+    color: var(--ink);
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+  /* show only the text matching the active document language */
+  html[lang="en"] .i18n-ko{ display: none; }
+  html[lang="en"] .i18n-ja{ display: none; }
+  html[lang="ko"] .i18n-en{ display: none; }
+  html[lang="ko"] .i18n-ja{ display: none; }
+  html[lang="ja"] .i18n-en{ display: none; }
+  html[lang="ja"] .i18n-ko{ display: none; }
+
+  /* Contact CTA */
+  .cta-section{
+    padding: var(--s-10) 0;
+    text-align: center;
+  }
+  .cta-section .display-m{
+    margin: 0 auto var(--s-4);
+    max-width: 800px;
+  }
+  .cta-section .lead{
+    margin: 0 auto var(--s-6);
+    max-width: 900px; /* widened so each KO sentence fits on its intended single line via <br/> */
+    color: var(--muted);
+  }
 
   @media(max-width:600px){
     .nav-menu{gap:var(--s-4);}
@@ -214,6 +408,16 @@
 </head>
 <body>
 
+<!-- INTRO — brand title card -->
+<section class="intro" aria-label="Kreators Network">
+  <div class="intro-logo">
+    <img src="/assets/Kreators_logo(B)_v2.png" alt="KREATORS." />
+  </div>
+  <div class="intro-cue" aria-hidden="true">
+    <span lang="en">Scroll</span>
+  </div>
+</section>
+
 <!-- NAV -->
 <nav class="nav">
   <div class="container nav-inner">
@@ -221,9 +425,10 @@
       <img src="/assets/Kreators_logo(B)_v2.png" alt="KREATORS." />
     </a>
     <div class="nav-menu">
+      <!-- Nav labels are intentionally English-only regardless of lang toggle -->
       <a href="portfolio.html">Work</a>
       <a href="blog.html">Journal</a>
-      <a href="hiring.html" class="active">Careers</a>
+      <a href="hiring.html">Careers</a>
     </div>
     <div class="nav-actions">
       <div class="lang-toggle" role="group" aria-label="Language">
@@ -238,70 +443,144 @@
   </div>
 </nav>
 
-<div class="page-content">
 <main class="container">
 
-  <!-- PAGE HEADER — Label is intentionally English-locked (no i18n spans) so it
-       stays "Careers" in all language modes; headline + intro participate in i18n. -->
-  <section class="page-header">
-    <div class="label">Careers</div>
-    <h1 class="display-l">
-      <span class="i18n-en">Looking for colleagues to grow with us.</span>
-      <span class="i18n-ko">함께 성장할 동료를 찾습니다.</span>
-      <span class="i18n-ja">共に成長する仲間を探しています。</span>
+  <!-- HERO -->
+  <section class="hero">
+    <div class="label" style="color:var(--muted); margin-bottom: var(--s-4);" lang="en">
+      Entertainment · Data · Marketing
+    </div>
+    <h1 class="display-l hero-headline">
+      <span class="i18n-en">We read the <span class="hl-ink">data</span> in entertainment.<br/>We write the <span class="hl-orange">strategy</span>.</span>
+      <span class="i18n-ko">엔터테인먼트의 <span class="hl-ink">데이터</span>를 읽고,<br/><span class="hl-orange">전략</span>을 설계합니다.</span>
+      <span class="i18n-ja">エンターテインメントの<span class="hl-ink">データ</span>を読み、<br/><span class="hl-orange">戦略</span>を描く。</span>
     </h1>
-    <p class="lead">
-      <span class="i18n-en">We're looking for people who connect music, data, and marketing<br/>— and want to shape artists' growth with us.</span>
-      <span class="i18n-ko">음악과 데이터, 마케팅을 연결해 아티스트의 성장을 함께 만들어갈 사람을 기다립니다.</span>
-      <span class="i18n-ja">音楽とデータ、マーケティングをつなぎ、アーティストの成長を共に創っていく方をお待ちしています。</span>
+    <p class="lead hero-sub">
+      <span class="i18n-en">Kreators Network is a Seoul-based agency.<br/>We turn entertainment industry data into marketing strategies for labels and artists worldwide.</span>
+      <span class="i18n-ko">Kreators Network는 엔터테인먼트 데이터 마케팅 에이전시입니다.<br/>음악 산업의 데이터를 통해 마케팅 전략을 세우고, 전 세계 레이블과 아티스트의 성장을 돕습니다.</span>
+      <span class="i18n-ja">Kreators Networkは、ソウルを拠点に活動するエージェンシーです。<br/>エンターテインメント産業のデータを、世界のレーベルとアーティストのためのマーケティング戦略へと変えます。</span>
     </p>
   </section>
 
-  <!-- (Culture section removed — was "How we work" with 4 brand values.
-        Re-add later if needed; the CSS for .culture / .culture-grid /
-        .culture-values / .value remains in <style> for that future use.) -->
-
-  <!-- OPEN POSITIONS — content sourced from Payload (parent=hiring) -->
-  <section class="positions">
-    <div class="positions-header">
-      <!-- Label is intentionally English-locked (no i18n spans). -->
-      <div class="label">Open positions</div>
-    </div>
-
-    <!-- Position-type chips — display-only, sourced from `hiring` category children.
-         Adding a child category in Payload Admin appears here on next page load.
-         No filter logic; this is purely a visual signal of which teams are hiring. -->
-    <div class="position-types" id="positionTypes" hidden></div>
-
-    <!-- Position rows — populated from Payload posts scoped to hiring children. -->
-    <div id="positionList"></div>
-
-    <!-- Status: loading / error / empty — replaces position rows when needed. -->
-    <div class="position-status" id="positionStatus">
-      <span class="i18n-en">Loading positions…</span>
-      <span class="i18n-ko">포지션을 불러오는 중…</span>
-      <span class="i18n-ja">ポジションを読み込み中…</span>
+  <!-- ABOUT / MANIFESTO -->
+  <section class="manifesto" id="about">
+    <div class="manifesto-grid">
+      <div class="manifesto-left">
+        <div class="label" lang="en">About</div>
+        <p class="manifesto-statement">
+          <span class="i18n-en">A trusted partner to labels and artists at home and abroad — HYPEER for marketing, Passport Seoul for data, Talented for curation. We are also Luminate&rsquo;s exclusive Korea sales partner. We deliver content, experiences, analytics, and strategy.</span>
+          <span class="i18n-ko">Kreators Network는 국내외 레이블과 아티스트의 성장을 함께 설계하는 파트너입니다. 시장 데이터 분석, 마케팅 전략, 콘텐츠 제작, 오프라인 이벤트 운영까지 음악 비즈니스의 다양한 접점에서 아티스트의 성공을 돕습니다. 또한 Luminate의 한국 독점 세일즈 파트너로서, 글로벌 음악 데이터와 시장 인사이트를 국내 산업에 연결하고 있습니다.</span>
+          <span class="i18n-ja">国内外のレーベルとアーティストに信頼されるパートナー — マーケティングはHYPEER、データはPassport Seoul、キュレーションはTalented。さらに、Luminateの韓国独占セールスパートナーでもあります。コンテンツ・体験・分析・戦略を届けます。</span>
+        </p>
+        <a href="#" class="btn" style="margin-top: var(--s-6);">
+          <span class="i18n-en">Learn about us</span><span class="i18n-ko">더 알아보기</span><span class="i18n-ja">スタジオ紹介</span>
+          <span class="arrow">→</span>
+        </a>
+      </div>
+      <div class="manifesto-right">
+        <div class="capability">
+          <div class="capability-num">01</div>
+          <h3 lang="en">Data Intelligence</h3>
+          <p>
+            <span class="i18n-en">We analyze streaming, social, and fandom data in depth to surface the key metrics that explain and predict how artists and content grow. We design our clients&rsquo; data strategy and walk the entire journey with them.</span>
+            <span class="i18n-ko">스트리밍, 소셜, 팬덤 데이터를 입체적으로 분석해 아티스트와 콘텐츠의 성장을 설명하고 예측할 수 있는 핵심 지표를 찾아냅니다. 고객사의 데이터 전략을 설계하고 여정 전체를 함께합니다.</span>
+            <span class="i18n-ja">ストリーミング、ソーシャル、ファンダムのデータを多角的に分析し、アーティストとコンテンツの成長を説明・予測できる主要指標を見出します。クライアントのデータ戦略を設計し、その道のりを共に歩みます。</span>
+          </p>
+        </div>
+        <div class="capability">
+          <div class="capability-num">02</div>
+          <h3 lang="en">Artist Marketing</h3>
+          <p>
+            <span class="i18n-en">We design artist brands and campaigns grounded in audience behavior — not assumptions — end-to-end across music entertainment.</span>
+            <span class="i18n-ko">직감이 아닌 오디언스의 실제 행동을 바탕으로, 아티스트 브랜드와 캠페인을 설계합니다. 음악 엔터테인먼트의 전략부터 실행까지 전 과정을 함께합니다.</span>
+            <span class="i18n-ja">アーティストのブランドとキャンペーンを、仮説ではなく — オーディエンスの実際の行動の上でデザインします。音楽エンターテインメントを、始まりから終わりまで。</span>
+          </p>
+        </div>
+        <div class="capability">
+          <div class="capability-num">03</div>
+          <h3 lang="en">Content Production</h3>
+          <p>
+            <span class="i18n-en">We craft videos, social content, and the visual assets that bring artist brands to life — every detail designed with care.</span>
+            <span class="i18n-ko">영상, 소셜 콘텐츠, 비주얼 에셋까지, 아티스트 브랜드가 선명하게 전달될 수 있도록 모든 디테일을 설계합니다.</span>
+            <span class="i18n-ja">映像、SNSコンテンツ、そしてアーティストブランドを形づくるすべてのビジュアルアセット。ディテールまで丁寧にデザインします。</span>
+          </p>
+        </div>
+      </div>
     </div>
   </section>
 
-  <!-- OPEN APPLICATION — section heading removed per design 2026-04-30;
-       only the descriptive lead + CTA button remain. -->
-  <section class="open-app">
+  <!-- HYPEER ISLAND -->
+  <section class="hypeer-section" id="hypeer">
+    <div class="hypeer-island">
+      <div class="hypeer-logo">
+        <img src="/assets/HYPR_logo_B.png" alt="HYPEER" />
+      </div>
+      <div class="label" lang="en">Introducing</div>
+      <h2 class="display-m" style="margin: var(--s-3) 0 var(--s-3); max-width: 900px;" lang="en">
+        HYPEER<span class="headline-def">Marketing Experience lab of Kreators Network.</span>
+      </h2>
+      <p class="lead" style="max-width: 640px; margin: 0 0 var(--s-6);">
+        <span class="i18n-en">We unite creative storytelling with data intelligence to build artist brands that people remember and markets reward.</span>
+        <span class="i18n-ko">HYPEER는 크리에이티브 스토리텔링과 데이터 인텔리전스를 연결해<br/>사람들이 기억하고 시장이 반응하는 아티스트 브랜드를 설계합니다.</span>
+        <span class="i18n-ja">クリエイティブなストーリーテリングとデータインテリジェンスを併せて扱い、人々が覚え、市場が認めるアーティストブランドをつくります。</span>
+      </p>
+      <!-- Brand motto: kept in English across all locales for typographic consistency (Newsreader is Latin-only variable) -->
+      <p class="sub-headline" lang="en">
+        Right music to right people &mdash; in a right way.
+      </p>
+      <a href="portfolio.html?brand=hypeer" class="btn" style="background:var(--ink);color:var(--hypeer);border-color:var(--ink);" lang="en">
+        See HYPEER work
+        <span class="arrow">→</span>
+      </a>
+    </div>
+  </section>
+
+  <!-- PASSPORT SEOUL ISLAND -->
+  <section class="passport-section" id="passport-seoul">
+    <div class="passport-island">
+      <div class="passport-logo">
+        <img src="/assets/PPS_logo_white.png" alt="Passport Seoul" />
+      </div>
+      <div class="label" lang="en">Introducing</div>
+      <h2 class="display-m" style="margin: var(--s-3) 0 var(--s-3); max-width: 900px;" lang="en">
+        Passport Seoul
+      </h2>
+      <p class="sub-headline" lang="en">
+        Data-driven strategy &amp; planning unit.
+      </p>
+      <p class="lead" style="max-width: 640px; margin: 0 0 var(--s-6);">
+        <span class="i18n-en">We use entertainment market data to provide artist strategy guides for entering or expanding into the Korean and overseas markets.</span>
+        <span class="i18n-ko">엔터테인먼트 시장 데이터를 바탕으로 아티스트의 시장 진입과 확장을 위한 전략 가이드를 설계합니다.<br/>한국 시장 진출부터 해외 확장까지, 데이터에 기반한 방향을 제시합니다.</span>
+        <span class="i18n-ja">エンターテインメント市場のデータをもとに、アーティストの戦略ガイドをつくります。韓国市場への進出も、海外への展開も。</span>
+      </p>
+      <a href="portfolio.html?brand=passport-seoul" class="btn btn-on-dark" lang="en">
+        See Passport Seoul work
+        <span class="arrow">→</span>
+      </a>
+    </div>
+  </section>
+
+  <!-- CONTACT CTA -->
+  <section class="cta-section" id="contact">
+    <h2 class="display-m">
+      <span class="i18n-en">Let's lead the industry together.</span>
+      <span class="i18n-ko">엔터테인먼트의 성장을<br/>함께 설계합니다.</span>
+      <span class="i18n-ja">業界を、ともにリードしよう。</span>
+    </h2>
     <p class="lead">
-      <span class="i18n-en">We're always open to hearing from people who share our curiosity about entertainment and data.<br/>Send us a note — tell us what you'd want to build here.</span>
-      <span class="i18n-ko">엔터테인먼트와 데이터, 마케팅에 대한 호기심과 열정을 가진 분을 기다리고 있습니다.</span>
-      <span class="i18n-ja">エンターテインメントとデータ、マーケティングに対する好奇心と情熱をお持ちの方をお待ちしています。</span>
+      <span class="i18n-en">We work with labels, agencies, and platforms looking for data-driven entertainment marketing.<br/>Tell us what you're building.</span>
+      <span class="i18n-ko">우리는 데이터 기반 엔터테인먼트 마케팅을 필요로 하는 레이블, 에이전시, 플랫폼과 함께합니다.<br/>새로운 발매, 캠페인, 시장 확장을 준비하고 있다면 Kreators Network가 도와드리겠습니다.</span>
+      <span class="i18n-ja">データドリブンなエンターテインメントマーケティングを求めるレーベル、エージェンシー、<br/>プラットフォームと共に歩みます。今取り組んでいることを、お聞かせください。</span>
     </p>
-    <a href="mailto:careers@kreatorsnetwork.com" class="btn btn-dark">
-      <span class="i18n-en">Send open application</span><span class="i18n-ko">인재 풀 등록</span><span class="i18n-ja">オープンエントリー</span>
+    <a href="mailto:info@kreatorsnetwork.com" class="btn btn-dark" lang="en">
+      Get in touch
       <span class="arrow">→</span>
     </a>
   </section>
 
 </main>
-</div>
 
-<!-- FOOTER — English-only -->
+<!-- FOOTER — intentionally English-only regardless of lang toggle -->
 <footer class="footer">
   <div class="container">
     <div class="footer-grid">
@@ -344,7 +623,36 @@
 </footer>
 
 <script>
-  // Language toggle — shared across all pages, persists via localStorage.
+  // Intro logo fades + subtly lifts as the user scrolls through the first viewport.
+  (function(){
+    var logo = document.querySelector('.intro-logo');
+    var cue  = document.querySelector('.intro-cue');
+    if(!logo) return;
+    var ticking = false;
+    function update(){
+      var h = window.innerHeight || document.documentElement.clientHeight;
+      var y = window.scrollY || window.pageYOffset || 0;
+      // Finish the transition slightly before the viewport ends (0.85 * h) for a cleaner handoff.
+      var p = Math.max(0, Math.min(1, y / (h * 0.85)));
+      // Logo opacity matches the scroll cue (2.8x) so they vanish in lockstep.
+      // Transform stays at the base rate — subtle lift while still visible, invisible after.
+      logo.style.opacity = String(Math.max(0, 1 - p * 2.8));
+      logo.style.transform = 'translateY(' + (-p * 56) + 'px) scale(' + (1 - p * 0.04) + ')';
+      if(cue){ cue.style.opacity = String(Math.max(0, 1 - p * 2.8)); }
+      ticking = false;
+    }
+    function onScroll(){
+      if(!ticking){
+        window.requestAnimationFrame(update);
+        ticking = true;
+      }
+    }
+    window.addEventListener('scroll', onScroll, {passive: true});
+    window.addEventListener('resize', onScroll, {passive: true});
+    update();
+  })();
+
+  // Language toggle — single-page i18n with localStorage persistence.
   (function(){
     var root = document.documentElement;
     var KEY = 'kn-lang';
@@ -352,249 +660,18 @@
     try {
       var stored = localStorage.getItem(KEY);
       if(stored && valid[stored]) root.setAttribute('lang', stored);
-    } catch(e) {}
+    } catch(e) { /* storage unavailable */ }
     var btns = document.querySelectorAll('.lang-btn');
     btns.forEach(function(btn){
       btn.addEventListener('click', function(){
         var next = btn.getAttribute('data-lang');
         if(!valid[next]) return;
         root.setAttribute('lang', next);
-        try { localStorage.setItem(KEY, next); } catch(e) {}
+        try { localStorage.setItem(KEY, next); } catch(e) { /* noop */ }
       });
     });
   })();
 
-  // ──────────────────────────────────────────────────────────────────────
-  // CMS-CONNECTED HIRING (mirrors Phase C-2 blog pattern).
-  //
-  // CATEGORY CHIPS: fetched from /api/categories?where[parent.slug][equals]=hiring
-  //   Display only — no filter wiring (per current product brief).
-  //   Adding a child of `hiring` in Payload Admin appears here on next page load.
-  //
-  // POSITIONS: fetched from /api/posts and filtered client-side to those tagged
-  //   with at least one hiring child category. Posts that belong only to blog or
-  //   portfolio parents are intentionally excluded.
-  //
-  // i18n note: chip labels and category column use Payload's `title` verbatim
-  // across all languages (no per-language translation yet). Section labels and
-  // status messages remain bilingual via .i18n-* spans.
-  //
-  // HYPEER orange accent: applied automatically when a category slug equals
-  // 'hypeer' so the brand rule (orange = HYPEER only) holds without hardcoding.
-  // ──────────────────────────────────────────────────────────────────────
-  (function(){
-    var POSTS_API = '/api/posts?depth=1&limit=100&sort=-publishedAt&where[_status][equals]=published';
-
-    var CATEGORIES = [];        // [{slug, label}]
-    var HIRING_CHILD_SLUGS = []; // ['research', 'hypeer', ...]
-
-    var POSITIONS = [];
-    var loadingState = 'loading'; // 'loading' | 'ready' | 'error'
-
-    var typesEl = document.getElementById('positionTypes');
-    var listEl = document.getElementById('positionList');
-    var statusEl = document.getElementById('positionStatus');
-    if(!typesEl || !listEl || !statusEl) return;
-
-    // ---------------------------------------------------------------------------
-    // FETCH HELPERS
-    // ---------------------------------------------------------------------------
-    function fetchPayloadCategories(parentSlug){
-      var params = new URLSearchParams();
-      params.set('where[parent.slug][equals]', parentSlug);
-      params.set('depth', '0');
-      params.set('limit', '100');
-      params.set('sort', 'title');
-      return fetch('/api/categories?' + params.toString(), { credentials: 'same-origin' })
-        .then(function(r){
-          if(!r.ok) throw new Error('Categories fetch failed: ' + r.status);
-          return r.json();
-        })
-        .then(function(data){
-          return (data.docs || []).map(function(c){
-            return { slug: c.slug, label: c.title };
-          });
-        });
-    }
-
-    // ---------------------------------------------------------------------------
-    // ESCAPING + FORMATTING
-    // ---------------------------------------------------------------------------
-    function escapeHtml(s){
-      return String(s == null ? '' : s).replace(/[&<>"']/g, function(c){
-        return { '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c];
-      });
-    }
-
-    // ---------------------------------------------------------------------------
-    // NORMALIZATION — Payload post → row schema.
-    //
-    // Location is read from `meta.description` for now (free-form text in the
-    // post's SEO description), since the Posts collection has no dedicated
-    // `location` field yet. If/when a structured field is added, swap in here.
-    // ---------------------------------------------------------------------------
-    function pickHiringCategory(doc){
-      if(!doc.categories || !doc.categories.length) return null;
-      for(var i = 0; i < doc.categories.length; i++){
-        var c = doc.categories[i];
-        if(c && c.slug && HIRING_CHILD_SLUGS.indexOf(c.slug) !== -1) return c;
-      }
-      return doc.categories[0];
-    }
-
-    function normalizePost(doc){
-      var category = pickHiringCategory(doc);
-      var location = (doc.meta && doc.meta.description) || '';
-      return {
-        href: doc.slug
-          ? '/wireframes/hiring-article.html?slug=' + encodeURIComponent(doc.slug)
-          : '#',
-        title: doc.title || '',
-        categorySlug: category ? category.slug : '',
-        categoryLabel: category ? category.title : '',
-        location: location
-      };
-    }
-
-    // ---------------------------------------------------------------------------
-    // RENDER — chips + position rows.
-    // ---------------------------------------------------------------------------
-    function renderTypeChips(){
-      if(!CATEGORIES.length){
-        typesEl.hidden = true;
-        typesEl.innerHTML = '';
-        return;
-      }
-      var html = CATEGORIES.map(function(cat){
-        var hypeer = cat.slug === 'hypeer' ? ' tag-hypeer' : '';
-        return '<span class="tag' + hypeer + '">' + escapeHtml(cat.label) + '</span>';
-      }).join('');
-      typesEl.innerHTML = html;
-      typesEl.hidden = false;
-    }
-
-    function renderPositions(){
-      if(!POSITIONS.length){
-        listEl.innerHTML = '';
-        return;
-      }
-      var html = POSITIONS.map(function(p, i){
-        var isLast = i === POSITIONS.length - 1;
-        var rowStyle = isLast ? ' style="border-bottom:1px solid var(--ink);"' : '';
-        var hypeer = p.categorySlug === 'hypeer' ? ' tag-hypeer' : '';
-        var teamCell = p.categoryLabel
-          ? '<span class="tag' + hypeer + '">' + escapeHtml(p.categoryLabel) + '</span>'
-          : '';
-        return (
-          '<a href="' + escapeHtml(p.href) + '" class="position-row"' + rowStyle + '>' +
-            '<div class="position-title">' + escapeHtml(p.title) + '</div>' +
-            '<div class="position-team">' + teamCell + '</div>' +
-            '<div class="position-location">' + escapeHtml(p.location) + '</div>' +
-            '<div class="position-arrow">→</div>' +
-          '</a>'
-        );
-      }).join('');
-      listEl.innerHTML = html;
-    }
-
-    function showStatus(html){
-      statusEl.innerHTML = html;
-      statusEl.hidden = false;
-      listEl.innerHTML = '';
-    }
-    function hideStatus(){ statusEl.hidden = true; }
-
-    function render(){
-      renderTypeChips();
-
-      if(loadingState === 'loading'){
-        showStatus(
-          '<span class="i18n-en">Loading positions…</span>' +
-          '<span class="i18n-ko">포지션을 불러오는 중…</span>' +
-          '<span class="i18n-ja">ポジションを読み込み中…</span>'
-        );
-        return;
-      }
-      if(loadingState === 'error'){
-        showStatus(
-          '<span class="i18n-en">Unable to load open positions right now. Please try again later.</span>' +
-          '<span class="i18n-ko">포지션을 불러오지 못했습니다. 잠시 후 다시 시도해 주세요.</span>' +
-          '<span class="i18n-ja">ポジションを読み込めませんでした。しばらくしてから再度お試しください。</span>'
-        );
-        return;
-      }
-
-      if(!POSITIONS.length){
-        showStatus(
-          '<span class="i18n-en">No open positions right now — but we\'re always open to hearing from you.</span>' +
-          '<span class="i18n-ko">현재 공개된 포지션은 없습니다 — 언제든 자유 지원으로 연락 주세요.</span>' +
-          '<span class="i18n-ja">現在募集中のポジションはありません — オープンエントリーはいつでも歓迎です。</span>'
-        );
-        return;
-      }
-
-      hideStatus();
-      renderPositions();
-    }
-
-    // Initial render — chips area is empty (will hide), status shows loading.
-    render();
-
-    // ---------------------------------------------------------------------------
-    // ASYNC STARTUP — fetch categories and posts in parallel.
-    // Categories must arrive before scoping POSITIONS (we need HIRING_CHILD_SLUGS).
-    // ---------------------------------------------------------------------------
-    var categoriesPromise = fetchPayloadCategories('hiring')
-      .then(function(cats){
-        CATEGORIES = cats;
-        HIRING_CHILD_SLUGS = cats.map(function(c){ return c.slug; });
-      })
-      .catch(function(err){
-        if(typeof console !== 'undefined' && console.warn){
-          console.warn('[hiring] category fetch failed; falling back to unscoped post list', err);
-        }
-      });
-
-    var postsPromise = fetch(POSTS_API, { credentials: 'same-origin' })
-      .then(function(r){
-        if(!r.ok) throw new Error('HTTP ' + r.status);
-        return r.json();
-      })
-      .then(function(data){
-        return (data && data.docs) || [];
-      })
-      .catch(function(err){
-        if(typeof console !== 'undefined' && console.error){
-          console.error('[hiring] posts fetch failed:', err);
-        }
-        return null;
-      });
-
-    Promise.all([categoriesPromise, postsPromise]).then(function(results){
-      var docs = results[1];
-      if(docs === null){
-        loadingState = 'error';
-        render();
-        return;
-      }
-
-      // Scope to posts that include at least one hiring-child category.
-      // If category fetch failed (HIRING_CHILD_SLUGS empty), show nothing scoped
-      // — better to show "No open positions" than to leak blog/portfolio posts.
-      var scopedDocs = HIRING_CHILD_SLUGS.length > 0
-        ? docs.filter(function(doc){
-            if(!doc.categories || !Array.isArray(doc.categories)) return false;
-            return doc.categories.some(function(cat){
-              return cat && cat.slug && HIRING_CHILD_SLUGS.indexOf(cat.slug) !== -1;
-            });
-          })
-        : [];
-
-      POSITIONS = scopedDocs.map(normalizePost).filter(function(p){ return p.title; });
-      loadingState = 'ready';
-      render();
-    });
-  })();
 </script>
 
 </body>
