@@ -95,7 +95,9 @@
   .page-content{padding-top:72px;}
 
   .post{
-    max-width:760px;
+    /* Wider than blog-article (was 760) so long position titles wrap less
+       aggressively. The body column is kept narrow below for readability. */
+    max-width:920px;
     margin:0 auto;
     padding:var(--s-9) var(--pad-x) var(--s-9);
   }
@@ -132,9 +134,9 @@
   }
 
   /* Position-specific facts strip — sits above the body, below the title.
-     Each fact is a label/value pair: TYPE / LOCATION / POSTED. */
+     Each fact is a label/value pair: ROLE / POSTED. */
   .post-facts{
-    display:grid;grid-template-columns:repeat(3,minmax(0,1fr));
+    display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
     gap:var(--s-5);
     margin:var(--s-5) 0 var(--s-5);
     padding:var(--s-5) 0;
@@ -164,12 +166,17 @@
   }
   .post-hero-caption a:hover{color:var(--ink);border-color:var(--ink);}
 
-  /* Body — Lexical-rendered content */
+  /* Body — Lexical-rendered content. Constrained to a tighter reading column
+     so the article header (title / facts) can breathe at the wider .post width
+     while the long-form copy still wraps at a comfortable line length. */
   .post-body{
     font-family:var(--font-serif);
     font-size:19px;line-height:1.78;
     color:var(--ink-2);
     margin-top:var(--s-7);
+    max-width:720px;
+    margin-left:auto;
+    margin-right:auto;
   }
   .post-body p{margin:0 0 var(--s-5);}
   .post-body h2,.post-body h3,.post-body h4{
@@ -285,7 +292,7 @@
         <span class="lang-sep" aria-hidden="true">·</span>
         <button type="button" class="lang-btn" data-lang="ja">JP</button>
       </div>
-      <a href="main.html#contact" class="nav-cta">Contact</a>
+      <a href="mailto:info@kreatorsnetwork.com" class="nav-cta">Contact</a>
     </div>
   </div>
 </nav>
@@ -308,24 +315,16 @@
       <h1 class="display-l post-title"></h1>
       <p class="post-subtitle" hidden></p>
 
-      <!-- Facts strip — TYPE / LOCATION / POSTED. Each fact's value is filled in
+      <!-- Facts strip — ROLE / POSTED. Each fact's value is filled in
            from Payload data; if a value is missing, the cell falls back to "—". -->
       <div class="post-facts">
         <div class="post-fact">
           <span class="label">
-            <span class="i18n-en">Type</span>
-            <span class="i18n-ko">유형</span>
-            <span class="i18n-ja">タイプ</span>
+            <span class="i18n-en">Role</span>
+            <span class="i18n-ko">직무</span>
+            <span class="i18n-ja">職務</span>
           </span>
           <span class="value post-fact-type">—</span>
-        </div>
-        <div class="post-fact">
-          <span class="label">
-            <span class="i18n-en">Location</span>
-            <span class="i18n-ko">근무지</span>
-            <span class="i18n-ja">勤務地</span>
-          </span>
-          <span class="value post-fact-location">—</span>
         </div>
         <div class="post-fact">
           <span class="label">
@@ -562,12 +561,10 @@
         subtitleEl.textContent = '';
       }
 
-      // Facts strip
+      // Facts strip — Role + Posted (Location was removed per design 2026-04-30).
       var typeEl = postEl.querySelector('.post-fact-type');
-      var locEl = postEl.querySelector('.post-fact-location');
       var dateEl = postEl.querySelector('.post-fact-date');
       typeEl.textContent = (category && category.title) || '—';
-      locEl.textContent = (post.meta && post.meta.description) || '—';
       var dateLabel = formatDate(post.publishedAt || post.createdAt);
       dateEl.textContent = dateLabel || '—';
 
