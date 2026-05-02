@@ -248,14 +248,13 @@
     </p>
   </section>
 
-  <!-- FILTERS — labels kept in English across all locales for brand consistency.
-       data-filter values map to the CMS `category` field. -->
+  <!-- FILTERS — populated dynamically from the Categories collection on page load.
+       Only the "All" chip is hardcoded (always present + acts as fallback if the
+       categories fetch fails). Other chips are appended for each Category whose
+       top-level ancestor is the "blog" category in the nested-docs hierarchy.
+       data-filter values map to each Category's `slug`. -->
   <div class="filters">
     <button class="filter-btn active" data-filter="all">All</button>
-    <button class="filter-btn" data-filter="research">Research</button>
-    <button class="filter-btn" data-filter="essay">Essay</button>
-    <button class="filter-btn" data-filter="data-story">Data Story</button>
-    <button class="filter-btn" data-filter="industry-brief">Industry Brief</button>
   </div>
 
   <!-- FEATURED ARTICLE — shell; populated by JS from the ARTICLES data source.
@@ -393,13 +392,15 @@
     // "portfolio" or "hiring" parents is excluded automatically.
     var JOURNAL_PARENT_SLUG = 'blog';
 
-    var filterBtns = document.querySelectorAll('.filter-btn[data-filter]');
+    // Filter chips live inside this container — chips themselves are added/removed
+    // dynamically, so we reference the container (stable) rather than a static NodeList.
+    var filtersContainer = document.querySelector('.filters');
     var featuredEl = document.getElementById('featuredArticle');
     var listEl = document.getElementById('articleList');
     var emptyEl = document.getElementById('emptyState');
     var loadMoreEl = document.getElementById('loadMoreContainer');
     var loadMoreBtn = document.getElementById('loadMoreBtn');
-    if(!filterBtns.length || !featuredEl || !listEl || !loadMoreBtn || !loadMoreEl) return;
+    if(!filtersContainer || !featuredEl || !listEl || !loadMoreBtn || !loadMoreEl) return;
 
     var ARTICLES = [];                                // populated by fetch on load
     var loadingState = 'loading';                     // 'loading' | 'ready' | 'error'
@@ -559,7 +560,8 @@
     }
 
     function render(){
-      filterBtns.forEach(function(b){
+      // Query fresh every render — chips may have been appended after the categories fetch.
+      filtersContainer.querySelectorAll('.filter-btn[data-filter]').forEach(function(b){
         b.classList.toggle('active', b.getAttribute('data-filter') === state.filter);
       });
 
@@ -608,12 +610,14 @@
       if(cat) state.filter = cat;
     } catch(e) {}
 
-    filterBtns.forEach(function(btn){
-      btn.addEventListener('click', function(){
-        state.filter = btn.getAttribute('data-filter') || 'all';
-        state.visibleCount = INITIAL_COUNT; // reset on filter change
-        render();
-      });
+    // Event delegation on the container — handles clicks on chips that get
+    // appended later by the categories fetch, without re-attaching listeners.
+    filtersContainer.addEventListener('click', function(e){
+      var btn = e.target && e.target.closest && e.target.closest('.filter-btn[data-filter]');
+      if(!btn || !filtersContainer.contains(btn)) return;
+      state.filter = btn.getAttribute('data-filter') || 'all';
+      state.visibleCount = INITIAL_COUNT; // reset on filter change
+      render();
     });
 
     loadMoreBtn.addEventListener('click', function(){
@@ -693,6 +697,76 @@
           console.error('[blog] Failed to fetch posts:', err);
         }
         render();
+      });
+
+    // ---------------------------------------------------------------------------
+    // CATEGORIES → FILTER CHIPS
+    //
+    // Source of truth = the Categories collection in Payload. Any Category whose
+    // top-level ancestor is the "blog" parent becomes a filter chip on this page.
+    // Adding or deleting a Category in the CMS is reflected on the next page load
+    // — no code change needed.
+    //
+    // Runs in parallel with the posts fetch above, so neither blocks the other.
+    // ---------------------------------------------------------------------------
+    function isJournalCategory(cat){
+      // The "blog" parent itself is the umbrella, not a filter chip.
+      if(!cat || cat.slug === JOURNAL_PARENT_SLUG) return false;
+      // Direct parent populated as full object (depth >= 1)
+      if(cat.parent && typeof cat.parent === 'object' && cat.parent.slug === JOURNAL_PARENT_SLUG){
+        return true;
+      }
+      // breadcrumbs[0] = top-level ancestor; always populated by nested-docs plugin.
+      if(cat.breadcrumbs && cat.breadcrumbs.length){
+        var top = cat.breadcrumbs[0];
+        if(top){
+          if(top.url === '/' + JOURNAL_PARENT_SLUG) return true;
+          if(top.label && String(top.label).toLowerCase() === JOURNAL_PARENT_SLUG) return true;
+        }
+      }
+      return false;
+    }
+
+    function renderFilterChips(categories){
+      // Remove all chips except the hardcoded "All" (which acts as fallback).
+      filtersContainer.querySelectorAll('.filter-btn[data-filter]:not([data-filter="all"])').forEach(function(b){
+        b.remove();
+      });
+      // Append one chip per Category, sorted alphabetically by title for predictable order.
+      categories.slice().sort(function(a, b){
+        return String(a.title || '').localeCompare(String(b.title || ''));
+      }).forEach(function(cat){
+        var btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'filter-btn';
+        btn.setAttribute('data-filter', cat.slug);
+        btn.textContent = cat.title;
+        if(cat.slug === state.filter) btn.classList.add('active');
+        filtersContainer.appendChild(btn);
+      });
+    }
+
+    fetch('/api/categories?depth=1&limit=100&sort=title', { credentials: 'same-origin' })
+      .then(function(r){
+        if(!r.ok) throw new Error('HTTP ' + r.status);
+        return r.json();
+      })
+      .then(function(data){
+        var cats = ((data && data.docs) || []).filter(isJournalCategory);
+        renderFilterChips(cats);
+        // If the URL filter slug doesn't match any chip (e.g. category was
+        // deleted from CMS while a stale shareable URL is open), reset to "All".
+        var validSlugs = ['all'].concat(cats.map(function(c){ return c.slug; }));
+        if(validSlugs.indexOf(state.filter) === -1){
+          state.filter = 'all';
+          render();
+        }
+      })
+      .catch(function(err){
+        // Graceful degradation — only the "All" chip remains. Posts still load.
+        if(typeof console !== 'undefined' && console.warn){
+          console.warn('[blog] Filter chip fetch failed; falling back to "All" only:', err);
+        }
       });
   })();
 </script>
