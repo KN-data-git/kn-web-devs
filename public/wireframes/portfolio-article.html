@@ -637,6 +637,7 @@
         case 'listitem':   return renderListItem(node);
         case 'quote':      return renderQuote(node);
         case 'upload':     return renderUpload(node);
+        case 'block':      return renderInlineBlock(node);
         default:           return node.children ? renderChildren(node.children) : '';
       }
     }
@@ -684,6 +685,52 @@
       if(!url) return '';
       var alt = escapeAttr(v.alt || '');
       var captionHTML = v.caption ? renderLexical(v.caption) : '';
+      return (
+        '<figure class="post-figure">' +
+          '<img src="' + escapeAttr(url) + '" alt="' + alt + '" />' +
+          (captionHTML ? '<figcaption>' + captionHTML + '</figcaption>' : '') +
+        '</figure>'
+      );
+    }
+
+    // Inline `block` Lexical node — Payload Website Template embeds custom blocks
+    // (Media Block, Banner, Code, etc.) as `block` nodes with `fields.blockType`
+    // discriminating which block to render. We handle Media Block here; new
+    // block types can be added with another case.
+    function renderInlineBlock(node){
+      var fields = node.fields || {};
+      var blockType = fields.blockType || '';
+      switch(blockType){
+        case 'mediaBlock':
+        case 'mediablock':
+        case 'media':
+          return renderMediaBlock(fields);
+        default:
+          // Unknown custom block — log so it's discoverable, but don't break the page.
+          if(typeof console !== 'undefined' && console.warn){
+            console.warn('[project] unhandled Lexical block type:', blockType, fields);
+          }
+          return '';
+      }
+    }
+
+    function renderMediaBlock(fields){
+      // `media` is a populated upload doc (depth>=1). It might also be just an ID
+      // string at depth=0 — in that case we have no URL to render, so we bail.
+      var media = fields.media;
+      if(!media || typeof media !== 'object') return '';
+      var url = (media.sizes && media.sizes.large && media.sizes.large.url) || media.url || '';
+      if(!url) return '';
+      var alt = escapeAttr(media.alt || '');
+      // Caption can live on the block (`fields.caption`) or on the media doc itself.
+      // Both can be either a Lexical tree (richText) or a plain string.
+      var rawCaption = fields.caption || media.caption;
+      var captionHTML = '';
+      if(rawCaption){
+        captionHTML = (typeof rawCaption === 'object' && rawCaption.root)
+          ? renderLexical(rawCaption)
+          : escapeHtml(String(rawCaption));
+      }
       return (
         '<figure class="post-figure">' +
           '<img src="' + escapeAttr(url) + '" alt="' + alt + '" />' +
