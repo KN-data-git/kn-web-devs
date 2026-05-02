@@ -303,9 +303,7 @@
   <article class="post" id="post" hidden>
     <a href="hiring.html" class="post-back">
       <span aria-hidden="true">&larr;</span>
-      <span class="i18n-en">Careers</span>
-      <span class="i18n-ko">채용</span>
-      <span class="i18n-ja">採用</span>
+      Careers
     </a>
 
     <header class="post-header">
@@ -344,32 +342,13 @@
 
     <div class="post-body" id="postBody"></div>
 
-    <!-- Apply CTA — opens a mailto with subject line prefilled to the role title. -->
-    <section class="post-apply">
-      <h2>
-        <span class="i18n-en">Interested in this role?</span>
-        <span class="i18n-ko">이 포지션에 지원하고 싶으신가요?</span>
-        <span class="i18n-ja">このポジションに興味がありますか？</span>
-      </h2>
-      <p>
-        <span class="i18n-en">Send a short note about what you'd want to build here, with your CV or portfolio attached.</span>
-        <span class="i18n-ko">이력서 또는 포트폴리오와 함께, 여기서 무엇을 만들고 싶은지 짧게 적어 보내주세요.</span>
-        <span class="i18n-ja">履歴書またはポートフォリオを添えて、ここで何を創りたいかを簡潔にお書きください。</span>
-      </p>
-      <a id="applyLink" href="mailto:careers@kreatorsnetwork.com" class="btn btn-dark">
-        <span class="i18n-en">Apply via email</span>
-        <span class="i18n-ko">이메일로 지원하기</span>
-        <span class="i18n-ja">メールで応募する</span>
-        <span class="arrow">→</span>
-      </a>
-    </section>
+    <!-- (Apply CTA section removed 2026-04-30 — apply flow will route to
+          external links per position; .post-apply CSS retained in <style>.) -->
 
     <footer class="post-footer">
       <a href="hiring.html" class="post-footer-back">
         <span aria-hidden="true">&larr;</span>
-        <span class="i18n-en">Back to all positions</span>
-        <span class="i18n-ko">전체 포지션으로 돌아가기</span>
-        <span class="i18n-ja">ポジション一覧に戻る</span>
+        Back to all positions
       </a>
     </footer>
   </article>
@@ -401,7 +380,6 @@
           <li><a href="main.html#hypeer">HYPEER</a></li>
           <li><a href="main.html#passport-seoul">Passport Seoul</a></li>
           <li><a href="hiring.html">Careers</a></li>
-          <li><a href="main.html#contact">Contact</a></li>
         </ul>
       </div>
       <div>
@@ -414,15 +392,13 @@
       <div>
         <h4>Follow</h4>
         <ul>
-          <li><a href="#">Instagram</a></li>
-          <li><a href="#">LinkedIn</a></li>
-          <li><a href="#">Medium</a></li>
+          <li><a href="https://www.linkedin.com/company/kreatorsnetwork/" target="_blank" rel="noopener noreferrer">LinkedIn</a></li>
+          <li><a href="https://medium.com/@info_52880" target="_blank" rel="noopener noreferrer">Medium</a></li>
         </ul>
       </div>
     </div>
     <div class="footer-bottom">
       <span>&copy; 2026 Kreators Network</span>
-      <span>Seoul &middot; Remote</span>
     </div>
   </div>
 </footer>
@@ -453,22 +429,19 @@
   //
   // Mirrors blog-article.html: same Lexical → HTML traversal handles paragraph,
   // heading, text formatting, link, list, quote, and upload nodes. Hiring-only
-  // bits: facts strip (Type / Location / Posted) and Apply CTA mailto subject.
+  // bit: facts strip (Role / Posted).
   //
   // Field mapping:
-  //   Type      ← first category title (preferred from `hiring` children)
-  //   Location  ← post.meta.description (free-form text for now)
-  //   Posted    ← publishedAt
+  //   Role    ← first category title (preferred from `hiring` children)
+  //   Posted  ← publishedAt
   //
-  // If the Posts collection later gains structured fields (e.g. `location`,
-  // `employmentType`), swap the lookup site below — the rest of the page is
-  // unchanged.
+  // If the Posts collection later gains structured fields (e.g. `employmentType`),
+  // swap the lookup site below — the rest of the page is unchanged.
   // ──────────────────────────────────────────────────────────────────────
   (function(){
     var statusEl = document.getElementById('postStatus');
     var postEl = document.getElementById('post');
     var bodyEl = document.getElementById('postBody');
-    var applyEl = document.getElementById('applyLink');
 
     var slug = '';
     try {
@@ -567,14 +540,6 @@
       typeEl.textContent = (category && category.title) || '—';
       var dateLabel = formatDate(post.publishedAt || post.createdAt);
       dateEl.textContent = dateLabel || '—';
-
-      // Apply CTA — prefill mailto subject with the role title for legibility.
-      if(title){
-        try {
-          applyEl.href = 'mailto:careers@kreatorsnetwork.com'
-            + '?subject=' + encodeURIComponent('Application — ' + title);
-        } catch(e) {}
-      }
 
       // Hero image (large size)
       if(post.heroImage){
